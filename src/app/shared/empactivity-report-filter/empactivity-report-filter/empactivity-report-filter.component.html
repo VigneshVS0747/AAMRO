@@ -1,0 +1,39 @@
+<div class="px-1 mt-2">
+    <form [formGroup]="filterForm">
+      <div class=" flex-wrap align-items-center justify-content-between">
+        <div class="row">
+          <div class="col-12 col-md-3">
+            <mat-form-field class="w-100">
+              <mat-label class="labelcolor">From Date</mat-label>
+              <input matInput [matDatepicker]="picker1" formControlName="fromDate">
+              <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-12 col-md-3">
+            <mat-form-field class="w-100">
+              <mat-label class="labelcolor">To Date</mat-label>
+              <input matInput [matDatepicker]="picker2" formControlName="toDate">
+              <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-12 col-md-3">
+            <mat-form-field class="w-100">
+                <mat-label class="labelcolor">Follow Up Status</mat-label>
+                <mat-select formControlName="followUpStatus" [multiple]="true">
+                  <mat-option *ngFor="let item of Followupstatus" [value]="item.followUpStatusId">
+                    {{item.followUpStatus}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3" style="align-content: center;">
+            <button class="btn btn-primary" style="font-size: 13px;" (click)="onSearch()">
+              <i class="fa fa-search me-2"></i>Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>

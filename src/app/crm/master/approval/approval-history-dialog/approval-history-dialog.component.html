@@ -1,0 +1,188 @@
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Approval History" />
+                    <span>Approval History</span>
+                </h3>
+            </div>
+        </div>
+        <hr class="mt-0 mb-4" />
+        <mat-card style="height: 600px;overflow: auto;">
+            <br />
+            <mat-card-content>
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="form">
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <mat-form-field>
+                                      <mat-label class="labelcolorGray">Screen Name</mat-label>
+                                      <input matInput type="text" formControlName="screenName" maxlength="50" readonly autocomplete="off">
+                                    </mat-form-field>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <mat-form-field>
+                                      <mat-label class="labelcolorGray">Reference Number</mat-label>
+                                      <input matInput type="text" formControlName="referenceNumber" maxlength="50" readonly autocomplete="off">
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                              </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                  <div class="table">
+                    <div class="border border-1 rounded-4">
+                        <table class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed">
+                            <thead class="bg-light">
+                                <tr>
+                                    <!-- <th class="center-header">S.No</th> -->
+                                    <th class="center-header">Level</th>
+                                    <th class="center-header">Number Of Users</th>
+                                    <th class="center-header">Users</th>
+                                    <th class="center-header">Required To Approval</th>
+                                    <th class="center-header">Approved Count</th>
+                                    <th class="center-header">Approved Users</th>
+                                    <th class="center-header">Required To Rejection</th>
+                                    <th class="center-header">Rejected Count</th>
+                                    <th class="center-header"> Rejected Users</th>
+                                    <th class="center-header">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of approvalLevelsSummary; let i = index">
+                                    <!-- <td class="center-align">
+                                        {{ i+1 }}
+                                    </td> -->
+                                    <td class="center-align">
+                                        {{row.level}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.numberOfUsers}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.users}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.requiredApproval}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.approvedCount}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.approvedUsers}}
+                                    </td>
+                                    <td class="center-align">
+                                      {{row.requiredRejection}}
+                                  </td>
+                                    <td class="center-align">
+                                        {{row.rejectedCount}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.rejectedUsers}}
+                                    </td>
+                                    <td class="center-align">
+                                      {{row.status}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+                <section class="custom-table-wrapper mt-2">
+                    <kendo-grid [kendoGridBinding]="approveHistory" [filterable]="true" [resizable]="true" [height]="450"
+                        [pageSize]="10" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+                        <kendo-grid-column [style]="{
+                            'text-align': 'left',
+                            padding: '5px',
+                            
+                          }" [headerStyle]="{
+                            justifyContent: 'center',
+                            
+                          }" field="cycle" title="Cycle" media="(min-width: 450px)" [width]="80">
+                                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                    {{ dataItem.cycle }}
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column [style]="{
+                                'text-align': 'left',
+                                padding: '5px',
+                                
+                              }" [headerStyle]="{
+                                justifyContent: 'center',
+                                
+                              }" field="levelNumber" title="Level" media="(min-width: 450px)" [width]="80">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.levelNumber }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                        <kendo-grid-column [style]="{
+                        'text-align': 'left',
+                        padding: '5px',
+                        
+                      }" [headerStyle]="{
+                        justifyContent: 'center',
+                        
+                      }" field="statusId" title="Status" media="(min-width: 450px)" [width]="80">
+                            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                {{ dataItem.approvalStatus }}
+                            </ng-template>
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{
+                    'text-align': 'left',
+                    padding: '5px',
+                    
+                  }" [headerStyle]="{
+                    justifyContent: 'center',
+                    
+                  }" field="employeeName" title="Approver" media="(min-width: 450px)" [width]="80">
+                            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                {{ dataItem.employeeName }}
+                            </ng-template>
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                      justifyContent: 'center',
+                      
+                    }" field="date" format="{0:dd/MMM/yyyy}" filter="date" title="Date"
+                            media="(min-width: 450px)" [width]="80">
+                            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                {{ dataItem.date | date:'dd/MMM/yyyy' }}
+                            </ng-template>
+                        </kendo-grid-column>
+        
+                      <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                    justifyContent: 'center',
+                    
+                  }" field="remarks" title="Remarks" media="(min-width: 450px)" [width]="150">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                      {{ dataItem.remarks }}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <ng-template kendoPagerTemplate>
+                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                    <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+            
+                    <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+                    <kendo-pager-info></kendo-pager-info>
+                  </ng-template>
+                </kendo-grid>
+              </section>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</mat-dialog-actions>
+
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+        Cancel
+    </button> &nbsp;&nbsp;
+</mat-dialog-actions>

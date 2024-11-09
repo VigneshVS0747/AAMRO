@@ -1,0 +1,5 @@
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* Align button to the right */
+    margin-top: 50px; /* Push the button to the bottom */
+}

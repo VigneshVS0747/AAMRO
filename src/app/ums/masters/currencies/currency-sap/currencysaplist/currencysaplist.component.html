@@ -1,0 +1,64 @@
+<div class="table-list-display">
+    <div class="component-list">
+      <div class="header-container">
+        <h3 class="box-title" *ngIf="currencies.length > 0">
+          <img src="./assets/images/billing-storage.png" alt="Currency Details" />
+          <span>SAP-Currency</span>
+        </h3>
+        <div class="text-end" >
+          <!-- <button class="btn btn-primary Addbtn" type="button" (click)="addCurrency()">
+            <i class="fa fa-plus-circle me-2"></i>Add
+          </button>&nbsp;
+          <button class="btn btn-primary" type="button" routerLink="/ums/master/currencysaplist">
+            <i class="fa fa-plus-circle me-2"></i>SapList
+          </button>
+          -->
+        </div>
+       
+        <hr />
+      </div>
+  
+      <section class="custom-table-wrapper">
+        <kendo-grid [kendoGridBinding]="currencies"  [filterable]="true" [resizable]="true"
+          [height]="500"  [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }"
+          >
+          <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+          justifyContent: 'center',
+          
+        }" field="code" title="Code">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.code }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column [style]="{
+              'text-align': 'left',
+              padding: '5px',
+              
+            }" [headerStyle]="{
+              justifyContent: 'center',
+              
+            }" field="name" title="Name">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.name }}
+            </ng-template>
+          </kendo-grid-column>
+  
+  
+          <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+              justifyContent: 'center',
+              
+            }" field="hundredthName" title=" Hundredth Name">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.hundredthName }}
+            </ng-template>
+          </kendo-grid-column>
+          <!-- <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}" [headerStyle]="{'justifyContent': 'center'}" field="denominationSub" title="DenominationSub">
+    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+    {{dataItem.denominationSub}}
+    </ng-template>
+    </kendo-grid-column> -->
+       
+        </kendo-grid>
+      </section>
+    </div>
+  </div>

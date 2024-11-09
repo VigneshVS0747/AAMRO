@@ -1,0 +1,111 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <div class="header-container">
+      <h3 class="box-title">
+        <img src="./assets/images/billing-storage.png" alt="Customer" />
+        <span>Customer</span>
+      </h3>
+      <div class="text-end">
+        <button class="btn btn-primary Addbtn" type="button" *ngIf="pagePrivilege.includes('create')" (click)="add()">
+          <i class="fa fa-plus-circle me-2"></i>Add
+        </button>
+      </div>
+      <hr />
+    </div>
+    <section class="custom-table-wrapper">
+      <kendo-grid [kendoGridBinding]="customers" [filterable]="true" [resizable]="true" [height]="500" [pageSize]="10"
+        [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+        <kendo-grid-column [style]="{
+                  'text-align': 'left',
+                  padding: '5px',
+                  
+                }" [headerStyle]="{
+                  justifyContent: 'center',
+                  
+                }" field="customerCode" title="Customer Id" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.customerCode }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                  justifyContent: 'center',
+                  
+                }" field="customerName" title="Name" [width]="95">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.customerName }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                justifyContent: 'center',
+                
+              }" field="countryName" title="country" [width]="85">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.countryName }}
+          </ng-template>
+        </kendo-grid-column>
+        <!-- <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                justifyContent: 'center',
+                
+              }" field="customerEmail" title="Email">
+              <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                {{ dataItem.customerEmail }}
+              </ng-template>
+            </kendo-grid-column>  -->
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                justifyContent: 'center',
+                
+              }" field="salesOwnerName" title="Sales Owner" [width]="105">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.salesOwnerName }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+            justifyContent: 'center',
+            
+          }" field="salesExecutiveName" title="Sales Executive" [width]="105">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.salesExecutiveName }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+          justifyContent: 'center',
+          
+        }" field="cStatus" title="Status" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.cStatus }}
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                  justifyContent: 'center',
+                }" title="Action" [width]="85" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <!-- <a type="button" (click)="onMail(dataItem)"><i class="fa-solid fa-envelope fa-lg"></i></a>&nbsp; -->
+            <a type="button"*ngIf="pagePrivilege.includes('view')" (click)="onview(dataItem)"><i class="fas fa-eye"></i></a>&nbsp;
+            <a type="button" *ngIf="pagePrivilege.includes('edit')" (click)="onEdit(dataItem)"><i class="fas fa-square-pen"></i></a>&nbsp;
+            <a type="button" *ngIf="pagePrivilege.includes('delete')"(click)="onDelete(dataItem)"><i class="fas fa-trash"></i></a>&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+          justifyContent: 'center',
+          
+        }" title="ACT" [width]="50" [sticky]="true">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          <a type="submit" matTooltip="Follow Up History" matTooltipPosition="above" (click)="OpenHistory(5,dataItem.customerId,dataItem.cStatusId)"><i
+            class="fas fa-clock-rotate-left"></i></a>&nbsp; 
+            <a type="submit" matTooltip="Approval History" matTooltipPosition="above" (click)="approveHistory(dataItem.customerId)"><i class="fa-solid fa-repeat fa-lg"></i></a>&nbsp;
+        </ng-template>
+      </kendo-grid-column>
+      <ng-template kendoPagerTemplate>
+        <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+        <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+        <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+        <kendo-pager-info></kendo-pager-info>
+      </ng-template>
+    </kendo-grid>
+  </section>
+
+  </div>
+</div>

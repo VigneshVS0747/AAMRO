@@ -1,0 +1,350 @@
+<div>
+    <div class="mx-2 p-2">
+        <h3 class="box-title">
+            <img src="./assets/images/billing-storage.png" alt="Line Item" />
+            <span>Mapping</span>
+            <mat-divider></mat-divider>
+        </h3>
+        <div class="mt-2">
+            <div class="d-flex justify-content-end mb-2">
+                <!-- <button mat-raised-button color="primary" [disabled]="showAddRow || this.data?.view" (click)="Add()">
+                    Add
+                </button> -->
+                <button class="btn btn-primary" type="button" [disabled]="showAddRow || this.data?.view" (click)="Add()">
+                <i class="fa fa-plus-circle me-2"></i>Add
+            </button>
+            </div>
+            <kendo-grid [kendoGridBinding]="MappingList" [filterable]="true" [resizable]="true" [height]="500"
+                [pageSize]="pageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [skip]="skip"
+                (pageChange)="pageChange($event)">
+
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center', }" field="lineItemCategoryName" title="Category"
+                    [width]="130">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        
+
+                        <span >
+                            {{ dataItem.lineItemCategoryName }}
+                        </span>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="lineItemName" title="Aamro Line Item"
+                    filter="text" [width]="160">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+
+
+
+                        <span>
+                            {{ dataItem.lineItemName }}
+                        </span>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="calculationParameter"
+                    title="Calculation Parameter" filter="text" [width]="200">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+
+                        
+
+                        <span>
+                            {{ dataItem.calculationParameter }}
+                        </span>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="calculationType" title="Calculation Type"
+                    filter="text" [width]="160">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+
+
+                        <span>
+                            {{ dataItem.calculationType }}
+                        </span>
+                    </ng-template>
+                </kendo-grid-column>
+
+
+                <kendo-grid-column [style]="{'text-align': 'left', padding: '5px'}"
+                [headerStyle]="{justifyContent: 'center'}" field="valueInVendorCurrency" title="Value"
+                filter="text" [width]="100">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    <div *ngIf="dataItem?.Isedit">
+                        <mat-form-field class="w-100 w-full">
+                            <input type="text" placeholder="Value" matInput
+                                [(ngModel)]="dataItem.valueInVendorCurrency" [formControl]="value" step="any"
+                                (input)="trimDecimalFieldValue($event)">
+                            <mat-error *ngIf="value.touched && value.invalid">Value is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <span >
+                        {{ dataItem.valueInVendorCurrency }}
+                    </span>
+                </ng-template>
+            </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="taxCodeName" title="Tax Name" filter="text"
+                    [width]="110">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            
+                        <span>
+                            {{ dataItem.taxCodeName }}
+                        </span>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="taxPercentage" title="Tax Percentage"
+                    filter="text" [width]="140">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    
+                        <span >
+                            {{ dataItem.taxPercentage }}
+                        </span>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left', padding: '5px'}"
+                [headerStyle]="{justifyContent: 'center'}" field="minValueInVendorCurrency" title="Minimum Value"
+                filter="text" [width]="140">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                  
+                    <span >
+                        {{ dataItem.minValueInVendorCurrency }}
+                    </span>
+                </ng-template>
+            </kendo-grid-column>
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="remarks" title="Remarks" filter="text"
+                    [width]="150">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+ 
+                        <span >
+                            {{ dataItem.remarks }}
+                        </span>
+                    </ng-template>
+                </kendo-grid-column>
+
+
+                <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                    justifyContent: 'center',
+                      
+                  }" title="Action" [width]="130" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                        <div *ngIf="!dataItem.Isedit">
+                            <button mat-icon-button [disabled]="showAddRow || this.data?.view" type="submit" (click)="Edit(dataItem)"><i
+                                    class="fas fa-square-pen"></i>
+                            </button>&nbsp;
+                            <button mat-icon-button [disabled]="showAddRow || this.data?.view" type="submit"
+                                (click)="Delete(dataItem.regionMapId,rowIndex)"><i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="dataItem.Isedit">
+                            <button mat-icon-button type="submit" #submitButton tabindex="0" (click)="Save(dataItem)">
+                                <ng-container *ngIf="showAddRow; else editIcon">
+                                    <i class="fas fa-sd-card"></i>
+                                </ng-container>
+                                <ng-template #editIcon>
+                                    <i class="fas fa-sd-card"></i> </ng-template>
+                            </button>&nbsp;
+                            <button mat-icon-button type="submit" #cancelButton tabindex="0"
+                                (keydown.enter)="handleKeyPress($event, dataItem,rowIndex)"
+                                (click)="oncancel(dataItem,rowIndex)"><i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+        </div>
+        <mat-dialog-actions align="end" class="d-flex align-items-baseline">
+            <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+                Cancel
+            </button> &nbsp;&nbsp;
+            <button [disabled]="this.data?.view" class="btn btn-primary returntolistbtn" type="submit" (click)="AddtoList()">
+                <i class="fa fa-list me-2"></i>Add to List
+            </button>
+        </mat-dialog-actions>
+    </div>
+</div>
+
+<ng-template #addTemplates>
+    <h3 class="box-title px-2 mt-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        <span *ngIf="!showAddRow">Add Mapping</span>
+        <span *ngIf="showAddRow">Update Mapping</span>
+        <mat-divider></mat-divider>
+    </h3>
+    <div class="row px-2 mb-2 mb-1 m-1">
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100 w-full">
+                <mat-label class="labelcolor">Category</mat-label>
+                <input type="text" placeholder="Category" aria-label="Number" matInput
+                     [formControl]="LineItemCategory"
+                    [matAutocomplete]="auto1">
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="LineItemCategoryEvent($event)">
+                    <mat-option *ngFor="let option of filteredLineItemCategory | async"
+                        [value]="option?.lineItemCategoryName">
+                        {{option?.lineItemCategoryName}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                    *ngIf="LineItemCategory.touched && LineItemCategory.hasError('required')">Line
+                    Item Category is
+                    required</mat-error>
+                <mat-error
+                    *ngIf="LineItemCategory.hasError('invalidOption')">Invalid
+                    Option
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100 w-full">
+                <mat-label class="labelcolor">Aamro Line Item</mat-label>
+                <input type="text" placeholder="Aamro Line Item" aria-label="Number"
+                     matInput [formControl]="LineItem"
+                    [matAutocomplete]="auto2">
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="checkLineItem($event)">
+                    <mat-option *ngFor="let option of filteredLineItem | async"
+                        [value]="option?.lineItemName">
+                        {{option?.lineItemName}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="LineItem.touched && LineItem.hasError('required')">Line Item is
+                    required</mat-error>
+                <mat-error *ngIf="LineItem.hasError('invalidOption')">Invalid
+                    Option</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100 w-full">
+                <mat-label class="labelcolor">Calculation Parameter</mat-label>
+                <input type="text" placeholder="Calculation Parameter" aria-label="Number" matInput
+                     [formControl]="calculationParameter"
+                    [matAutocomplete]="auto3">
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="calculationParameterEvent($event)">
+                    <mat-option *ngFor="let option of filteredCalculationParameter | async"
+                        [value]="option?.calculationParameter">
+                        {{option?.calculationParameter}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                    *ngIf="calculationParameter.touched && calculationParameter.hasError('required')">Calculation
+                    Parameter is
+                    required</mat-error>
+                <mat-error
+                    *ngIf="calculationParameter.hasError('invalidOption')">Invalid
+                    Option</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100 w-full">
+                <mat-label [ngClass]="{'labelcolorGray': calculationTypeReadonly, 'labelcolor': !calculationTypeReadonly}">Calculation Type</mat-label>
+                <input type="text" placeholder="Calculation Type" aria-label="Number"
+                     matInput [formControl]="calculationType" [readonly]="calculationTypeReadonly"
+                    [matAutocomplete]="auto4">
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-autocomplete #auto4="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                    <mat-option *ngFor="let option of filteredCalculationType | async"
+                        [value]="option?.calculationType">
+                        {{option?.calculationType}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="calculationType.touched && calculationType.hasError('required')">Calculation Type
+                    is
+                    required</mat-error>
+                <mat-error
+                    *ngIf="calculationType.hasError('invalidOption')">Invalid
+                    Option</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100 w-full">
+                <mat-label class="labelcolor">Value</mat-label>
+                <input type="text" placeholder="Value" matInput
+                     [formControl]="value" step="any"
+                    (input)="trimDecimalFieldValue($event)">
+                <mat-error *ngIf="value.touched && value.hasError('required')">Value is required</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100 w-full">
+                <mat-label class="labelcolor">Tax Name</mat-label>
+                <input type="text" placeholder="Tax Name" aria-label="Number"
+                     matInput [formControl]="taxName"
+                    [matAutocomplete]="auto5">
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-autocomplete #auto5="matAutocomplete" (optionSelected)="getTaxPercentage($event)">
+                    <mat-option *ngFor="let option of filteredTaxName | async"
+                        [value]="option?.taxCodeName">
+                        {{option?.taxCodeName}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="taxName.touched && taxName.hasError('required')">Tax Name is required</mat-error>
+                <mat-error *ngIf="taxName.hasError('invalidOption')">Invalid
+                    Option</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100 w-full">
+                <mat-label class="labelcolor">Tax Percentage</mat-label>
+                <input type="number" step="any" placeholder="Tax Percentage"
+                     matInput [formControl]="taxPercentage">
+                <mat-error
+                    *ngIf="taxPercentage.touched && taxPercentage.hasError('required') && !taxPercentage.hasError('decimal')">Tax
+                    Percentage is required</mat-error>
+                <mat-error *ngIf="taxPercentage.hasError('decimal')">
+                    Tax Percentage must be a positive number with up to 14 digits before the decimal
+                    point and 2 digits after
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100 w-full">
+                <mat-label class="labelcolor">Minimum Value</mat-label>
+                <input type="text" placeholder="Minimum Value" matInput
+                     [formControl]="minimumValue" step="any"
+                    (input)="trimDecimalFieldMinValue($event)">
+                <!-- <mat-error *ngIf="minimumValue.touched && minimumValue.invalid">
+                    Minimum Value is required
+                </mat-error> -->
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100 w-full">
+                <mat-label class="labelcolor">Remarks</mat-label>
+                <textarea type="text" placeholder="Remarks" matInput rows="1" 
+                    [formControl]="remarks"></textarea>
+                <mat-error *ngIf="remarks.hasError('maxlength')">
+                    Remarks cannot exceed 500 characters
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <mat-dialog-actions align="end" class="d-flex align-items-baseline">
+        <button class="btn btn-secondary canceltbtn" type="submit" (click)="addClose()">
+            Cancel
+        </button> &nbsp;&nbsp;
+        <button [disabled]="this.data?.view" *ngIf="!showAddRow" class="btn btn-primary returntolistbtn" type="submit" (click)="addSave()">
+            <i class="fa fa-list me-2"></i>Add to List
+        </button>
+        <button [disabled]="this.data?.view" *ngIf="showAddRow" class="btn btn-primary returntolistbtn" type="submit" (click)="addSave()">
+            <i class="fa fa-list me-2"></i>Update List
+        </button>
+    </mat-dialog-actions>
+</ng-template>

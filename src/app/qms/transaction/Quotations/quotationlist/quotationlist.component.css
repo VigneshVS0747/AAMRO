@@ -1,0 +1,5 @@
+.disabled-link {
+    pointer-events: none;
+    opacity: 0.3 !important; /* Or any other color to indicate the button is disabled */
+    cursor: not-allowed;
+  }

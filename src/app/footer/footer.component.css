@@ -1,0 +1,9 @@
+.footer{
+    position:fixed;
+    font-family: RobotoRegular;
+    bottom:-3px;
+    background-color:#00447C !important;
+    text-align: center;
+    width:100%;
+    color:#FFFFFF;
+}

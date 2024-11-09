@@ -1,0 +1,12 @@
+.center-align {
+    text-align: center;
+  }
+.moveheader {
+  font-style: italic;
+}
+.k-grid-header {
+  font-weight: bold !important;
+}
+.Page-Short{
+  padding-left: 500px;
+}

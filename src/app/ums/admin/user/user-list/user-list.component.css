@@ -1,0 +1,90 @@
+.centered-icon {
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .centered-icon a {
+    display: inline-block;
+    padding: 5px 0;
+  }
+  
+  .centered-icon i {
+    display: inline-block;
+    font-size: 1.2em; /* Adjust icon size as needed */
+  }
+
+  /* Style for the toggle button */
+.toggle-button {
+    cursor: pointer;
+    color: goldenrod;
+    text-decoration: underline;
+    
+  }
+  
+  /*.table-container {
+    height: 400px; /* Set a fixed height for the container */
+    /*overflow-y: auto; /* Enable vertical scrolling */
+    /*border-bottom: 1px solid #00447C;  /* For last row border */
+
+  /*}*/
+
+  .table-container {
+    
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: nowrap; /* Prevent text from wrapping */
+    max-width: 100%; /* Set a maximum width to allow horizontal scrolling */
+    max-height:350px;
+    border-bottom: 1px solid #00447C; /* For the last row border */
+  }
+
+  .mat-header-cell {
+    text-align: center;
+    font-size: 18px;
+  }
+
+  .centered-cell {
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  }
+
+  .gray-icon {
+    color: gray; /* You can use any gray color you prefer */
+  }
+
+  .blue-icon {
+    color: rgb(0,0,255); /* You can use any gray color you prefer */
+  }
+
+  .golden-icon {
+    color: goldenrod;
+  }
+
+   
+  .mat-cell {
+    font-size: 16px;
+  }
+  
+
+  
+  .icon-checkbox-container {
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .icon-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* You might need to adjust the following styles according to your specific design */
+  .fa-star-of-david {
+    margin-right: 3px; /* Adjust spacing between the icon and checkbox */
+  }
+  
+  .Page-Short{
+    padding-left: 500px;
+  }

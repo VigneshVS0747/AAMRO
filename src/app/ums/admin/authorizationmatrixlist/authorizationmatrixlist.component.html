@@ -1,0 +1,125 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <h3 class="box-title">
+      <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+      <span>Authorization Matrix List</span>
+    </h3>
+    <div class="text-end" *ngIf="pagePrivilege.includes('create')">
+      <button
+        class="btn btn-primary Addbtn"
+        type="button"
+        routerLink="/ums/activity/authmat/create"
+      >
+        <i class="fa fa-plus-circle me-2"></i>Add
+      </button>
+    </div>
+
+    <hr class="mt-0 mb-4" />
+
+    <section class="custom-table-wrapper">
+      <kendo-grid
+        [kendoGridBinding]="Authmatrix"
+        [filter]="filter"
+        [filterable]="true"
+        [resizable]="true"
+        [height]="500"
+        [pageSize]="pageSize"
+        [sortable]="true"
+        [pageable]="true"
+        [selectable]="{ enabled: true }"
+        (filterChange)="onFilterChange($event)"
+      >
+        <kendo-grid-column
+          [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }"
+          field="authorizationMatrixName"
+          title="Matrix Name"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.authorizationMatrixName }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          [style]="{ 'text-align': 'center' }"
+          [headerStyle]="{ justifyContent: 'center' }"
+          field="livestatus"
+          filter="boolean"
+          title=" Active"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <mat-checkbox
+              class="example-margin"
+              [disabled]="true"
+              [(ngModel)]="dataItem.livestatus"
+            ></mat-checkbox>
+          </ng-template>
+        </kendo-grid-column>
+        <!-- <kendo-grid-column
+          [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }"
+          field="createdDate"
+          title="Created Date"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.createdDate | date : "dd-MM-yyy" }}
+          </ng-template>
+        </kendo-grid-column> -->
+
+        <!-- <kendo-grid-column
+          [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }"
+          field="updatedDate"
+          title="Updated Date"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.updatedDate | date : "dd-MM-yyy" }}
+          </ng-template>
+        </kendo-grid-column> -->
+        <kendo-grid-column
+          [style]="{ 'text-align': 'center' }"
+          [headerStyle]="{ justifyContent: 'center' }"
+          title="Action"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <!-- <a type="submit" routerLink="/ums/authmat/{{dataItem.authorizationMatrixID}}"><i class="fas fa-eye"></i></a>&nbsp; -->
+            <a
+              type="submit"
+              *ngIf="pagePrivilege.includes('edit')"
+              routerLink="/ums/activity/authmat/edit/{{
+                dataItem.authorizationMatrixID
+              }}/false"
+              ><i class="fas fa-square-pen"></i></a
+            >&nbsp;
+            <a
+              type="submit"
+              *ngIf="pagePrivilege.includes('delete')"
+              (click)="
+                deleteAuthorizationMatrix(dataItem.authorizationMatrixID)
+              "
+              ><i class="fas fa-trash"></i></a
+            >&nbsp;
+            <a
+              type="submit"
+              *ngIf="pagePrivilege.includes('view')"
+              routerLink="/ums/activity/authmat/view/{{
+                dataItem.authorizationMatrixID
+              }}/true"
+              ><i class="fas fa-eye"></i></a
+            >&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+        <ng-template
+        kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons
+          [buttonCount]="buttonCount"
+        ></kendo-pager-numeric-buttons>
+        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+       
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>  
+      </kendo-grid>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,154 @@
+<div class="mt-2 mb-2 mx-3">
+    <div>
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Purchase Quotation" />
+                <span> Region Mapping</span>
+            </h3>
+            <div class="text-end">
+                <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" (click)="add()">
+                    <i class="fa fa-plus-circle me-2"></i>New
+                </button>
+                <!-- <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" (click)="add()">
+                    New
+                </button> -->
+            </div>
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="mt-2">
+            <kendo-grid [kendoGridBinding]="mappingList" [filterable]="true" [resizable]="true" [height]="500"
+                [pageSize]="pageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [skip]="skip" (pageChange)="pageChange($event)">
+                <kendo-grid-column [style]="{
+                    'text-align': 'left',
+                    padding: '5px',
+                    
+                  }" [headerStyle]="{
+                    justifyContent: 'center',
+                    
+                  }" field="regionName" title="Region*" [width]="80">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+
+                        <div *ngIf="dataItem?.Isedit">
+                            <mat-form-field appearance="fill" class="w-full w-100">
+                                <!-- <mat-label>Region</mat-label> -->
+                                <input type="text" matInput [formControl]="regionControl" [matAutocomplete]="auto" required
+                                (blur)="validatePastedRegionValue()">
+                                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" 
+                                    (optionSelected)="SelectedRegion($event.option.value)">
+                                    <mat-option *ngFor="let region of filteredRegions | async"
+                                        [value]="region.regionName">
+                                        {{ region.regionName }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-error
+                                *ngIf="regionControl.hasError('required')"
+                                class="text-danger">
+                                Region field is required*
+                              </mat-error>
+                                <mat-error
+                                *ngIf="regionControl.dirty && regionControl.hasError('invalidOption')"
+                                class="text-danger">
+                                Invalid Region*
+                              </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <span *ngIf="!dataItem?.Isedit">
+                            {{ dataItem.regionName }}
+                        </span>
+
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                  justifyContent: 'center',
+                  
+                }" field="countryName" title="Country*" [width]="100">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="dataItem?.Isedit">
+                            <mat-form-field appearance="fill" class="w-full w-100">
+                                <!-- <mat-label>Country</mat-label> -->
+                                <input type="text" matInput [formControl]="countryControl" [matAutocomplete]="auto" required
+                                (blur)="validatePastedCountryValue()">
+                                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                                    (optionSelected)="SelectedCountry($event.option.value)" >
+                                    <mat-option *ngFor="let country of filteredCountries | async"
+                                        [value]="country.countryName">
+                                        {{ country.countryName }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-error
+                                *ngIf="countryControl.hasError('required') && countryControl.touched"
+                                class="text-danger">
+                                Country field is required*
+                              </mat-error>
+                                <mat-error
+                                *ngIf="countryControl.dirty && countryControl.hasError('invalidOption')"
+                                class="text-danger">
+                                Invalid Country*
+                              </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!dataItem?.Isedit">
+                            {{ dataItem.countryName }}
+                        </span>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }"
+                 field="livestatus" title="Active" filter="boolean" [width]="110">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <div *ngIf="dataItem.Isedit">
+                            <mat-checkbox class="example-margin" [(ngModel)]="dataItem.livestatus"
+                                (change)="handleChange($event, dataItem)"></mat-checkbox>
+                        </div>
+                        <div *ngIf="!dataItem.Isedit">
+                            <mat-checkbox class="example-margin" [disabled]="true" [(ngModel)]="dataItem.livestatus">
+                            </mat-checkbox>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                    justifyContent: 'center',
+                      
+                  }" title="Action" [width]="80" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="!dataItem.Isedit">
+                            <button mat-icon-button [disabled]="showAddRow" type="submit" *ngIf="pagePrivilege.includes('edit')"
+                                (click)="Edit(dataItem)"><i class="fas fa-square-pen"></i>
+                            </button>&nbsp;
+                            <button mat-icon-button [disabled]="showAddRow" type="submit" *ngIf="pagePrivilege.includes('delete')"
+                                (click)="Delete(dataItem.regionMapId)"><i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="dataItem.Isedit">
+                            <button mat-icon-button type="submit" #submitButton tabindex="0" (keydown.enter)="hndlKeyPress($event, dataItem)"
+                                (change)="hndlChange($event)" (click)="!editRow ? Save(dataItem) : Update(dataItem)">
+                                <ng-container *ngIf="showAddRow; else editIcon">
+                                    <i class="fas fa-sd-card"></i>
+                                </ng-container>
+                                <ng-template #editIcon>
+                                    <i class="fas fa-sd-card"></i> </ng-template>
+                            </button>&nbsp;
+                            <button mat-icon-button type="submit" #cancelButton tabindex="0" (keydown.enter)="handleKeyPress($event, dataItem)"
+                                (click)="oncancel(dataItem)"><i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <ng-template kendoPagerTemplate>
+                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                    <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+          
+                    <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+                    <kendo-pager-info></kendo-pager-info>
+                  </ng-template>
+            </kendo-grid>
+        </div>
+    </div>
+</div>

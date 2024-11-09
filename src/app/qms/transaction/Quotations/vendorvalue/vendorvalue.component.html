@@ -1,0 +1,257 @@
+<div class="table-list-display">
+    <div class="component-creation">
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Job Type" />
+                <span>Vendor Filter</span>
+            </h3>
+            <hr class="mt-0 mb-4" />
+
+<mat-card>
+    <mat-card-title class="title">
+         Customer Line Item
+    </mat-card-title>
+    <br />
+
+    <mat-card-content>
+        <form [formGroup]="vendorValue">
+            <div class="row">       
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label class="labelcolor">Aamro LineItem Description</mat-label>
+                        <input matInput type="text" readonly="true" formControlName="aamrolineitemdis"
+                            placeholder="Aamro LineItem Description" />
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label class="labelcolor">Calculation Parameter</mat-label>
+                        <input matInput type="text"  readonly="true" formControlName="calculationParameter"
+                            placeholder="Calculation Parameter" />
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label class="labelcolor">Calculation Type</mat-label>
+                        <input matInput type="text"  readonly="true" formControlName="calculationType"
+                            placeholder="Calculation Type" />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label class="labelcolor">Minimum Charge</mat-label>
+                        <input matInput type="text"  readonly="true" formControlName="minimumcharge"
+                            placeholder="Minimum Charge" />
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label class="labelcolor">Tax</mat-label>
+                        <input matInput type="text"  readonly="true" formControlName="tax"
+                            placeholder="Tax" />
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </form>
+    </mat-card-content>
+</mat-card>
+<mat-card>
+    <mat-card-title class="title">
+         Vendor Line Item
+    </mat-card-title>
+    <br />
+
+    <mat-card-content>
+        <form [formGroup]="QLIvendorValue">
+            <div class="row">       
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label class="labelcolor">Source From</mat-label>
+                        <input matInput  formControlName="sourceFromId" readonly="true"
+                            [matAutocomplete]="sourceFromId" />
+                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                        <mat-autocomplete #sourceFromId="matAutocomplete" [displayWith]="displaySourceFromListLabelFn"
+                            (optionSelected)="sourceFromSelectedOption($event)">
+                            <mat-option
+                                *ngFor="let sourceFromList of filteredSourceFromOptions$ | async"
+                                [value]="sourceFromList">
+                                {{ sourceFromList.sourceFrom }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <!-- <mat-error *ngIf="
+        Enquiry.controls['originCountryId'].dirty &&
+        Enquiry.hasError('required', 'originCountryId')
+    " class="text-danger">Origin Country is required*</mat-error> -->
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label class="labelcolor">Reference Number</mat-label>
+                        <input matInput  formControlName="refNumberId" readonly="true"
+                            [matAutocomplete]="refNumberId" />
+                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                        <mat-autocomplete #refNumberId="matAutocomplete" [displayWith]="displayRefNumberListLabelFn"
+                            (optionSelected)="refNumberSelectedOption($event)">
+                            <mat-option
+                                *ngFor="let PQandCdrp of filteredRefNumberOptions$ | async"
+                                [value]="PQandCdrp">
+                                {{PQandCdrp.refNumber}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <!-- <mat-error *ngIf="
+        Enquiry.controls['originCountryId'].dirty &&
+        Enquiry.hasError('required', 'originCountryId')
+    " class="text-danger">Origin Country is required*</mat-error> -->
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label class="labelcolor">Currency</mat-label>
+                        <input matInput  formControlName="currencyId"
+                            [matAutocomplete]="currencyId" />
+                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                        <mat-autocomplete #currencyId="matAutocomplete" [displayWith]="displayCurrencyListLabelFn"
+                            (optionSelected)="currencySelectedOption($event)">
+                            <mat-option
+                                *ngFor="let currency of filteredCurrencyOptions$ | async"
+                                [value]="currency">
+                                {{currency.currencyName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <!-- <mat-error *ngIf="
+        Enquiry.controls['originCountryId'].dirty &&
+        Enquiry.hasError('required', 'originCountryId')
+    " class="text-danger">Origin Country is required*</mat-error> -->
+                    </mat-form-field>
+                </div>
+              
+            </div>
+
+        </form>
+    </mat-card-content>
+    <section class="custom-table-wrapper">
+        <div class="text-end">
+            <button class="btn btn-primary Addbtn" type="button" [hidden]="disablefields" (click)="AddVendorLineItem()">
+                <i class="fa fa-plus-circle me-2"></i>Add
+            </button>
+        </div>
+        <kendo-grid
+          [kendoGridBinding]="QVLD"
+          [filterable]="true"
+          [resizable]="true"
+          [height]="300"
+          [pageSize]="20"
+          [sortable]="true"
+          [pageable]="true"
+          [selectable]="{ enabled: true }"
+        >
+          <kendo-grid-column
+            [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }"
+            field="lineItemCategoryName"
+            title="Aamro line ItemCategor Name"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+             {{dataItem.lineItemCategoryName}}
+            </ng-template>
+          </kendo-grid-column>
+           <kendo-grid-column
+            [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }"
+            field="vendorLineItem"
+            title="Vendor LineItem"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+             {{dataItem.vendorLineItem}}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                    [headerStyle]="{ justifyContent: 'center' }" field="calculationParameter" title="Calculation Paramenter"
+                                    >
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{dataItem.calculationParameter}}
+                                    </ng-template>
+                                </kendo-grid-column>   
+                                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                [headerStyle]="{ justifyContent: 'center' }" field="calculationType" title="Calculation Type"
+                                >
+                                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                    {{dataItem.calculationType}}
+                                </ng-template>
+                            </kendo-grid-column> 
+                            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                            [headerStyle]="{ justifyContent: 'center' }" field="valueInVendorCurrency" title="ValueIn Vendor Currency"
+                            >
+                            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                {{dataItem.valueInVendorCurrency}}
+                            </ng-template>
+                        </kendo-grid-column>  
+                        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                        [headerStyle]="{ justifyContent: 'center' }" field="minValueInVendorCurrency" title="Minimum Value In Vendor Currency"
+                         >
+                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                            {{dataItem.minValueInVendorCurrency}}
+                        </ng-template>
+                    </kendo-grid-column> 
+                    <!-- <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="exchangeRate" title="Exchange Rate"
+                     >
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{dataItem.exchangeRate}}
+                    </ng-template>
+                </kendo-grid-column>  -->
+               
+                   
+                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="taxCodeName" title="Tax Name"
+                     >
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{dataItem.taxCodeName}}
+                    </ng-template>
+                </kendo-grid-column>   
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                [headerStyle]="{ justifyContent: 'center' }" field="taxPercentag" title="Tax Percentage"
+                 >
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    {{dataItem.taxPercentage}}
+                </ng-template>
+            </kendo-grid-column>   
+            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="remarks" title="Remarks"
+             >
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                {{dataItem.remarks}}
+            </ng-template>
+        </kendo-grid-column>      
+    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+        justifyContent: 'center',
+        
+      }" title="Action" media="(min-width: 450px)" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem"  let-rowIndex="rowIndex">
+               <a type="button" class="view" (click)="onview(dataItem,rowIndex)"><i
+                      class="fas fa-eye"></i></a>&nbsp;
+              <a type="button" class="edit" 
+                  (click)="onEdit(dataItem,rowIndex)" [hidden]="disablefields"><i
+                      class="fas fa-square-pen"></i></a>&nbsp;
+            <a type="button" class="delete" 
+                  (click)="onDelete(dataItem,rowIndex)" [hidden]="disablefields"><i
+                      class="fas fa-trash "></i></a>&nbsp;
+          </ng-template>
+      </kendo-grid-column>
+        </kendo-grid>
+      </section> 
+</mat-card>
+
+
+        </div>
+    </div>
+</div>
+<div class="m-4 mb-5 d-flex align-items-center justify-content-end" style="bottom: 115px">
+    <button class="btn btn-secondary me-1 px-2 py-1" type="submit" (click)="close()" >
+      Cancel
+   </button> &nbsp;&nbsp;
+    <button class="btn btn-primary savebtn me-1" type="submit" [hidden]="disablefields" (click)="AddToList()"  >
+      <i class="fas fa-list-ul"></i> Add to List
+    </button> 

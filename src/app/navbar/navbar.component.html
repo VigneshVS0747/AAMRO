@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>AAMRO</title>
+  <!-- Boxiocns CDN Link -->
+  <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+  <!-- <div class="sidebar open">
+    <div class="logo-details">
+      <span class="logo_name" *ngIf="!toggleMenu"><img class="logo" src="assets/image/logo.png" alt="logo" /></span>
+      <span class="logo_close" *ngIf="toggleMenu"><img class="logo-close" src="assets/image/logo1.png"
+          alt="logo" /></span>
+    </div>
+    <div class="mat-tree-wrapper">
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="custom-mat-tree">
+        <mat-tree-node routerLink="/{{node.menuUrl}}" *matTreeNodeDef="let node"
+          [class]="'custom-mat-tree-node node-hover node-level-' + node.level">
+          <div class="icon-menu">
+            <img *ngIf="node.name === 'WMS'" src="assets/image/WMS.svg" alt="" />
+            <img *ngIf="node.name === 'TOS'" src="assets/image/TOM.svg" alt="" />
+            <img *ngIf="node.name === 'MIS'" src="assets/image/MIS.svg" alt="" />
+
+            {{ node.name }}
+          </div>
+        </mat-tree-node>
+        <mat-tree-node matTreeNodeToggle *matTreeNodeDef="let node; when: hasChild"
+          [class]="'custom-mat-tree-node node-hover node-level-' + node.level" (click)="umstoggle(node.name)">
+          <div class="icon-menu">
+            <img *ngIf="node.name === 'UMS'" src="assets/image/icon1.svg" alt="" />
+            <img *ngIf="node.name === 'CRM'" src="assets/image/CRM.svg" alt="" />
+            {{ node.name }}
+          </div>
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{
+            treeControl.isExpanded(node) ? "expand_more" : "chevron_right"
+            }}
+          </mat-icon>
+        </mat-tree-node>
+      </mat-tree>
+      <div class="shrunken-menu-wrapper">
+        <div class="shrunken-menu" *ngFor="let menu of sampleMenu; let i = index">
+          <div class="shrunken-menu-div" (click)="openToggleMenu(menu.menuName)">
+            <img class="shrunken-menu-img" [src]="
+                  {
+                    WMS: 'assets/image/WMS.svg',
+                    CRM: 'assets/image/CRM.svg',
+                    TOS: 'assets/image/TOM.svg',
+                    MIS: 'assets/image/MIS.svg',
+                    UMS: 'assets/image/icon1.svg'
+                  }[menu.menuName] || ''
+                " alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+    <mat-toolbar class="home-content">
+      <div class="logo-details d-flex align-items-center gap-3">
+        <span class="logo_name" *ngIf="showFirstImage">
+          <img class="logo" src="assets/image/logo.png" alt="logo" />
+        </span>
+        <span  *ngIf="!showFirstImage">
+          <img  src="assets/image/logo1.png" alt="logo" />
+        </span>
+        <!-- <button mat-icon-button style="color: #11101d;font-size: 35px;" (click)="collapsed.set(!collapsed());toggleImages()"> -->
+          <!-- <i style="color: #11101d;font-size: 35px;" (click)="collapsed.set(!collapsed());toggleImages()" class="bx bx-menu-alt-left"></i> -->
+        <!-- </button> -->
+        <mat-icon mat-icon-button matTooltip="Open/Close" class="custom-nav-icon mt-2" style="cursor:pointer" (click)="collapsed.set(!collapsed());toggleImages()">sort</mat-icon>
+
+      </div>
+      <!-- <div class="toogle">
+        <i style="cursor: pointer;" matTooltip="Open/Close" class="bx bx-menu-alt-left"
+          (click)="handleMenuToggle()"></i>
+      </div> -->
+
+      <div class="simple_wrapper" [ngStyle]="{'font-size': this.screenWidth < 700 ? '14px' : '16px' }">
+       <span *ngIf="this.screenWidth > 780">
+        {{menuname}}
+       </span>
+      </div>
+      <div class="d-md-none">
+        <div class="d-flex align-items-center">
+          <div class="search-container">
+            <div class="search-box" [class.active]="isSearchVisible">
+              <button mat-icon-button class="search-icon" (click)="toggleSearch()">
+                <mat-icon class="custom-nav-icon mt-2">search</mat-icon>
+              </button>
+              <input type="text" placeholder="Search..." class="form-control search-input" [formControl]="searchControl"
+                [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="optionSelected($event)">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.menuName">
+                  {{ option.menuName }}
+                </mat-option>
+              </mat-autocomplete>
+            </div>
+          </div>
+          <mat-icon mat-icon-button [matMenuTriggerFor]="openMenu" matTooltip="Open Menu"
+            style="font-size: 30px;cursor: pointer;">menu</mat-icon>
+        </div>
+
+      </div>
+
+      <mat-menu #openMenu="matMenu">
+        <button style="cursor: auto;" mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span><b>{{LoggedUser}}</b></span>
+        </button>
+        <mat-divider class="mx-2 mb-1 mt-1"></mat-divider>
+        <button mat-menu-item >
+          <mat-icon matBadge="3" matBadgeColor="warn" class="custom-nav-icon mobileView">notifications</mat-icon>
+          <span>Notifications</span>
+        </button>
+        <mat-divider class="mx-2 mb-1 mt-1"></mat-divider>
+        <button mat-menu-item [matMenuTriggerFor]="profile">
+          <mat-icon>account_box</mat-icon>
+          <span>Profile</span>
+        </button>
+      </mat-menu>
+
+      <div class="d-none d-md-block">
+        <div class="right-user">
+          <!-- <div class="search-box" *ngIf="isSearchVisible">
+             <input type="text" placeholder="Search...">
+           </div>
+           <button mat-icon-button (click)="toggleSearch()">
+             <mat-icon class="custom-nav-icon">search</mat-icon>
+           </button> -->
+
+          <div class="search-container">
+            <div class="search-box" [class.active]="isSearchVisible">
+              <button mat-icon-button class="search-icon" (click)="toggleSearch()">
+                <mat-icon class="custom-nav-icon mt-2" style="margin-left: 12px;">search</mat-icon>
+              </button>
+              <input type="text" placeholder="Search..." class="form-control search-input" [formControl]="searchControl"
+                [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="optionSelected($event)">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.menuName">
+                  {{ option.menuName }}
+                </mat-option>
+              </mat-autocomplete>
+            </div>
+          </div>
+          <button mat-icon-button aria-label="Example icon-button with a menu" (click)="notificationbell()">
+            <mat-icon   [matBadge]="notification.length"  matBadgeColor="warn"  class="custom-nav-icon mobileView mt-2">notifications</mat-icon>
+          </button>
+          <!-- <div class="rounded-shaded">
+             <button mat-icon-button [matMenuTriggerFor]="profile">
+               <mat-icon class="custom-nav-icon">person</mat-icon>
+             </button>
+             <span>{{LoggedUser}}</span><span class="logged-in">?</span>
+           </div> -->
+          <button mat-icon-button [matMenuTriggerFor]="profile">
+            <mat-icon class="custom-nav-icon mt-2">account_box</mat-icon>
+          </button>
+
+          <div class="vr mr-2"></div>
+
+          <div class="d-flex align-items-center gap-2">
+            <img style="width: 25px;height: 25px;" src="../../assets/User.png">
+            <span class="userName">
+              {{LoggedUser}}
+            </span>
+          </div>
+        </div>
+      </div>
+
+     
+      
+      <mat-menu #profile="matMenu">
+        <button type="submit" mat-menu-item (click)="ChangePass()">
+          <mat-icon>lock</mat-icon>
+          <span>Change Password</span>
+        </button>
+        <button type="submit" mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>logout</span>
+        </button>
+        <!-- <div class="notifications-tab" (click)="ChangePass()">
+            <div class="notifications-icon">
+              <mat-icon>logout</mat-icon>
+            </div>
+            <div class="notifcations-content">Change Password</div>
+          </div>
+          <div class="notifications-tab" (click)="logout()">
+            <div class="notifications-icon">
+              <mat-icon>logout</mat-icon>
+            </div>
+            <div class="notifcations-content">Logout</div>
+          </div> -->
+      </mat-menu>
+    </mat-toolbar>
+
+
+    <mat-sidenav-container>
+      <mat-sidenav opened mode="side" [style.width]="sidenavWidth()" style="background-color: #1f7ec1;">
+        <div>
+          <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="custom-mat-tree">
+            <mat-tree-node routerLink="/{{node.menuUrl}}" *matTreeNodeDef="let node"
+              [class]="'custom-mat-tree-node node-hover node-level-' + node.level">
+              <div class="icon-menu" [ngStyle]="{'margin-left':!this.collapsed() ? '-10px' : '-30px'}" style="margin-left: -20px;" [matTooltip]="node.name"  matTooltipPosition="above">
+                <img *ngIf="node.name === 'WMS'" src="assets/image/WMS.svg" alt="" />
+                <img *ngIf="node.name === 'TOS'" src="assets/image/TOM.svg" alt="" />
+                <img *ngIf="node.name === 'MIS'" src="assets/image/MIS.svg" alt="" />
+    
+                <!-- <span class="custom-mat-data"> -->
+                    <!-- <img src="../../assets/Incoterms.png" alt=""> -->
+                    <img src="{{path}}/MenuImages/{{node.images}}" alt="img">
+                  <!-- <mat-icon style="margin-left: -6px;">attach_money</mat-icon> -->
+                  <span *ngIf="!this.collapsed()">
+                    {{ node.name }}
+                  </span> 
+                  <!-- <span >
+                    {{ node.createdDate }}
+                  </span>  -->
+                <!-- </span>   -->
+              </div>
+            </mat-tree-node>
+            <mat-tree-node matTreeNodeToggle *matTreeNodeDef="let node; when: hasChild" [ngStyle]="{'margin-left':!this.collapsed() && node.level == 1 ? '25px' : '0px'}"
+              [class]="'custom-mat-tree-node node-hover node-level-' + node.level " (click)="umstoggle(node.name)">
+              <div class="icon-menu0 d-flex align-items-center gap-2" [matTooltip]="node.name"  matTooltipPosition="above">
+                <img *ngIf="node.name === 'UMS'" src="assets/image/icon1.svg" alt="" />
+                <img *ngIf="node.name === 'CRM'" src="assets/image/CRM.svg" alt="" />
+                <img *ngIf="node.name === 'QMS'" src="assets/image/QMS.png" alt="" />
+                <!-- <span class="level1" *ngIf="this.collapsed()"> {{ node.name }}</span> -->
+                <!-- <mat-icon *ngIf="node.level == 1" [ngStyle]="{'margin-left':treeControl.isExpanded(node)  ? '-1.5px' : '5px' }" >grade</mat-icon> -->
+                <!-- <img *ngIf="node.level == 1" src="{{path}}/MenuImages/{{node.images}}" alt="img" [ngStyle]="{'margin-left':treeControl.isExpanded(node)  ? '-1.5px' : '5px' }" > -->
+                <span *ngIf="!this.collapsed()"> {{ node.name }}</span>
+              </div>
+              <mat-icon style="margin-left: -12px;" class="mat-icon-rtl-mirror">
+                {{
+                treeControl.isExpanded(node) ? "expand_more" : "chevron_right"
+                }}
+              </mat-icon>
+            </mat-tree-node>
+          </mat-tree>
+          <div class="shrunken-menu-wrapper">
+            <div class="shrunken-menu" *ngFor="let menu of sampleMenu; let i = index">
+              <div class="shrunken-menu-div" (click)="openToggleMenu(menu.menuName)">
+                <img class="shrunken-menu-img" [src]="
+                      {
+                        WMS: 'assets/image/WMS.svg',
+                        CRM: 'assets/image/CRM.svg',
+                        TOS: 'assets/image/TOM.svg',
+                        MIS: 'assets/image/MIS.svg',
+                        UMS: 'assets/image/icon1.svg'
+                      }[menu.menuName] || ''
+                    " alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <mat-nav-list>
+          <a mat-list-item class="menu-item"
+           *ngFor="let item of menuItem()"
+          [routerLink]="item.route"
+          routerLinkActive="selected-menu-item"
+          #rla="routerLinkActive" 
+          [activated]="rla.isActive">
+          <mat-icon matListItemIcon>{{item.icon}}</mat-icon>
+          <span>{{item.label}}</span>
+          </a>
+        </mat-nav-list> -->
+      </mat-sidenav>
+      <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
+        <!-- <router-outlet></router-outlet> -->
+        <div class="home-content-area">
+          <div class="child-wrapper">
+            <div class="bread-crump"></div>
+            <div class="content-bg">
+              <router-outlet></router-outlet>
+            </div>
+          </div>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

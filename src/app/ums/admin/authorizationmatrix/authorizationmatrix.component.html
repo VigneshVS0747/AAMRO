@@ -1,0 +1,207 @@
+<div class="table-list-display">
+  <div class="component-creation">
+    <div class="header-container">
+      <h3 class="box-title">
+        <img src="./assets/images/billing-storage.png" alt="Employee" />
+        <span>Authorization Matrix</span>
+      </h3>
+
+      <button class="btn btn-primary returntolistbtn" type="submit" routerLink="/ums/activity/authmat">
+        <i class="fa fa-list me-2"></i> Return to List
+      </button>
+    </div>
+    <div>
+      <hr class="mt-0 mb-4" />
+    </div>
+    <mat-card>
+      <mat-card-title class="title">
+        {{ title }}
+      </mat-card-title>
+      <br />
+
+      <mat-card-content>
+        <div class="row" *ngIf="Showform">
+          <div class="col-md-5">
+            <mat-form-field class="txtauth">
+              <mat-label class="labelcolor">Authorization Matrix Name*</mat-label>
+              <input type="text" id="authorizationMatrixName" name="authorizationMatrixName"
+                [(ngModel)]="Auth.authorizationMatrixName" matInput placeholder="Authorization Matrix Name" />
+            </mat-form-field>
+            <mat-error *ngIf="submitted && !Auth.authorizationMatrixName" class="text-danger">
+              Authorization Matrix is required*.
+            </mat-error>
+          </div>
+          <div class="col-md-3">
+            <mat-checkbox class="example-margin" name="livestatus" [(ngModel)]="Auth.livestatus">Active</mat-checkbox>
+          </div>
+          <div class="col-md">
+            <button type="submit" class="btn btn-primary Addentry" data-toggle="modal" data-target="#exampleModal">
+              <i class="fas fa-circle-plus"></i>&nbsp;Add
+            </button>
+          </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal1-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Authorization Item
+                </h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form *ngIf="Showform">
+                  <div class="d-flex justify-content-around align-items-center">
+                    <div>
+                      <mat-form-field class="Width110">
+                        <mat-label class="labelcolor"
+                          >Authorization Item Name</mat-label
+                        >
+                        <mat-select
+                          id="selectedItems"
+                          name="selectedItems"
+                          [(ngModel)]="selectedItems"
+                          multiple
+                          (selectionChange)="onSelectionChangeauthitem($event)"
+                        >
+                          <mat-option
+                            *ngFor="let row of authname"
+                            [value]="row.authorizationItemID"
+                            >{{ row.authorizationItemName }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div>
+                      <button type="submit" (click)="onSelectAuthItems()" data-dismiss="modal"
+                        class="btn btn-primary Addtolist">
+                        <i class="fas fa-circle-plus"></i>&nbsp;Add To List
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="Showform1">
+          <div class="col-md-5">
+            <mat-form-field class="txtauth">
+              <mat-label class="labelcolor">Authorization Matrix Name*</mat-label>
+              <input type="text" name="authorizationMatrixName" [(ngModel)]="matrixname" [disabled]="readOnly" matInput
+                placeholder="Authorization Name" #authorizationMatrixName="ngModel" />
+
+              <!-- <mat-error *ngIf="dynamic.controls['matrixName'].dirty && dynamic.hasError('required','matrixName')" class="text-danger">
+            AuthorizationMatrix Name required
+            </mat-error> -->
+            </mat-form-field>
+            <mat-error *ngIf="authorizationMatrixName.invalid && submitted">
+              Authorization Matrix Name is required*.
+            </mat-error>
+          </div>
+          <div class="col-md-3">
+            <mat-checkbox class="example-margin" name="livestatus" [disabled]="readOnly"
+              [(ngModel)]="livestatus">Active</mat-checkbox>
+          </div>
+          <div class="col-md">
+            <button type="submit" class="btn btn-primary Addentry" data-toggle="modal" [disabled]="readOnly"
+              data-target="#exampleModal2">
+              <i class="fas fa-circle-plus"></i>&nbsp;Add
+            </button>
+          </div>
+        </div>
+        <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal1-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Authorization item
+                </h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form *ngIf="Showform1" class="px-md-2">
+                  <div class="d-flex justify-content-around align-items-center">
+                    <div>
+                      <mat-form-field>
+                        <mat-label class="labelcolor"
+                          >Authorization Item Name*</mat-label
+                        >
+                        <mat-select
+                          name="selected"
+                          [(ngModel)]="selected"
+                          (selectionChange)="onSelectionChange($event)"
+                          multiple
+                        >
+                          <mat-option
+                            *ngFor="let row of authname"
+                            [value]="row.authorizationItemID"
+                            >{{ row.authorizationItemName }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div>
+                      <button type="submit" (click)="onSelect()" data-dismiss="modal" class="btn btn-primary Addtolist">
+                        <i class="fas fa-circle-plus"></i>&nbsp;Add To List
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="Showtable1" class="border border-1 rounded-4">
+          <table class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed">
+            <thead class="bg-light">
+              <tr>
+                <th class="center-header">Authorization Item name</th>
+                <th class="center-header">Warehouse</th>
+                <th class="center-header">Customer</th>
+                <th class="center-header">Jobtype</th>
+                <th class="center-header">Brand</th>
+                <th class="center-header" *ngIf="!readOnly">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of authmatrixbyid">
+                <td>
+                  {{ row.authorizationItemName }}
+                </td>
+                <td>
+                  {{ row.warehouseName }}
+                </td>
+                <td>
+                  {{ row.customerName }}
+                </td>
+                <td>
+                  {{ row.jobtypeName }}
+                </td>
+                <td>
+                  {{ row.brandName }}
+                </td>
+                <td *ngIf="!readOnly" class="center-align">
+                  <a type="submit" (click)="deleteItem(row)"><i class="fas fa-trash"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px" *ngIf="!readOnly">
+  <button class="btn btn-primary savebtn me-1" type="submit" (click)="saveData()" *ngIf="Showsave">
+    <i class="fa fa-save me-2"></i> Save
+  </button>
+  <button class="btn btn-primary savebtn me-1" type="submit" (click)="UpdateData()" *ngIf="Showupdate">
+    <i class="fa fa-save me-2"></i>Update
+  </button>
+  <button type="button" class="btn btn-danger resetbtn" (click)="reset()">
+    <i class="fa fa-times-circle"></i> Reset
+  </button>
+</div>

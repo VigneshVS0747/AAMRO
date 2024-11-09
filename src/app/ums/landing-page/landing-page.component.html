@@ -1,0 +1,229 @@
+<!-- <div class="simple_wrapper">Dashboard coming soon</div>  -->
+
+  <div class="px-2">
+    <div class="d-flex align-items-center justify-content-between flex-wrap">
+      <div class="col-md-4 chartOuter">
+        <mat-card-header>
+          <b>Enquiry</b>
+        </mat-card-header>
+        <div class="mt-2 mb-2 px-2">
+          <kendo-chart style="height: 270px;" (render)="onRender($event)">
+            <kendo-chart-series>
+              <kendo-chart-series-item type="donut" [data]="EnquirychartData" categoryField="label" field="count"
+                [visual]="visualHandler">
+                <kendo-chart-series-item-labels [content]="ElabelContent" position="outsideEnd" background="none">
+                </kendo-chart-series-item-labels>
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+            <kendo-chart-tooltip format="{0}"></kendo-chart-tooltip>
+            <kendo-chart-legend [visible]="false"></kendo-chart-legend>
+          </kendo-chart>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="d-flex align-items-center justify-content-center flex-wrap mt-3">
+          <mat-radio-group aria-label="Select an option" color="primary" (change)="enquiryChange($event)" [formControl]="enquryControl">
+            <mat-radio-button *ngFor="let item of EnquiryData" [value]="item?.label">{{item?.label}} -
+              <b>{{item?.count}}</b></mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    
+      <div class="col-md-4 chartOuter">
+        <mat-card-header>
+          <b>Follow Up</b>
+        </mat-card-header>
+        <div class="mt-2 mb-2 px-2">
+          <kendo-chart style="height: 250px;">
+             <kendo-chart-title text="Enquiry Status Distribution"></kendo-chart-title>
+           <kendo-chart-legend position="bottom"></kendo-chart-legend>
+            <kendo-chart-series>
+              <kendo-chart-series-item *ngFor="let series of model; let outermost = last" type="pie" [startAngle]="150"
+                [name]="series.name" [data]="series.data" field="value"  categoryField="category" colorField="color">
+                <kendo-chart-series-item-labels *ngIf="outermost" position="outsideEnd" background="none"
+                  [content]="FollowlabelContent">
+                </kendo-chart-series-item-labels>
+              </kendo-chart-series-item>
+              <kendo-chart-tooltip format="{0}"></kendo-chart-tooltip>
+            </kendo-chart-series>
+          </kendo-chart>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="d-flex align-items-center justify-content-center flex-wrap mt-3">
+          <mat-radio-group aria-label="Select an option" color="primary" (change)="followupChange($event)" [formControl]="followControl">
+            <mat-radio-button *ngFor="let item of FollowUpData" [value]="item?.category">{{item?.category}} -
+              <b>{{item?.value}}</b></mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    
+      <div class="col-md-4 chartOuter">
+        <mat-card-header>
+          <b>Potential Customer and Customer</b>
+        </mat-card-header>
+        <div class="mt-2 mb-2 px-2">
+          <kendo-chart style="height: 210px;">
+            <kendo-chart-legend [visible]="false"></kendo-chart-legend>
+            <kendo-chart-area background="none"></kendo-chart-area>
+            <kendo-chart-tooltip>
+              <ng-template
+                kendoChartSeriesTooltipTemplate
+                let-value="value"
+                let-category="category"
+                let-series="series"
+              >
+                {{ category }} ({{ series.name }}): {{ value }}
+              </ng-template>
+            </kendo-chart-tooltip>
+            <kendo-chart-series>
+              <kendo-chart-series-item
+                *ngFor="let series of CChartData; let outermost = last"
+                type="donut"
+                [startAngle]="150"
+                [name]="series.name"
+                [data]="series.data"
+                field="value"
+                categoryField="category"
+                colorField="color"
+              >
+                <kendo-chart-series-item-labels
+                  *ngIf="outermost"
+                  position="outsideEnd"
+                  background="none"
+                  [content]="ClabelContent"
+                  [align]="labelAlign"
+                >
+                </kendo-chart-series-item-labels>
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+          </kendo-chart>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="d-flex align-items-center justify-content-center flex-wrap">
+          <mat-radio-group aria-label="Select an option" color="primary" (change)="followChangeEvent($event)" [formControl]="PtoCControl">
+            <mat-radio-button *ngFor="let item of CChartOptionData" [value]="item">{{item?.name}} 
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div *ngIf="selectedCustomerData.length > 0">
+          <mat-divider></mat-divider>
+          <mat-radio-group aria-label="Select a status" color="primary" (change)="sendStatusId($event)" [formControl]="CustomerControl">
+            <mat-radio-button *ngFor="let status of selectedCustomerData" [value]="status">
+              {{status.category}} - {{status.value}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="col-md-4 chartOuter mt-3 mb-2">
+        <div class="d-flex align-items-center justify-content-between px-1">
+          <mat-card-header>
+            <b>Enquiry Graph</b>
+          </mat-card-header>
+          <div>
+              <kendo-dropdownlist (valueChange)="onYearChange($event)" [data]="years" value="2024">
+              </kendo-dropdownlist>
+          </div>
+        </div>
+  
+  
+        <div class="mt-2 mb-2 px-2">
+          <kendo-chart style="height: 250px;">
+            <kendo-chart-title text="Enquiry Counts"></kendo-chart-title>
+            <kendo-chart-category-axis>
+              <kendo-chart-category-axis-item
+                [categories]="categories"
+                [title]="{ text: 'Months' }"
+              >
+              </kendo-chart-category-axis-item>
+            </kendo-chart-category-axis>
+            <kendo-chart-series>
+              <kendo-chart-series-item
+                type="line"
+                [data]="enquiryCounts"
+                [markers]="{ visible: true }"
+                
+              >
+              </kendo-chart-series-item>
+              <kendo-chart-tooltip format="{0}"></kendo-chart-tooltip>
+            </kendo-chart-series>
+          </kendo-chart>
+        </div>
+      </div>
+  
+      <div class="col-md-8 chartOuter1 mt-3 mb-2">
+        <div class="d-flex align-items-center justify-content-between">
+          <mat-card-header>
+            <b>Customer Transformation Counts</b>
+          </mat-card-header>
+        </div>
+  
+  
+        <div class="mt-2 mb-2 px-2">
+          <kendo-chart style="height: 250px;">
+             <kendo-chart-title text="Customer Transformation Counts"></kendo-chart-title>
+            <kendo-chart-legend position="top"></kendo-chart-legend>
+            <kendo-chart-category-axis>
+              <kendo-chart-category-axis-item [categories]="['Customers', 'Potential Customers', 'Converted Potential Customers']">
+              </kendo-chart-category-axis-item>
+            </kendo-chart-category-axis>
+            <kendo-chart-series-item-labels [content]="PtoClabelContent" position="outsideEnd" background="none">
+            </kendo-chart-series-item-labels>
+            <kendo-chart-x-axis-item-labels
+            format="{0:N0}"
+            [skip]="1"
+            rotation="auto"
+            [content]="PtoClabelContent"
+          ></kendo-chart-x-axis-item-labels>
+            <kendo-chart-series>
+              <kendo-chart-series-item *ngFor="let series of chartData" [data]="series.data" [name]="series.name" type="column">
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+            <kendo-chart-tooltip format="{0}"></kendo-chart-tooltip>
+          </kendo-chart>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+
+
+ <!-- <div *ngIf="isEnguiryTable" class="mt-3 mb-3 px-3 mx-2">
+  <h3 class="mt-2 mb-2">Enquiry</h3>
+  <kendo-grid [data]="EgridData" [skip]="Eskip" [filterable]="true" [resizable]="true"
+    [height]="500" [pageSize]="EpageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }"
+    [filterable]="true" (dataStateChange)="onEStateChange($event)" (pageChange)="EpageChange($event)">
+
+    <kendo-grid-column field="enquiryNumber" title="Enquiry Code" [width]="80">
+    </kendo-grid-column>
+
+    <kendo-grid-column format="{0:dd/MMM/yyyy}" filter="date" [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }" field="enquiryDate" title="Date" [width]="85">
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+        {{ dataItem.enquiryDate | date: 'dd/MMM/yyyy' }}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="jobCategory" title="Job Category" [width]="110">
+    </kendo-grid-column>
+    <kendo-grid-column field="jobTypeName" title="Job Type" [width]="110">
+    </kendo-grid-column>
+    <kendo-grid-column field="enquiryStatus" title="Status" [width]="100">
+    </kendo-grid-column>
+    <ng-template kendoPagerTemplate>
+      <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+      <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+      <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+      <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+      <kendo-pager-info></kendo-pager-info>
+    </ng-template>
+  </kendo-grid>
+
+</div> -->
+
+
+
+

@@ -1,0 +1,96 @@
+<div class="table-list-display">
+    <div class="component-creation">
+      <div class="header-container">
+        <h3 class="box-title">
+          <img src="./assets/images/billing-storage.png" alt="Employee" />
+          <span>Encryption & Decryption</span>
+        </h3>
+
+      </div>
+  
+      <hr class="mt-0 mb-4" />
+  
+      <mat-card>
+        <mat-card-title class="title">
+          {{ titile }}
+        </mat-card-title>
+        <br />
+  
+        <mat-card-content>
+          <form >
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Encrypt</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="Encryption"
+                    #encryptionInput="ngModel"
+                    type="text"
+                    name="first"
+                    placeholder="Encrypt"
+                    autocomplete="off"
+                    required
+                  />
+                  <mat-error *ngIf="(encryptionInput.invalid || (encryptionInput.touched && !Encryption)) && (encryptionInput.touched || submitted)">
+                    Encryption is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <button
+                class="btn btn-primary savebtn me-1"
+                type="submit"
+                (click)="Encrypt()"
+              >
+                <i class="fa fa-save me-2"></i>Encrypt
+              </button>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field>
+                      <mat-label class="labelcolor">Decrypt</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="Decryption"
+                        name="second"
+                        #decryptionInput="ngModel"
+                        type="text"
+                        placeholder="Decrypt"
+                        autocomplete="off"
+                        required
+                      />
+                      <mat-error *ngIf="(decryptionInput.invalid || (decryptionInput.touched && !Decryption)) && (decryptionInput.touched || submittedDecrypt)">
+                        Decryption is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <button
+                    class="btn btn-primary savebtn me-1"
+                    type="submit"
+                    (click)="Decrypt()"
+                  >
+                    <i class="fa fa-save me-2"></i>Decrypt
+                  </button>
+                  </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>{{Output}}</mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+    <button
+      type="submit"
+      class="btn btn-danger resetbtn"
+      (click)="reset()"
+    >
+      <i class="fa fa-times-circle me-2"></i>Reset
+    </button>
+  </div>
+  

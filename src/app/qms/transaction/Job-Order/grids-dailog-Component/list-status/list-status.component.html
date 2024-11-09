@@ -1,0 +1,240 @@
+<div class="px-2 mb-1 mt-1">
+    <form [formGroup]="Status">
+        <div class="row d-flex flex-wrap justify-content-between">
+            <div class="row">
+                <!-- <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label class="labelcolor">Mode of Transport</mat-label>
+                        <input  matInput formControlName="modeofTransportId"
+                            [matAutocomplete]="Modeauto">
+                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    </mat-form-field>
+                        <mat-autocomplete #Modeauto="matAutocomplete"
+                            [displayWith]="displayModeListLabelFn"
+                            (optionSelected)="Modeelectedoption($event)">
+                            <mat-option
+                                *ngFor="let Modeoftransport of filteredtransOptions$ | async"
+                                [value]="Modeoftransport" [disabled]="Modeoftransport.isNotFound">
+                                {{ Modeoftransport.modeofTransport }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <<mat-error *ngIf="
+                        Status.controls['modeofTransportId'].touched &&
+                        Status.hasError('required', 'modeofTransportId')
+    " class="text-danger">Mode of transport is required*</mat-error> -->
+                   
+                <!-- </div> -->
+                <div class="col-md-4" >
+                    <mat-form-field appearance="fill"  >
+                        <mat-label class="labelcolor">Latest Stage</mat-label>
+                        <input matInput type="text" formControlName="latestStage"
+                            maxlength="100" placeholder="Latest Stage" readonly="true"
+                            autocomplete="off">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div>
+                <mat-icon class="text-danger closeIcon" (click)="close()">close</mat-icon>
+            </div>
+        </div>
+
+    </form>
+    
+    
+    
+    <div>
+        <div class="table-list-display">
+            <div class="component-list">
+                <section class="custom-table-wrapper">
+                    <div class="addbutton">
+                        <button class="btn btn-primary Addbtn"  type="button"
+                            (click)="AddStatus()"><i class="fa fa-plus-circle me-2"></i>Add</button>
+                    </div>
+                    <kendo-grid [kendoGridBinding]="JobStatus" [filterable]="true" [resizable]="true"
+                        [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                        [formGroup]="Status" (pageChange)="pageChange($event)" [skip]="skip">
+
+                        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                            [headerStyle]="{ justifyContent: 'center' }" field="refNumberId"
+                            title="Reference Number*" [width]="100">
+
+                            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                <div *ngIf="dataItem.Isedit">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Reference Number</mat-label>
+                                        <input matInput 
+                                            formControlName="refNumberId"
+                                            [matAutocomplete]="documentId" />
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #documentId="matAutocomplete"
+                                        [displayWith]="displayRefListLabelFn"
+                                            (optionSelected)="Reflectedoption($event)">
+                                            <mat-option *ngFor="let ref of filteredrefOptions$ | async"
+                                                [value]="ref">
+                                                {{ref.number}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="
+                                        Status.controls['refNumberId'].touched &&
+                                        Status.hasError('required', 'refNumberId')
+                                  " class="text-danger" style="margin-left:-3px;">Reference Number is required*</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="!dataItem.Isedit">
+                                    {{dataItem.number}}
+                                </div>
+                            </ng-template>
+                        </kendo-grid-column>
+
+                        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                        [headerStyle]="{ justifyContent: 'center' }" field="refNumberId"
+                        title="Date & Time*" [width]="100">
+
+                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                            <div *ngIf="dataItem.Isedit">
+                                <mat-form-field>
+                                    <mat-label class="labelcolor">Date & Time</mat-label>
+                                    <input matInput  formControlName="date" [ngxMatDatetimePicker]="FollowUpDatePicker" [max]="maxDate"
+                                    [min]="minDate">
+                                    <ngx-mat-datepicker-toggle matSuffix [for]="FollowUpDatePicker"></ngx-mat-datepicker-toggle>
+                                    <ngx-mat-datetime-picker #FollowUpDatePicker [showSpinners]="showSpinners" 
+                                    [defaultTime]="defaultTime"
+                                    [stepHour]="stepHour" [stepMinute]="stepMinute" 
+                                    [touchUi]="touchUi"
+                                    [color]="color"
+                                    [inputFormat]="'DD/MMM/YYYY HH:mm'"
+                                       >
+                                      <ngx-mat-datepicker-actions>
+                                        <button mat-button class="btn btn-secondary me-2" ngxMatDatepickerCancel>Cancel</button>
+                                        <button class="btn btn-primary" ngxMatDatepickerApply>Apply</button>
+                                      </ngx-mat-datepicker-actions>
+                                    </ngx-mat-datetime-picker>
+                    
+                                    <mat-error *ngIf="
+                                    Status.controls['date'].touched &&
+                                    Status.hasError('required', 'date')
+                                    " class="text-danger">date is required*</mat-error>
+                                  </mat-form-field>
+                            </div>
+
+                            <div *ngIf="!dataItem.Isedit">
+                                {{dataItem.date | date: 'dd/MMM/yyyy HH:mm:ss'}}
+                            </div>
+                        </ng-template>
+                    </kendo-grid-column>
+                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="jobOrderStageId"
+                    title="Job Order Stage" [width]="100">
+
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="dataItem.Isedit">
+                            <mat-form-field>
+                                <mat-label class="labelcolor">Job Order Stage</mat-label>
+                                <input matInput 
+                                    formControlName="jobOrderStageId"
+                                    [matAutocomplete]="documentId" />
+                                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                <mat-autocomplete #documentId="matAutocomplete"
+                                [displayWith]="displayjobListLabelFn"
+                                    (optionSelected)="joblectedoption($event)">
+                                    <mat-option *ngFor="let job of filteredjobsOptions$ | async"
+                                        [value]="job" 
+                                        [disabled]="isStageDisabled(job.jtypeStageId)">
+                                        {{job.jobStage}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="
+                                Status.controls['jobOrderStageId'].touched &&
+                                Status.hasError('required', 'jobOrderStageId')
+                          " class="text-danger">JobOrderStage is required*</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div *ngIf="!dataItem.Isedit">
+                            {{dataItem.jobStage}}
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                [headerStyle]="{ justifyContent: 'center' }" field="jobOrderStageId"
+                title="Job Order Status" [width]="100">
+
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    <div *ngIf="dataItem.Isedit">
+                        <mat-form-field>
+                            <mat-label class="labelcolor">Job Order Status</mat-label>
+                            <input matInput type="text" formControlName="jobOrderStatusId"
+                                placeholder="Vendor LineItem" />
+                        </mat-form-field>
+                    </div>
+
+                    <div *ngIf="!dataItem.Isedit">
+                        {{dataItem.jobStageStatus}}
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="remarks" title="Remarks"
+            [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                <div *ngIf="dataItem.Isedit">
+                    <mat-form-field>
+                        <textarea matInput type="text" 
+                            formControlName="remarks" maxlength="500"
+                            placeholder="Remarks"></textarea>
+
+                    </mat-form-field>
+                </div>
+                <div *ngIf="!dataItem.Isedit">
+                    {{dataItem.remarks}}
+                </div>
+
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+        [headerStyle]="{ justifyContent: 'center' }" title="Action"
+        [style]="{ 'text-align': 'center' }" [width]="80" [sticky]="true">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+            <div *ngIf="!dataItem.Isedit">
+              <!-- <a (click)="editRow(dataItem, rowIndex)"><i
+                class="fas fa-square-pen"></i></a>&nbsp; -->
+                <a (click)="deleteRow(rowIndex,dataItem.jobOrderStageId,dataItem.refNumberId)" [ngClass]="{'disabled-link': dataItem.joStatusId != null}"><i
+                    class="fas fa-trash"></i></a>
+            </div>
+            <div *ngIf="dataItem.Isedit">
+              <a (click)="saveRow(rowIndex)"> <i class="fas fa-sd-card"></i></a>&nbsp;
+              <a (click)="cancelEdit(dataItem,rowIndex)"><i class="fas fa-xmark"></i></a>
+            </div>
+          </ng-template>
+    </kendo-grid-column>
+
+               
+
+
+                        <kendo-grid-row-index></kendo-grid-row-index>
+                    </kendo-grid>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+
+    <div mat-dialog-actions style="float: right;" class="d-flex gap-2">
+        <button (click)="close()" class="btn btn-secondary canceltbtn me" type="submit">
+            Close
+        </button>
+        <!-- <button *ngIf="this.data?.list == undefined || this.data?.list == null" class="btn btn-primary returntolistbtn"
+            type="submit" (click)="save()">
+            <i class="fa fa-list me-2"></i>Add to List
+        </button> -->
+        <button  class="btn btn-primary returntolistbtn" type="submit" [disabled]="show"
+            (click)="save()">
+            <i class="fa fa-list me-2"></i>Update to List
+        </button>
+    
+    </div>
+</div>

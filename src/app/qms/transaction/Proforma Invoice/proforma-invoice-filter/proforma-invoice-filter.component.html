@@ -1,0 +1,169 @@
+<div class="px-3">
+    <div class="mb-3 mt-2">
+        <div class="header-container d-flex justify-content-between align-items-center flex-wrap">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Vendor Contract - FFS" />
+                <span>Line Item Filter</span>
+            </h3>
+        </div>
+        <mat-divider></mat-divider>
+    </div>
+
+    <div>
+        <form [formGroup]="PIFilterForm">
+            <div class="row" *ngIf="show1Table">
+                <div class="col-12 col-md-6">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">From Date</mat-label>
+                        <input matInput formControlName="fromDate" [matDatepicker]="picker1">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="f.fromDate.touched && f.fromDate.hasError('required')">
+                            From date is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">To Date</mat-label>
+                        <input matInput formControlName="toDate" [matDatepicker]="picker2">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="f.toDate.touched && f.toDate.hasError('required')">
+                          To date is required
+                        </mat-error>
+                        <mat-error *ngIf="f.toDate.hasError('dateRange')">
+                            Valid To date cannot be earlier than Valid From date
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Job Number</mat-label>
+                        <mat-select formControlName="JobNumberControl" [multiple]="true">
+                            <mat-option *ngFor="let item of JobOrderNumberList" [value]="item?.jobOrderId">
+                                {{ item?.jobOrderNumber }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6" >
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Ref1/Ref2/AWB</mat-label>
+                        <input formControlName="ref12Conrol" matInput placeholder="Ref1/Ref2/AWB" (input)="onInputChange($event)" [maxLength]="20">
+                        <!-- <mat-error *ngIf="PIFilterForm.get('invoiceAmount')?.hasError('negativeAmount')">
+                            Invoice Amount cannot be negative
+                          </mat-error> -->
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-1 d-flex justify-content-end" *ngIf="show1Table">
+                <button class="btn btn-primary savebtn me-1" type="submit" (click)="find()"><i
+                        class="fas fa-search me-2"></i> Find
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-3 mb-3" *ngIf="show1Table">
+            <kendo-grid [kendoGridBinding]="PIFilterList" [filterable]="true" [resizable]="true" [height]="300"
+                [pageSize]="pageSize" [sortable]="true" [pageable]="true" [selectable]="true"
+                [skip]="skip" (selectionChange)="onSelectionChange($event)">
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center'}" field="jobOrderNumber" title="Job Number" [width]="155">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="jobOrderDate" title="Job Date" filter="date" format="{0:dd/MMM/yyyy}"
+                    [width]="140">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{dataItem.jobOrderDate | date: 'dd/MMM/yyyy'}}
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="jobTypeName" title="Job Type" filter="text"
+                    [width]="130">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="referenceNumber1" title="Ref 1" filter="text"
+                    [width]="130">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="awB_MBL_Formatted" title="AWB/MBL" filter="text"
+                    [width]="130">
+                    <!-- <ng-template kendoGridCellTemplate let-dataItem>
+                        {{ dataItem.mawbNumber }}{{ dataItem.mawbNumber && dataItem.mblNumber ? ' / ' : '' }}{{ dataItem.mblNumber }}
+                    </ng-template> -->
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="referenceNumber2" title="Ref 2" filter="text"
+                    [width]="100">
+                </kendo-grid-column>
+
+                <kendo-grid-checkbox-column [showSelectAll]="true" [width]="40"></kendo-grid-checkbox-column>
+            </kendo-grid>
+            <div class="mb-1 d-flex justify-content-end gap-2">
+                <button mat-dialog-close class="btn btn-secondary canceltbtn me-2" type="submit" (click)="Close()">
+                    Cancel
+                </button>
+                <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="(this.selectedJOIds ?? []).length > 0" (click)="next()"> Next
+                </button>
+            </div>
+            
+        </div>
+
+        <div class="mt-3 mb-3" *ngIf="show2Table">
+            <kendo-grid [kendoGridBinding]="PIFilterLineItemList" [filterable]="true" [resizable]="true" [height]="300"
+                [pageSize]="pageSize" [sortable]="true" [pageable]="true" [selectable]="true"
+                [skip]="skip" (selectionChange)="on2Change($event)">
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center'}" field="jobOrderNumber" title="Job Number" [width]="155">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="jobOrderDate" title="Job Date" filter="date" format="{0:dd/MMM/yyyy}"
+                    [width]="140">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{dataItem.jobOrderDate | date: 'dd/MMM/yyyy'}}
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="lineItemCode" title="Line Item Code" filter="text"
+                    [width]="130">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="lineItemName" title="Line Item Description" filter="text"
+                    [width]="130">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="lineItemCategoryName" title="Line Item Category" filter="text"
+                    [width]="130">
+                </kendo-grid-column>
+
+                <!-- <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="aliasName" title="Alias Name" filter="text"
+                    [width]="100">
+                </kendo-grid-column> -->
+
+                <kendo-grid-checkbox-column [showSelectAll]="true" [width]="40"></kendo-grid-checkbox-column>
+            </kendo-grid>
+            <div class="mb-1 d-flex justify-content-end gap-2">
+                <button mat-dialog-close class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+                    Cancel
+                </button>
+                <button class="btn btn-primary savebtn me-1" type="submit" [disabled]="selectedLineItem.length == 0" (click)="add()"><i
+                        class="fas fa fa-list me-2"></i> Add to List
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

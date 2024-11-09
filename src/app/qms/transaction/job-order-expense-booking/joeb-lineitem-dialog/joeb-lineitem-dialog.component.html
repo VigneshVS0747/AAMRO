@@ -1,0 +1,95 @@
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Line Item Description" />
+                    <span>Line Item Description</span>
+                </h3>
+            </div>
+        </div>
+        <hr class="mt-0 mb-4" />
+        <mat-card>
+            <div>
+                <h3 class="text-xl text-danger px-3 mb-2">{{titile}}</h3>
+            </div>
+
+            <div>
+                <div class="table-list-display">
+                    <div class="component-list">
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <section class="custom-table-wrapper">
+                                <kendo-grid [kendoGridBinding]="purchaseInvoiceHistory" [filterable]="true"
+                                    [resizable]="true" [height]="500" [pageSize]="20" [sortable]="true"
+                                    [pageable]="true" [selectable]="{ enabled: true }">
+                                    <kendo-grid-column [style]="{
+                                        'text-align': 'left',
+                                        padding: '5px',
+                                      }" [headerStyle]="{
+                                        justifyContent: 'center',}" field="apInvoiceRefNumber" title="AP Invoice Ref.Number"
+                                        media="(min-width: 450px)" [width]="150">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.apInvoiceRefNumber }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{
+                                        'text-align': 'left',
+                                        padding: '5px',
+                                      }" [headerStyle]="{
+                                        justifyContent: 'center',}" field="invoicedAmount" title="Invoiced Amount"
+                                        media="(min-width: 450px)" [width]="150">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.invoicedAmount }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" field="invoicedDate" format="{0:dd/MMM/yyyy}" filter="date"  title="Invoiced Date"  [width]="150">
+                                      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.invoicedDate | date:'dd/MMM/yyyy' }}
+                                      </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{
+                                        'text-align': 'left',
+                                        padding: '5px',
+                                      }" [headerStyle]="{
+                                        justifyContent: 'center',}" field="vendorBillNumber" title="Vendor Bill Number"
+                                        media="(min-width: 450px)" [width]="150">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.vendorBillNumber }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" field="billDate" format="{0:dd/MMM/yyyy}" filter="date"  title="Bill Date"  [width]="150">
+                                      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.billDate | date:'dd/MMM/yyyy' }}
+                                      </ng-template>
+                                    </kendo-grid-column>
+                                    <ng-template kendoPagerTemplate>
+                                        <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                                        <kendo-pager-numeric-buttons
+                                            [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                                        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+                                        <kendo-pager-page-sizes class="Page-Short"
+                                            [pageSizes]="sizes"></kendo-pager-page-sizes>
+                                        <kendo-pager-info></kendo-pager-info>
+                                    </ng-template>
+                                </kendo-grid>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</mat-dialog-actions>
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+        Close
+    </button> &nbsp;
+
+</mat-dialog-actions>

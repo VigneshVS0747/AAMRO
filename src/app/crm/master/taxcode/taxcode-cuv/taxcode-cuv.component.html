@@ -1,0 +1,166 @@
+<div class="table-list-display">
+    <div class="component-creation">
+      <div class="header-container">
+        <h3 class="box-title">
+          <img src="./assets/images/billing-storage.png" alt="Employee" />
+          <span>TaxCode</span>
+        </h3>
+  
+        <button class="btn btn-primary returntolistbtn" type="button" (click)="returnToList()">
+          <i class="fa fa-list me-2"></i> Return to List
+        </button>
+      </div>
+      <hr class="mt-0 mb-4" />
+      <mat-card>
+        <mat-card-title class="title">
+          {{ title }}
+        </mat-card-title>
+        <br />
+        <mat-card-content>
+          <form (submit)="onSaveTaxCode(taxCodeForm)" #taxCodeForm="ngForm">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Tax Code</mat-label>
+                  <input matInput type="text" required maxlength="10" [readonly]="disablefields" placeholder="Tax Code"
+                    [ngModel]="editedTaxCode?.txCode" name="txCode" #txCode="ngModel" autocomplete="off" />
+                  <mat-error *ngIf="txCode.invalid && ShowError">Tax Code is required*</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Tax Name</mat-label>
+                  <input matInput type="text" required [readonly]="disablefields" maxlength="20" placeholder="Tax Name"
+                    [ngModel]="editedTaxCode?.taxCodeName" name="taxCodeName" #taxCodeName="ngModel" autocomplete="off" />
+                  <mat-error *ngIf="taxCodeName.invalid && ShowError">Tax Name is required*</mat-error>
+                </mat-form-field>
+              </div>
+              <!-- <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">State</mat-label>
+                  <input
+                    matInput
+                    [matAutocomplete]="autoTaxtype"
+                    [readonly]="disablefields"
+                    name="taxtype"
+                    #taxType="ngModel"
+                    [(ngModel)]="taxType"
+                    (ngModelChange)="filterTaxtype($event)"
+                    required
+                  />
+                  <mat-error *ngIf="stateInput.invalid && isSubmitted">
+                    State is required*.
+                  </mat-error> 
+                </mat-form-field>
+  
+                <mat-autocomplete #autoTaxtype="matAutocomplete">
+                  <mat-option
+                    *ngFor="let item of filteredTaxtype"
+                    [value]="item.taxType"
+                    (onSelectionChange)="onTaxtypeSelected($event, item)"
+                    [disabled]="item.isNotFound"
+                  >
+                    {{ item.taxType }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div> -->
+              <!-- <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Tax Type</mat-label>
+                  <input  matInput  required [readonly]="disablefields"  placeholder="Tax Type" 
+                  [ngModel]="editedTaxCode?.taxType"  name="taxType"  #taxType="ngModel" autocomplete="off">
+                </mat-form-field>   
+                <mat-autocomplete #autoEmployee="matAutocomplete">
+                  <mat-option *ngFor="let item of taxType" [value]="item.taxType" 
+                  >
+                    {{ item.taxType }}
+                  </mat-option>               
+                </mat-autocomplete>
+              </div>          -->
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Tax Type</mat-label>
+                  <mat-select name="taxType" [(value)]="selectedTaxtype" [ngModel]="editedTaxCode?.taxType" placeholder="Tax Type">
+                    <mat-option [value]="1">type1</mat-option>
+                    <mat-option [value]="2">type2</mat-option>
+                    <mat-option [value]="3">type3</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+        
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Percentage Of Tax(%)</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    required
+                    [readonly]="disablefields"
+                    maxlength="15"
+                    placeholder="Percentage Of Tax(%)"
+                    [ngModel]="editedTaxCode?.taxPer"
+                    name="taxPer"
+                    #taxPer="ngModel"
+                    autocomplete="off"
+                    (keydown)="onKeydown($event)"
+                  />
+                  <mat-error *ngIf="taxPer.invalid && ShowError">
+                    Percentage Of Tax(%): Numeric percentile value of tax applicable.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Country</mat-label>
+                  <input matInput [matAutocomplete]="autoCountry" [readonly]="disablefields" name="countryName"
+                    #countryInput="ngModel" [(ngModel)]="currentCountry"  (ngModelChange)="filter($event)" required>
+                  <mat-error *ngIf="countryInput.invalid  && ShowError">
+                    Country is required*.
+                  </mat-error>
+                </mat-form-field>
+  
+                <mat-autocomplete #autoCountry="matAutocomplete">
+                  <mat-option *ngFor="let country of filteredCountries" [value]="country.countryName"
+                    (onSelectionChange)="onCountrySelected($event,country)" [disabled]="country.isNotFound">
+                    {{ country.countryName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+              <div class="col-md-4">
+  
+                <mat-form-field>
+                  <mat-label class="labelcolor">Effective Date</mat-label>
+                  <input matInput [matDatepicker]="picker" [readonly]="disablefields" name="date" [(ngModel)]="date"
+                    (dateInput)="addEvent($event)" (dateChange)="addEvent($event)" required [max]="maxDate">
+                  <mat-hint>DD/MM/YYYY</mat-hint>
+                  <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="disablefields"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error *ngIf="isInvalidDate && taxCodeForm.controls['date'].touched">Invalid Date</mat-error>
+                </mat-form-field>
+                <mat-error
+                  *ngIf="taxCodeForm.controls['date'] && taxCodeForm.controls['date'].hasError('required') && ShowError">Date
+                  is required*</mat-error>
+              </div>
+  
+              <div class="col-md-4">
+                <mat-checkbox class="statusmargin" name="taxcodeStatus" [checked]="taxcodeStatus"
+                  [disabled]="disablefields" (change)="valueChange($event)">
+                  Active</mat-checkbox>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+    <button class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit"
+      (click)="onSaveTaxCode(taxCodeForm)">
+      <i class="fa fa-save me-2"></i> Save
+    </button>
+    <button type="button" class="btn btn-danger resetbtn" [hidden]="disablefields"
+      (click)="editedTaxCode?resetButtonClick():resetButtonClickforSave(taxCodeForm)">
+      <i class="fa fa-times-circle"></i> Reset
+    </button>
+  </div>

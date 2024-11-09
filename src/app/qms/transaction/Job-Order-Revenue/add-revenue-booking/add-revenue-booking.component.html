@@ -1,0 +1,478 @@
+<div class="table-list-display">
+    <div class="component-creation">
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Job Order Revenue Booking" />
+                <span>Job Order Revenue Booking</span>
+            </h3>
+            <button class="btn btn-primary returntolistbtn" type="button" (click)="returnToList()">
+                <i class="fa fa-list me-2"></i> Return to List
+            </button>
+        </div>
+    </div>
+    <hr class="mt-3 mb-4" />
+    <mat-card>
+        <mat-card-title class="title">
+            Job Order Revenue Booking
+        </mat-card-title>
+        <br />
+        <mat-card-content>
+            <div class="table-list-display">
+                <div class="component-creation">
+                    <div class="header-container">
+                        <form [formGroup]="revenueForm" class="mt-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolorGray">Reference Number</mat-label>
+                                        <input matInput type="text" readonly maxlength="20"
+                                            formControlName="referenceNumber" placeholder="Reference Number"
+                                            autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolor">Date</mat-label>
+                                        <input matInput [matDatepicker]="datePicker"
+                                            formControlName="revenueBookingDate" [readonly]="datereadonly"
+                                            [matDatepickerFilter]="dateFilter1" required>
+                                        <mat-error *ngIf="!revenueForm.controls['revenueBookingDate'].value">Date
+                                            is required*</mat-error>
+                                        <mat-datepicker-toggle [disabled]="datereadonly" matSuffix
+                                            [for]="datePicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #datePicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Job Order Number </mat-label>
+                                        <input matInput formControlName="jobOrderId" required [matAutocomplete]="autojo"
+                                            [readonly]="Edit" (keydown)="emptytjo($event)">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-error *ngIf="!revenueForm.controls['jobOrderId'].value">Job Order
+                                            Number
+                                            is required*</mat-error>
+                                    </mat-form-field>
+                                    <mat-autocomplete #autojo="matAutocomplete"
+                                        [displayWith]="displayJobOrderListLabelFn"
+                                        (optionSelected)="JobOrderSelectedoption($event)">
+                                        <mat-option *ngFor="let joList of filteredJobOrderOptions$ | async"
+                                            [value]="joList" [disabled]="joList.isNotFound">
+                                            {{ joList.jobOrderNumber}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolorGray">Customer Name</mat-label>
+                                        <input matInput type="text" readonly formControlName="customerName"
+                                            placeholder="Customer Name" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label [ngClass]="{ 'labelcolorGray': customerdisable, 'labelcolor': !customerdisable }">Customer Currency </mat-label>
+                                        <input matInput formControlName="custBillingCurrencyId"
+                                             [matAutocomplete]="autocurrency" required 
+                                             (keydown)="CCEmpty($event)" >
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #autocurrency="matAutocomplete"
+                                        [displayWith]="displayCurrencyListLabelFn"
+                                        (optionSelected)="CurrencyListSelectedoption($event)">
+                                        <mat-option *ngFor="let currencyList of filteredCurrencyListOptions$ | async"
+                                            [value]="currencyList" [disabled]="currencyList.isNotFound">
+                                            {{ currencyList.currencyName}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                        <mat-error *ngIf="!revenueForm.controls['custBillingCurrencyId'].value">Customer
+                                            currency
+                                            is required*</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolorGray">Job Type</mat-label>
+                                        <input matInput type="text" readonly formControlName="jobTypeName"
+                                            placeholder="Job Type" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolorGray">Sales Owner</mat-label>
+                                        <input matInput type="text" readonly formControlName="salesOwner"
+                                            placeholder="Sales Owner" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolorGray">Job Owner</mat-label>
+                                        <input matInput type="text" readonly formControlName="jobOwnerName"
+                                            placeholder="Job Owner" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolorGray">Job Stage</mat-label>
+                                        <input matInput type="text" readonly formControlName="jobStage"
+                                            placeholder="Job Stage" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolorGray">Job Status</mat-label>
+                                        <input matInput type="text" readonly formControlName="jobStageStatus"
+                                            placeholder="Job Status" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolorGray">CIF Value</mat-label>
+                                        <input matInput type="text" readonly formControlName="overallCIFValue"
+                                            placeholder="CIF Value" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolorGray">CIF Currency</mat-label>
+                                        <input matInput type="text" readonly formControlName="cifCurrencyName"
+                                            placeholder="CIF Currency" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-checkbox class="statusmargin" formControlName="isDraft"
+                                        (change)="onDraftChange($event)">Draft</mat-checkbox>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label class="labelcolor">Remarks</mat-label>
+                                        <textarea matInput [readonly]="disablefields" cols="8" rows="2" maxlength="500"
+                                            placeholder="" formControlName="remarks"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-list-display">
+                <div class="component-list">
+                    <div fxLayout="row" fxLayoutWrap="wrap">
+                        <section class="custom-table-wrapper">
+                            <div class="addbutton">
+                                <button class="btn btn-primary Addbtn" type="button" *ngIf="!viewMode"
+                                    (click)="openDialog()">
+                                    <i class="fa fa-plus-circle me-2"></i>Add
+                                </button>
+                            </div>
+                            <kendo-grid [kendoGridBinding]="JORevenueBookingDetail" [filterable]="true"
+                                [resizable]="true" [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                [selectable]="{ enabled: true }" (selectionChange)="onSelectionChange($event)"
+                                [selectedKeys]="selectedKeys" [kendoGridSelectBy]="'lineItemName'">
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="Line Item Code" title="Line Item Code"
+                                    media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.lineItemCode }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'lineItemName',}" field="lineItemName" title="Line Item"
+                                    media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.lineItemName }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="lineItemCategoryName" title="Line Item Category"
+                                    media="(min-width: 450px)" [width]="180">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.lineItemCategoryName }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="aliasName" title="Alias Name"
+                                    media="(min-width: 450px)" [width]="180">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.aliasName }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="countryName" title="Service Country"
+                                    media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.countryName }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="regionName" title="Region"
+                                    media="(min-width: 450px)" [width]="130">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.regionName }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="clientSourceFrom" title="Source From"
+                                    media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.clientSourceFrom }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="refNumber" title="Ref Number"
+                                    media="(min-width: 450px)" [width]="140">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.refNumber }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="calculationParameter"
+                                    title="Calculation Parameter" media="(min-width: 450px)" [width]="210">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.calculationParameter }}
+                                    </ng-template>
+                                </kendo-grid-column>
+
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="calculationType" title="Calculation Type"
+                                    media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.calculationType }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{ 'text-align': 'end', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                  }" field="unitPrice" title="Unit Price" media="(min-width: 450px)" [width]="100">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.unitPrice | number:'1.4-4' }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{ 'text-align': 'end', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                  }" field="quantity" title="Quantity" media="(min-width: 450px)" [width]="100">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.quantity | number:'1.4-4' }}
+                                    </ng-template>
+                                </kendo-grid-column>
+
+                                <kendo-grid-column [style]="{ 'text-align': 'end', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                  }" field="taxableValue" title="Taxable Value" media="(min-width: 450px)"
+                                    [width]="140">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.taxableValue | number:'1.2-2' }}
+                                    </ng-template>
+                                </kendo-grid-column>
+
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="taxCodeName" title="Tax Name"
+                                    media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.taxCodeName }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'end',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="taxPercentage" title="Tax Percentage"
+                                    media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.taxPercentage }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{ 'text-align': 'end', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                  }" field="taxValue" title="Tax Value" media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.taxValue | number:'1.4-4' }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{ 'text-align': 'end', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                  }"  title="Total In Customer Currency"
+                                    media="(min-width: 450px)" [width]="230">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.totalInCustomerCurrency | number:'1.4-4' }}
+                                    </ng-template>
+                                    <ng-template *ngIf="total" kendoGridFooterTemplate let-aggregates>
+                                        Total : {{ total['totalInCustomerCurrency']?.sum ?? 0 | number:'1.4-4' }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{ 'text-align': 'end', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                  }" field="exchangeRate" title="Exchange Rate" media="(min-width: 450px)"
+                                    [width]="140">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.exchangeRate | number:'1.4-4' }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{ 'text-align': 'end', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                  }"  title="Total In Company Currency"
+                                    media="(min-width: 450px)" [width]="240">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.totalInCompanyCurrency | number:'1.4-4' }}
+                                    </ng-template>
+                                    <ng-template *ngIf="total" kendoGridFooterTemplate let-aggregates>
+                                        Total : {{ total['totalInCompanyCurrency']?.sum ?? 0 | number:'1.4-4' }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{ 'text-align': 'end', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                  }" field="actualExpense" title="Actual Expense" media="(min-width: 450px)"
+                                    [width]="180">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.actualExpense | number:'1.4-4' }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="proformaInvoiceRefNo"
+                                    title="Proforma Invoice Ref No." media="(min-width: 450px)" [width]="250">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.proformaInvoiceRefNo }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="createdByEmp" title="Created By"
+                                    media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.createdByEmp }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                    'text-align': 'left',
+                                    padding: '5px',
+                                  }" [headerStyle]="{
+                                    justifyContent: 'center',}" field="updatedByEmp" title="Modified By"
+                                    media="(min-width: 450px)" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.updatedByEmp }}
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{
+                                  'text-align': 'left',
+                                  padding: '5px',
+                                }" [headerStyle]="{
+                                  justifyContent: 'center',}" field="remarks" title="Remarks"
+                                    media="(min-width: 450px)" [width]="200">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        {{ dataItem.remarks }}
+                                    </ng-template>
+                                </kendo-grid-column>
+
+                               
+
+                                <!-- <kendo-grid-checkbox-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                    justifyContent: 'center',}" media="(min-width: 450px)" [width]="50"  [sticky]="true" [showSelectAll]="true"></kendo-grid-checkbox-column> -->
+
+                                <kendo-grid-checkbox-column [style]="{ 'text-align': 'center' }"
+                                    [headerStyle]="{ justifyContent: 'center' }" media="(min-width: 450px)"
+                                    [width]="150" [sticky]="true" [showSelectAll]="false" title="Revenue Booked">
+                                    <ng-template kendoGridCheckboxColumnTemplate let-dataItem>
+                                        <input type="checkbox"
+                                            [disabled]="dataItem.joRevenueBookingDetailId !== 0 && dataItem.joRevenueBookingDetailId !== null"
+                                            [(ngModel)]="dataItem.selected" />
+                                    </ng-template>
+                                </kendo-grid-checkbox-column>
+                                
+                                <kendo-grid-column [style]="{ 'text-align': 'center' }" [sticky]="true" title="Partially Booked" [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem>
+                                        <input type="checkbox" [(ngModel)]="dataItem.partiallyBooked" 
+                                               (change)="onPartiallyBookedChange(dataItem)" />
+                                    </ng-template>
+                                </kendo-grid-column>
+
+                                <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                  justifyContent: 'center',
+                                  
+                                }" title="Action" media="(min-width: 450px)" [width]="100" [sticky]="true">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <a type="button" class="view" (click)="onviewDetails(dataItem, $event)"><i
+                                                class="fas fa-eye"></i></a>&nbsp;
+                                        <a type="button" class="edit" *ngIf="!viewMode"
+                                            (click)="onEditDetails(dataItem, $event)"><i
+                                                class="fas fa-square-pen"></i></a>&nbsp;
+                                        <a type="button" class="delete" *ngIf="!viewMode"
+                                            (click)="onDeleteDetails(dataItem, $event)"><i
+                                                class="fas fa-trash "></i></a>&nbsp;
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" title="ACT" media="(min-width: 450px)" [width]="100" [sticky]="true">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <a type="button" class="edit" (click)="lineItem(dataItem,$event)"><i
+                                                class="fa-solid fa-money-check-dollar fa-lg"></i></a>&nbsp;
+
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <ng-template kendoPagerTemplate>
+                                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                                    <kendo-pager-numeric-buttons
+                                        [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+                                    <kendo-pager-page-sizes class="Page-Short"
+                                        [pageSizes]="sizes"></kendo-pager-page-sizes>
+                                    <kendo-pager-info></kendo-pager-info>
+                                </ng-template>
+                            </kendo-grid>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px;">
+    <button class="btn btn-warning draftbtn me-1" type="submit" [hidden]="hidebutton" *ngIf="!viewMode"
+        (click)="onSaveGeneral('Draft')"><i class="fa fa-clock"></i> Draft</button>
+    <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="!viewMode && !gereralEdit" (click)="onSaveGeneral('Save')"><i
+            class="fa fa-save me-2"></i> Save</button>
+    <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="!viewMode && gereralEdit" (click)="onSaveGeneral('Save')"><i
+            class="fa fa-save me-2"></i> Update</button>
+    <button type="button" class="btn btn-danger resetbtn" *ngIf="!viewMode" (click)="resetGeneral()"><i
+            class="fa fa-times-circle"></i> Reset</button>
+</div>

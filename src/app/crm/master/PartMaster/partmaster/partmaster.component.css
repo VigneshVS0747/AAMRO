@@ -1,0 +1,186 @@
+Import google font
+ 
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  .gallery-imges {
+    width: 176px;
+    height: auto;
+    cursor: pointer;
+    /* position: absolute; */
+}
+  /* Styline the Heading of Image Gallery */
+  .heading{  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    background: #121FCF;
+    background: linear-gradient(to right, #0e85e0 0%, #26ff1a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+/* Styling gallery section where all images are */
+  /* .gallery {
+    width: 90%;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+    justify-content:center;
+    align-items: center; 
+  } */
+ 
+  /* Styling Particular Image */
+  /* .gallery-img {
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  } */
+  /* onHover image will expand little bit */
+  .gallery-img:hover {
+    transform: scale(1.1);
+    cursor: zoom-in;
+  }
+  /* This section will be seen when we click on image */
+  .image-popup-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+ 
+  /* close button when we want to close the bigger image */
+  .close-button {
+    position: absolute;
+    top: 20px;
+    right: 50px;
+    font-size:60px;
+    color: #fff;
+    cursor: pointer;
+  }
+  .close-button:hover{
+    color: red;
+  }
+ .cus-title{
+  padding: 10px 0 ;
+ }
+ .header-container{
+  margin-bottom: 30px;
+ }
+  /* when we click on the image it will expand in bigger size and will displayed 
+at middle of screen */
+  #popupImage {
+    display: block;
+    max-width: 80%;
+    max-height: 80%;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .gallery-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around; /* Adjust as needed */
+  }
+  
+  .gallery {
+    margin: 10px; /* Adjust spacing between images */
+  }
+  
+  .gallery-img {
+    width: 200px; /* Adjust image width as needed */
+    height: auto;
+    cursor: pointer;
+  }
+  /* Making images more responsive for smaller size device */
+  @media (max-width:670px) {
+    .gallery{
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-gap: 10px;
+    }
+    .gallery-img{
+        width:150px;
+        height: 150px;
+    }
+ 
+    .heading{
+        font-size: 20px;
+    }
+
+    
+      
+  }
+  .fas {
+    font-weight: 900;
+    font-size: 14px !important;
+    margin: 3px;
+    margin-bottom: 7px;
+  }
+  
+  
+  /* cus-tab-gropu */
+ /* Tab view design 001 */
+
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: rgb(255 255 255) !important ;
+  display: inline-flex;
+  align-items: center;
+}
+::ng-deep .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab {
+  flex-grow: 1;
+  border-radius: 50px 0 50px 0!important;
+  background: #6f7f8a;
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #f7f8ff !important;
+}
+::ng-deep .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab.mdc-tab--active {
+  flex-grow: 1;
+  border-radius: 50px 0 50px 0 !important;
+  background: #004ebd;
+  border-bottom-width:2px !important;
+  border-width: transparent !important;
+
+}
+::ng-deep .mat-mdc-focus-indicator {
+  position: static !important;
+}
+.mat-tab-label.mat-tab-label-active .mat-ripple-element::after {
+  background-color: transparent !important;
+}
+
+
+.backgroundBorder{
+  border: 2px solid rgb(31, 126, 193);
+  /* box-shadow: 2px 3px 3px gray; */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* Tab view design 002 */
+
+.align-download{
+  padding-left: 87%;
+}
+
+
+.gallery-altimage {
+  width: 193px;
+/* height: auto; */
+cursor: pointer;
+/* position: absolute; */
+}
+
+.img-adjust{
+      padding-right: 255px;
+}

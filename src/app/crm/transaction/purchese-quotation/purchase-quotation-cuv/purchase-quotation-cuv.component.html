@@ -1,0 +1,975 @@
+<div class="table-list-display">
+    <div class="component-creation">
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Purchase Quotation" />
+                <span>Purchase Quotation</span>
+            </h3>
+            <button class="btn btn-primary returntolistbtn" type="button" (click)="returnToList()">
+                <i class="fa fa-list me-2"></i> Return to List
+            </button>
+        </div>
+    </div>
+    <hr class="mt-3 mb-4" />
+    <mat-card>
+        <mat-card-title class="title">
+            Purchase Quotation
+        </mat-card-title>
+        <br />
+        <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedIndex" #matgroup>
+            <mat-tab class="my-2">
+                <ng-template mat-tab-label>
+                    <i class="fas fa-house"></i>
+                    General
+                </ng-template>
+
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="purchaseQuoteForm" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">Purchase Quotation Id</mat-label>
+                                            <input matInput type="text" readonly maxlength="20"
+                                                formControlName="pqNumber" placeholder="Purchase Quotation Id"
+                                                autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">PQ Against</mat-label>
+                                            <input matInput formControlName="pqAgainstId" [matAutocomplete]="autopq"
+                                                readonly>
+                                            <!-- <mat-icon matSuffix>keyboard_arrow_down</mat-icon> -->
+                                            <mat-error *ngIf="!purchaseQuoteForm.controls['pqAgainstId'].value">PQ
+                                                Against
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autopq="matAutocomplete"
+                                            [displayWith]="displayPQAgainstLabelFn"
+                                            (optionSelected)="PQAgainstSelectedoption($event)">
+                                            <mat-option *ngFor="let pqAgainstList of filteredpqAgainstOptions$ | async"
+                                                [value]="pqAgainstList" [disabled]="pqAgainstList.isNotFound">
+                                                {{ pqAgainstList.pqAgainst }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">Reference Number</mat-label>
+                                            <input matInput type="text" readonly formControlName="refNumber"
+                                                placeholder="Reference Number" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">Vendor Name</mat-label>
+                                            <input matInput type="text" readonly formControlName="vendorName"
+                                                placeholder="Vendor Name" autocomplete="off">
+                                            <mat-error *ngIf="!purchaseQuoteForm.controls['vendorName'].value">Vendor
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">Vendor Ranking</mat-label>
+                                            <input matInput type="text" readonly formControlName="vendorRanking"
+                                                placeholder="Vendor Ranking" autocomplete="off">
+
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">Vendor Type</mat-label>
+                                            <input matInput formControlName="vendorTypeId" readonly>
+                                            <!-- <mat-icon matSuffix>keyboard_arrow_down</mat-icon> -->
+                                            <mat-error *ngIf="!purchaseQuoteForm.controls['vendorTypeId'].value">Vendor
+                                                Type
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #auto="matAutocomplete"
+                                            (optionSelected)="SelectedVendor($event)" readonly>
+                                            <mat-option value="Potential">Potential</mat-option>
+                                            <mat-option value="Existing">Existing</mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Date</mat-label>
+                                            <input matInput [matDatepicker]="datePicker" formControlName="pqDate"
+                                                [readonly]="disablefields" [matDatepickerFilter]="dateFilter1" required
+                                                (dateChange)="onDateChange($event)">
+                                            <mat-error *ngIf="!purchaseQuoteForm.controls['pqDate'].value">Date is
+                                                required*</mat-error>
+                                            <mat-datepicker-toggle [disabled]="disablefields" matSuffix
+                                                [for]="datePicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #datePicker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Vendor Currency</mat-label>
+                                            <input matInput formControlName="vendorCurrencyId"
+                                                [readonly]="disablefields" [matAutocomplete]="autocurrency"
+                                                (blur)="currencyBlurEvent()" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error
+                                                *ngIf="!purchaseQuoteForm.controls['vendorCurrencyId'].value">Vendor
+                                                Currency
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocurrency="matAutocomplete"
+                                            [displayWith]="displayCurrencyListLabelFn"
+                                            (optionSelected)="CurrencyListSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let currencyList of filteredCurrencyListOptions$ | async"
+                                                [value]="currencyList" [disabled]="currencyList.isNotFound">
+                                                {{ currencyList.currencyName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Validity of Quotation</mat-label>
+                                            <input matInput [matDatepicker]="expiryDatePicker"
+                                                [readonly]="disablefields" formControlName="validDate"
+                                                [matDatepickerFilter]="dateFilter" required>
+                                            <mat-error *ngIf="!purchaseQuoteForm.controls['validDate'].value">Validity
+                                                of Quotation
+                                                is required*</mat-error>
+                                            <mat-datepicker-toggle matSuffix [disabled]="disablefields"
+                                                [for]="expiryDatePicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #expiryDatePicker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Job Category</mat-label>
+                                            <input matInput formControlName="jobCategoryId" (keydown)="JTEmpty($event)"
+                                                [readonly]="disablefields" [matAutocomplete]="autojob">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autojob="matAutocomplete"
+                                            [displayWith]="displayjobCategoryLabelFn"
+                                            (optionSelected)="jobCategorySelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let jobCategoryList of filteredjobCategoryOptions$ | async"
+                                                [value]="jobCategoryList" [disabled]="jobCategoryList.isNotFound">
+                                                {{ jobCategoryList.jobCategory}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Job Type</mat-label>
+                                            <input matInput formControlName="jobTypeId" [readonly]="disablefields"
+                                                [matAutocomplete]="autojobType">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autojobType="matAutocomplete"
+                                            [displayWith]="displayjobTypeLabelFn"
+                                            (optionSelected)="jobTypeSelectedoption($event)">
+                                            <mat-option *ngFor="let jobTypeList of filteredjobTypeOptions$ | async"
+                                                [value]="jobTypeList" [disabled]="jobTypeList.isNotFound">
+                                                {{ jobTypeList.jobTypeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Status</mat-label>
+                                            <input matInput formControlName="statusId" [readonly]="disablefields"
+                                                [matAutocomplete]="autorfqStatus" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!purchaseQuoteForm.controls['statusId'].value">Status is
+                                                required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autorfqStatus="matAutocomplete"
+                                            [displayWith]="displayrfqLabelFn"
+                                            (optionSelected)="rfqSelectoption($event)">
+                                            <mat-option *ngFor="let pqStatusList of filteredrfqOptions$ | async"
+                                                [value]="pqStatusList" [disabled]="pqStatusList.isNotFound"
+                                                [disabled]="isOptionDisabled(pqStatusList)">
+                                                {{ pqStatusList.pqStatus }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">Approval Status </mat-label>
+                                            <input matInput formControlName="approvalStatusId"
+                                                [matAutocomplete]="autoApprovalStatus" readonly>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoApprovalStatus="matAutocomplete"
+                                            [displayWith]="displayApprovalStatusLabelFn"
+                                            (optionSelected)="selectApprovalStatus($event)">
+                                            <mat-option
+                                                *ngFor="let approvalStatusList of filteredApprovalStatusOptions$ | async"
+                                                [value]="approvalStatusList" [disabled]="approvalStatusList.isNotFound">
+                                                {{ approvalStatusList.approvalStatus}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-12 col-md-4" *ngIf="showCancelFields">
+                                        <mat-form-field class="w-100 mt-1">
+                                            <mat-label class="labelcolor">Closed Reason</mat-label>
+                                            <input type="text" aria-label="Number" matInput
+                                                formControlName="cancelReasonControl" [matAutocomplete]="auto14">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-autocomplete #auto14="matAutocomplete">
+                                                <mat-option *ngFor="let option of filteredcancelReasonControl | async"
+                                                    [value]="option?.reasonName">
+                                                    {{option?.reasonName}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="!purchaseQuoteForm.controls['cancelReasonControl'].value">
+                                                InActive Reason is required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-12 col-md-4" *ngIf="showCancelFields">
+                                        <mat-form-field class="w-100 mt-1">
+                                            <mat-label class="labelcolor">Closed Remark</mat-label>
+                                            <input formControlName="cancelRemarkControl" matInput maxlength="50">
+
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Tag</mat-label>
+                                            <textarea matInput cols="8" rows="2" [readonly]="disablefields"
+                                                maxlength="100" placeholder="" formControlName="tags"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Remarks</mat-label>
+                                            <textarea matInput cols="8" rows="2" [readonly]="disablefields"
+                                                maxlength="500" placeholder="" formControlName="remarks"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <!-- Purchase Quotation Service Details -->
+
+            <mat-tab class="my-2">
+                <ng-template mat-tab-label>
+                    <i class="fas fa-headset"></i>
+                    Service Details
+                </ng-template>
+
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="purchaseQuoteForm" #form="ngForm" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Commodity</mat-label>
+                                            <mat-select formControlName="commodityId" [readonly]="disablefields"
+                                                [multiple]="true" (selectionChange)="onSelectCommodity()">
+                                                <mat-option *ngFor="let Commodity of CommodityList"
+                                                    [value]="Commodity.commodityId">
+                                                    {{ Commodity.commodityName }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Inco Term</mat-label>
+                                            <mat-select formControlName="incoTermId" [multiple]="true"
+                                                [readonly]="disablefields" (selectionChange)="onSelectInco()">
+                                                <mat-option *ngFor="let incoterm of incotermList"
+                                                    [value]="incoterm.incoTermId">
+                                                    {{ incoterm.incoTermCode }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Mode of Transport</mat-label>
+                                            <mat-select formControlName="modeofTransportId" [multiple]="true"
+                                                [readonly]="disablefields" (selectionChange)="onSelectTransport()">
+                                                <mat-option *ngFor="let modeofTransport of modeofTransportList"
+                                                    [value]="modeofTransport.modeofTransportId">
+                                                    {{ modeofTransport.modeofTransport }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Cargo Type</mat-label>
+                                            <input matInput formControlName="cargoTypeId" (keydown)="CargoEmpty($event)"
+                                                [readonly]="disablefields" [matAutocomplete]="autocargoType">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocargoType="matAutocomplete"
+                                            [displayWith]="displayCargoLabelFn"
+                                            (optionSelected)="CargoSelectedoption($event)">
+                                            <mat-option *ngFor="let cargoList of filteredCargoOptions$ | async"
+                                                [value]="cargoList" [disabled]="cargoList.isNotFound">
+                                                {{ cargoList.cargoType }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Origin Country</mat-label>
+                                            <input matInput formControlName="originCountryId" [readonly]="disablefields"
+                                                [matAutocomplete]="autoCountry" required
+                                                (blur)="OriginCountryBlurEvent()">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error
+                                                *ngIf="!purchaseQuoteForm.controls['originCountryId'].value">Origin
+                                                Country
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoCountry="matAutocomplete"
+                                            [displayWith]="displayCountryLabelFn"
+                                            (optionSelected)="CountrySelectedoption($event)">
+                                            <mat-option *ngFor="let CountryDatalist of filteredCountryOptions$ | async"
+                                                [value]="CountryDatalist" [disabled]="CountryDatalist.isNotFound">
+                                                {{ CountryDatalist.countryName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Destination Country</mat-label>
+                                            <input matInput formControlName="destCountryId" [readonly]="disablefields"
+                                                [matAutocomplete]="autodestCountryId" required
+                                                (blur)="DestCountryBlurEvent()">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!purchaseQuoteForm.controls['destCountryId'].value">Dest
+                                                Country
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autodestCountryId="matAutocomplete"
+                                            [displayWith]="displayDestCountryLabelFn"
+                                            (optionSelected)="DestCountrySelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let CountryDatalist of filteredCountryOptionsDest$ | async"
+                                                [value]="CountryDatalist" [disabled]="CountryDatalist.isNotFound">
+                                                {{ CountryDatalist.countryName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Port of Loading</mat-label>
+                                            <input matInput formControlName="loadingPortId" [readonly]="disablefields"
+                                                [matAutocomplete]="autoloading">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoloading="matAutocomplete"
+                                            [displayWith]="displayLoadingportLabelFn"
+                                            (optionSelected)="loadingportSelectoption($event)">
+                                            <mat-option
+                                                *ngFor="let portofLoadingList of filteredloadingportOptions$ | async"
+                                                [value]="portofLoadingList" [disabled]="portofLoadingList.isNotFound">
+                                                {{ portofLoadingList.loadingPortName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Port of Destination</mat-label>
+                                            <input matInput formControlName="destinationPortId"
+                                                [readonly]="disablefields" [matAutocomplete]="autodestination">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autodestination="matAutocomplete"
+                                            [displayWith]="displaydestportLabelFn"
+                                            (optionSelected)="destportSelectoption($event)">
+                                            <mat-option
+                                                *ngFor="let portofDestinationList of filtereddestportOptions$ | async"
+                                                [value]="portofDestinationList"
+                                                [disabled]="portofDestinationList.isNotFound">
+                                                {{ portofDestinationList.destinationPortIdName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Origin Location</mat-label>
+                                            <input matInput formControlName="originLocationId"
+                                                (keydown)="OriginEmpty($event)" [readonly]="disablefields"
+                                                [matAutocomplete]="autooriginCity">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autooriginCity="matAutocomplete"
+                                            [displayWith]="displayoriginCityLabelFn"
+                                            (optionSelected)="originCitySelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let originCityList of filteredoriginCityOptions$ | async"
+                                                [value]="originCityList" [disabled]="originCityList.isNotFound">
+                                                {{ originCityList.cityName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Destination Location</mat-label>
+                                            <input matInput formControlName="destLocationId"
+                                                (keydown)="DestinationEmpty($event)" [readonly]="disablefields"
+                                                [matAutocomplete]="autodestLocation">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autodestLocation="matAutocomplete"
+                                            [displayWith]="displayDestCityLabelFn"
+                                            (optionSelected)="destCitySelectedoption($event)">
+                                            <mat-option *ngFor="let DestCityList of filteredDestCityOptions$ | async"
+                                                [value]="DestCityList" [disabled]="DestCityList.isNotFound">
+                                                {{ DestCityList.cityName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Trailer Type</mat-label>
+                                            <input matInput formControlName="trailerTypeId"
+                                                (keydown)="TrailerEmpty($event)" [readonly]="disablefields"
+                                                [matAutocomplete]="autodtrailerType">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autodtrailerType="matAutocomplete"
+                                            [displayWith]="displayTrailerLabelFn"
+                                            (optionSelected)="TrailerSelectedoption($event)">
+                                            <mat-option *ngFor="let TrailerType of filteredTrailerOptions$ | async"
+                                                [value]="TrailerType" [disabled]="TrailerType.isNotFound">
+                                                {{ TrailerType.trailerTypeName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Transport Type</mat-label>
+                                            <input matInput formControlName="transportTypeId"
+                                                (keydown)="TransportEmpty($event)" [readonly]="disablefields"
+                                                [matAutocomplete]="automodeofTransport">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #automodeofTransport="matAutocomplete"
+                                            [displayWith]="displayTransportLabelFn"
+                                            (optionSelected)="TransportSelectedoption($event)">
+                                            <mat-option *ngFor="let transportList of filteredTransportOptions$ | async"
+                                                [value]="transportList" [disabled]="transportList.isNotFound">
+                                                {{ transportList.transportType }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Pick up Location</mat-label>
+                                            <input matInput type="text" formControlName="pickUpLocation" maxlength="100"
+                                                [readonly]="disablefields" placeholder="Pick up Location"
+                                                autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Final Place of Delivery</mat-label>
+                                            <input matInput type="text" formControlName="deliveryPlace" maxlength="100"
+                                                [readonly]="disablefields" placeholder="Final Place of Delivery"
+                                                autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Shipment Type</mat-label>
+                                            <input matInput formControlName="shipmentTypeId"
+                                                (keydown)="ShipmentEmpty($event)" [readonly]="disablefields"
+                                                [matAutocomplete]="autoshipmentType">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoshipmentType="matAutocomplete"
+                                            [displayWith]="displayshipmentLabelFn"
+                                            (optionSelected)="shipmentSelectoption($event)">
+                                            <mat-option *ngFor="let shipmentList of filteredshipmentOptions$ | async"
+                                                [value]="shipmentList" [disabled]="shipmentList.isNotFound">
+                                                {{ shipmentList.shipmentType }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Container Type</mat-label>
+                                            <input matInput formControlName="containerTypeId"
+                                                (keydown)="ContainerEmpty($event)" [readonly]="disablefields"
+                                                [matAutocomplete]="autocontainerType">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocontainerType="matAutocomplete"
+                                            [displayWith]="displayContainerLabelFn"
+                                            (optionSelected)="containerSelectoption($event)">
+                                            <mat-option *ngFor="let containerList of filteredContainerOptions$ | async"
+                                                [value]="containerList" [disabled]="containerList.isNotFound">
+                                                {{ containerList.containerTypeName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Temperature Required</mat-label>
+                                            <input matInput type="text" [readonly]="disablefields" maxlength="20"
+                                                formControlName="temperatureReq" placeholder="Temperature Required"
+                                                autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Vendor Remarks</mat-label>
+                                            <textarea matInput cols="8" rows="2" [readonly]="disablefields"
+                                                maxlength="500" placeholder=""
+                                                formControlName="vendorRemarks"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">UOM for Storage</mat-label>
+                                            <input matInput formControlName="storageUomId" (keydown)="UOMEmpty($event)"
+                                                [readonly]="disablefields" [matAutocomplete]="autostorageUom"> <mat-icon
+                                                matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autostorageUom="matAutocomplete"
+                                            [displayWith]="displayUOMLabelFn"
+                                            (optionSelected)="uomSelectoption($event)">
+                                            <mat-option *ngFor="let uomList of filteredUOMOptions$ | async"
+                                                [value]="uomList" [disabled]="uomList.isNotFound">
+                                                {{ uomList.uomName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Storage Value</mat-label>
+                                            <input matInput [readonly]="disablefields" (input)="valuePerUom($event)"
+                                                formControlName="valuePerUom" placeholder="Storage Value"
+                                                autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Number of Packages</mat-label>
+                                            <input matInput (change)="Clear()" [readonly]="disablefields"
+                                                (input)="packageNos($event)" formControlName="packageNos"
+                                                placeholder="Number of Packages" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="text-end">
+                                        <button class="btn btn-primary" *ngIf="!viewMode" type="button"
+                                            (click)="addPackage()">
+                                            <i class="fa fa-plus-circle me-2"></i>Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table">
+                    <div class="border border-1 rounded-4">
+                        <table class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="center-header">S.No</th>
+                                    <th class="center-header">Type of Packages</th>
+                                    <th class="center-header">Commodity</th>
+
+                                    <th class="center-header">Height(in Cm)</th>
+                                    <th class="center-header">Length(in Cm)</th>
+                                    <th class="center-header">Breadth(in Cm)</th>
+                                    <th class="center-header">CBM</th>
+                                    <th class="center-header">Package Weight(kg)</th>
+                                    <th class="center-header" *ngIf="!seaportSelected"> Chargeable Package Weight(kg)
+                                    </th>
+                                    <th class="center-header">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of pqPackage; let i = index">
+                                    <td class="center-align">
+                                        {{ i+1 }}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.packageTypeName}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.commodityName}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.height | number:'1.2-2'}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.length | number:'1.2-2'}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.breadth | number:'1.2-2'}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.cbm | number:'1.2-2'}}
+                                    </td>
+                                    <td class="center-align">
+                                        {{row.packWeightKg | number:'1.2-2'}}
+                                    </td>
+                                    <td class="center-align" [hidden]="seaportSelected">
+                                        {{row.chargePackWtKg | number:'1.2-2'}}
+                                    </td>
+                                    <td class="center-align">
+                                        <a type="button" class="view" (click)="View(row,i)"><i
+                                                class="fas fa-eye"></i></a>&nbsp;
+                                        <a type="button" class="edit" *ngIf="!viewMode" (click)="Edit(row,i)"><i
+                                                class="fas fa-square-pen"></i></a>&nbsp;
+                                        <a type="button" class="delete" *ngIf="!viewMode"
+                                            (click)="DeletepacKage(row,i)"><i class="fas fa-trash"></i></a>&nbsp;
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="center-align"><b>Total</b></td>
+                                    <td class="center-align"><b>{{ getTotalCrossWeight() }}</b></td>
+                                    <td class="center-align" [hidden]="seaportSelected"><b>{{ getTotalChargeableWeight()
+                                            }}</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <!-- Purchase Quotation Price Details -->
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fas fa-money-check-dollar"></i>
+                    Price Details
+                </ng-template>
+
+                <div class="table-list-display">
+                    <div class="component-list">
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <section class="custom-table-wrapper">
+                                <div class="addbutton">
+                                    <button class="btn btn-primary Addbtn" type="button" *ngIf="!viewMode"
+                                        (click)="openDialog()">
+                                        <i class="fa fa-plus-circle me-2"></i>Add
+                                    </button>
+                                </div>
+                                <kendo-grid [kendoGridBinding]="pqPrice" [filterable]="true" [resizable]="true"
+                                    [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                    [selectable]="{ enabled: true }">
+                                    <kendo-grid-column [style]="{
+                                      'text-align': 'left',
+                                      padding: '5px',
+                                      
+                                    }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                      
+                                    }" field="lineItemCategoryName" title="Aamro Line Item Category"
+                                        media="(min-width: 450px)" [width]="240">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.lineItemCategoryName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" field="vendorLineItemDesc" title="Vendor Line Item" media="(min-width: 450px)"
+                                        [width]="170">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.vendorLineItemDesc }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="calculationParameter" title="Calculation Parameter"
+                                        media="(min-width: 450px)" [width]="205">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.calculationParameter }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" field="calculationType" title="Calculation Type" media="(min-width: 450px)"
+                                        [width]="175">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.calculationType }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                            justifyContent: 'center',
+                                            
+                                          }" field="value" title="Value" media="(min-width: 450px)" [width]="85">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.value | number:'1.2-2' }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" field="minValue" title="Minimum Value" media="(min-width: 450px)"
+                                        [width]="150">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.minValue | number:'1.2-2' }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                                justifyContent: 'center',
+                                                
+                                              }" field="taxCodeName" title="Tax Name" media="(min-width: 450px)"
+                                        [width]="130">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.taxCodeName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                                    justifyContent: 'center',
+                                                    
+                                                  }" field="taxPer" title="Tax percentage" media="(min-width: 450px)"
+                                        [width]="150">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.taxPer }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                                            justifyContent: 'center',
+                                                            
+                                                          }" field="remarks" title="Remarks" media="(min-width: 450px)"
+                                        [width]="150">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.remarks }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" title="Action" media="(min-width: 450px)" [width]="100" [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <a type="button" class="view" (click)="onviewPrice(dataItem)"><i
+                                                    class="fas fa-eye"></i></a>&nbsp;
+                                            <a type="button" class="edit" *ngIf="!viewMode"
+                                                (click)="onEditPrice(dataItem)"><i
+                                                    class="fas fa-square-pen"></i></a>&nbsp;
+                                            <a type="button" class="delete" *ngIf="!viewMode"
+                                                (click)="onDeletePrice(dataItem)"><i
+                                                    class="fas fa-trash "></i></a>&nbsp;
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" title="ACT" media="(min-width: 450px)" [width]="100" [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <a type="button" class="edit" (click)="mapPrice(dataItem)"><i
+                                                    class="fa-solid fa-list-ul fa-lg"></i></a>&nbsp;
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-row-index></kendo-grid-row-index>
+                                    <ng-template kendoPagerTemplate>
+                                        <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                                        <kendo-pager-numeric-buttons
+                                            [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                                        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+                                        <kendo-pager-page-sizes class="Page-Short"
+                                            [pageSizes]="sizes"></kendo-pager-page-sizes>
+                                        <kendo-pager-info></kendo-pager-info>
+                                    </ng-template>
+                                </kendo-grid>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <!-- Purchase Quotation Terms & Conditions -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fas fa-award"></i>
+                    Terms & Conditions
+                </ng-template>
+                <quill-editor [format]="'json'" [formControl]="content" placeholder="Terms & Conditions..."
+                    style="width: 100%;height: 70vh;"></quill-editor>
+            </mat-tab>
+
+            <!-- Purchase Quotation Attachments -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fas fa-paperclip"></i>
+                    Attachments
+                </ng-template>
+                <div class="table-list-display">
+                    <div class="component-list">
+                        <section class="custom-table-wrapper">
+                            <div class="addbutton">
+                                <button class="btn btn-primary Addbtn" type="button" *ngIf="!viewMode"
+                                    (click)="AddDocument()"><i class="fa fa-plus-circle me-2"></i>Add</button>
+                            </div>
+                            <kendo-grid [kendoGridBinding]="pqDocuments" [filterable]="true" [resizable]="true"
+                                [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                [selectable]="{enabled: true}" (pageChange)="pageChange($event)" [skip]="skip">
+                                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px',overflow:'visible' }"
+                                    [headerStyle]="{ justifyContent: 'center' }" field="documentTypeName"
+                                    title="Document Type*" media="(min-width: 450px)" [width]="100">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <div class="ng-autocomplete">
+                                                <ng-autocomplete [data]="documents" [searchKeyword]="keywordDoc"
+                                                    placeholder="Select Document" (selected)="selectDocevent($event)"
+                                                    [itemTemplate]="itemTemplate"
+                                                    [(ngModel)]="dataItem.documentTypeName"
+                                                    (input)="onInputChange($event, dataItem)"
+                                                    [notFoundTemplate]="notFoundTemplate" [disabled]="isEditDocument">
+                                                </ng-autocomplete>
+                                                <ng-template #itemTemplate let-item>
+                                                    <a [innerHTML]="item.documentName"></a>
+                                                </ng-template>
+                                                <ng-template #notFoundTemplate let-notFound>
+                                                    <div [innerHTML]="notFound"></div>
+                                                </ng-template>
+                                                <div class="text-danger"
+                                                    *ngIf="ValidateFieldDoc(dataItem.documentTypeName)">
+                                                    <span>Document is required*</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            {{ dataItem.documentTypeName }}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" field="documentName" title="File *"
+                                    media="(min-width: 450px)" [width]="120">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <input type="file" class="form-control" (change)="File($event)"
+                                                [(ngModel)]="documentName" readonly>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            {{dataItem.documentName}}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" field="remarks" title="Remarks"
+                                    media="(min-width: 450px)" [width]="140">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <textarea type="text" class="form-control" maxlength="500"
+                                                [(ngModel)]="remarks"></textarea>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            {{dataItem.remarks}}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column title="Action" media="(min-width: 450px)" [width]="40"
+                                    [sticky]="true">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                                        <div *ngIf="!dataItem.IseditDoc" style="margin-left:1.5rem;">
+                                            <a type="button" (click)="show(dataItem.documentName)"><i
+                                                    class="fas fa-eye"></i></a>&nbsp;
+                                            <a type="submit" *ngIf="!viewMode" (click)="Deletedoc(dataItem,rowIndex)"><i
+                                                    class="fas fa-trash"></i></a>&nbsp;
+                                            <a type="button" *ngIf="!viewMode && !dataItem.documentName"
+                                                (click)="EditDoc(dataItem)"><i class="fas fa-square-pen"></i></a>&nbsp;
+                                        </div>
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <a type="submit" class="edit" *ngIf="!viewMode" #submitButton tabindex="0"
+                                                (keydown.enter)="hndlKeyPressDoc($event , dataItem)"
+                                                (change)="hndlChangeDoc($event)"
+                                                (click)="showAddRowDoc ? SaveDoc(dataItem) : UpdateDoc(dataItem)">
+                                                <ng-container *ngIf="showAddRowDoc; else editIcon">
+                                                    <i class="fas fa-sd-card"></i>
+                                                </ng-container>
+                                                <ng-template #editIcon>
+                                                    <i class="fas fa-sd-card"></i>
+                                                </ng-template>
+                                            </a>&nbsp;
+                                            <a type="submit" class="delete" *ngIf="!viewMode" #cancelButton tabindex="0"
+                                                (keydown.enter)="handleKeyPressDoc($event , dataItem)"
+                                                (click)="oncancelDoc(dataItem)"><i class="fas fa-xmark"></i></a>
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'center'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" title="ACT" media="(min-width: 450px)"
+                                    [width]="50" [sticky]="true">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            <a type="button" class="edit" (click)="Downloads(dataItem.documentName)">
+                                                <i class="fas fa-cloud-arrow-down"></i></a>&nbsp;
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-row-index></kendo-grid-row-index>
+                                <ng-template kendoPagerTemplate>
+                                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                                    <kendo-pager-numeric-buttons
+                                        [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+                                    <kendo-pager-page-sizes class="Page-Short"
+                                        [pageSizes]="sizes"></kendo-pager-page-sizes>
+                                    <kendo-pager-info></kendo-pager-info>
+                                </ng-template>
+                            </kendo-grid>
+                        </section>
+
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card>
+</div>
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px;">
+    <button class="btn btn-warning draftbtn me-1" type="submit" *ngIf="this.statusId === 1"
+        (click)="onSaveGeneral('Draft')"><i class="fa fa-clock"></i> Draft
+    </button>
+    <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="!viewMode && !gereralEdit"
+        (click)="onSaveGeneral('Save')"><i class="fa fa-save me-2"></i> Save</button>
+    <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="!viewMode && gereralEdit"
+        (click)="onSaveGeneral('Save')"><i class="fa fa-save me-2"></i> Update</button>
+    <button type="button" class="btn btn-danger resetbtn" *ngIf="!viewMode" (click)="resetGeneral()"><i
+            class="fa fa-times-circle"></i> Reset</button>
+    <button class="btn btn-primary savebtn me-1" type="submit" [hidden]="hideApprovebutton" (click)="onApprovel()">
+        Approve/Reject</button>
+</div>
+
+<ng-template let-data #ImagePreview>
+    <div class="d-flex justify-content-between">
+        <h2 mat-dialog-title> Preview </h2>
+        <mat-icon class="m-2" mat-dialog-close style="color: red;cursor: pointer;">close</mat-icon>
+    </div>
+    <img src="{{data}}" alt="" style="max-width: 700px;">
+</ng-template>

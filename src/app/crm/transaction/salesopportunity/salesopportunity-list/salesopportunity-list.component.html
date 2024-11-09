@@ -1,0 +1,98 @@
+<!-- <div class="table-list-display">
+  <div class="component-list">
+      <div class="header-container">
+          <h3 class="box-title">
+              <img src="./assets/images/billing-storage.png" alt="SalesOppourtunity" />
+              <span>SalesOppourtunity</span>
+            </h3>
+          <div class="text-end">
+              <button class="btn btn-primary Addbtn" type="button" (click)="add()">
+                  <i class="fa fa-plus-circle me-2"></i>Add
+              </button>
+          </div>
+          <hr/>
+      </div>
+      <section class="custom-table-wrapper">
+          <kendo-grid [kendoGridBinding]="salesOppourtunitys" [filterable]="true" [resizable]="true" [height]="500" [pageSize]="20"
+            [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+            <kendo-grid-column [style]="{
+                'text-align': 'left',
+                padding: '5px',
+                
+              }" [headerStyle]="{
+                justifyContent: 'center',
+                
+              }" field="customerName" title="Customer Name">
+              <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                {{ dataItem.customerName }}
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                justifyContent: 'center',
+                
+              }" field="CommodityName" title="CommodityName">
+              <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                {{ dataItem.commodity }}
+              </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+              justifyContent: 'center',
+              
+            }" field="serviceType" title="serviceType">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.serviceType }}
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+              justifyContent: 'center',
+              
+            }" field="airFright" title="airFright">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.airFreight }}
+            </ng-template>
+          </kendo-grid-column>   
+
+          <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+              justifyContent: 'center',
+              
+            }" field="jobsPerMonth" title="jobsPerMonth">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.jobsPerMonth }}
+            </ng-template>
+          </kendo-grid-column>
+
+      <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+          justifyContent: 'center',
+          
+        }" field="modeOfTransport" title="modeOfTransport">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          {{ dataItem.transportModeId }}
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+        justifyContent: 'center',
+        
+      }" field="seaFright" title="seaFright">
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+        {{ dataItem.seaFreight }}
+      </ng-template>
+    </kendo-grid-column>
+           
+            <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                justifyContent: 'center',
+                
+              }" title="Action">
+              <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                <a type="button" (click)="onEdit(dataItem)"><i class="fas fa-square-pen"></i></a>&nbsp;
+                <a type="button" (click)="onDelete(dataItem)"><i class="fas fa-trash"></i></a>&nbsp;
+                <a type="button" (click)="onview(dataItem)"><i class="fas fa-eye"></i></a>&nbsp;
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid>
+        </section>
+  </div>
+</div> -->

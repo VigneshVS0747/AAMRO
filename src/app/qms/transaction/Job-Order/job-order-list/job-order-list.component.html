@@ -1,0 +1,120 @@
+<div class="mt-2 mb-2 mx-3">
+    <div>
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Vendor Contract - FFS" />
+                <span>Job Order</span>
+            </h3>
+            <div class="text-end">
+                <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" (click)="add()">
+                    <i class="fa fa-plus-circle me-2"></i>New
+                </button>
+            </div>
+            <mat-divider></mat-divider>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div class="mt-2">
+            <kendo-grid [kendoGridBinding]="JobOrderList" filterable="menu" [resizable]="true" [height]="500"
+                [pageSize]="pageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [skip]="skip"
+                (pageChange)="pageChange($event)">
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center'}" field="jobOrderNumber" title="Job Order Number" filter="text"
+                    [width]="170">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="jobOrderDate" title="Job Order Date"
+                    filter="date" format="{0:dd/MMM/yyyy}" [width]="155">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{dataItem.jobOrderDate | date: 'dd/MMM/yyyy'}}
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="customerName" title="Customer" filter="text"
+                    [width]="130">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="jobTypeName" title="Job Type" filter="text"
+                    [width]="120">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="referenceNumber1" title="Ref 1" filter="text"
+                    [width]="120">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left', padding: '5px'}" [headerStyle]="{justifyContent: 'center'}"
+                    title="AWB/MBL" [width]="125" field="awB_MBL_Formatted" filter="text">
+                    <!-- <ng-template kendoGridCellTemplate let-dataItem>
+                        {{ dataItem.mawbNumber }}{{ dataItem.mawbNumber && dataItem.mblNumber ? ' / ' : '' }}{{ dataItem.mblNumber }}
+                    </ng-template> -->
+                </kendo-grid-column>
+          
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="jobOwnerName" title="Job Owner" filter="text"
+                    [width]="120">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="jobStage" title="Job Order Stage"
+                    filter="text" [width]="170">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="jobStageStatus" title="Job Order Status"
+                    filter="text" [width]="170">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{justifyContent: 'center'}"
+                    title="Action" [width]="100" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <a type="submit" *ngIf="pagePrivilege.includes('edit')" (click)="Edit(dataItem)">
+                                <i class="fas fa-square-pen"></i>
+                            </a>&nbsp;
+                            <a type="submit" *ngIf="pagePrivilege.includes('delete')"
+                                (click)="Delete(dataItem.jobOrderId)">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            <a type="submit" *ngIf="pagePrivilege.includes('view')" (click)="view(dataItem)">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{justifyContent: 'center'}"
+                    title="Act" [width]="140" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div class="d-flex flex-wrap justify-content-center align-items-center">
+                            <a type="submit" (click)="viewStatus(dataItem)">
+                                <i class="fas fa fa-refresh" aria-hidden="true"></i>
+                            </a>&nbsp;
+                            <button style="font-size: 10px;" type="submit" class="btn btn-warning btn-sm px-1 mx-1 py-1"
+                                (click)="costView(dataItem)">
+                                COST
+                            </button>
+                            <button style="font-size: 10px;" type="submit" class="btn btn-success btn-sm px-1 mx-1 py-1" (click)="revenue(dataItem)">
+                                REVENUE
+                            </button>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <ng-template kendoPagerTemplate>
+                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                    <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+          
+                    <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+                    <kendo-pager-info></kendo-pager-info>
+                  </ng-template>
+            </kendo-grid>
+        </div>
+    </div>
+</div>
+

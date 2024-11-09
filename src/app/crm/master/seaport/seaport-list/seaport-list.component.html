@@ -1,0 +1,108 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <div class="header-container">
+      <h3 class="box-title" >
+        <img src="./assets/images/billing-storage.png" alt="Seaport Details" />
+        <span>Seaport</span>
+      </h3>
+      <div class="text-end">
+        <button class="btn btn-primary Addbtn" type="button" *ngIf="pagePrivilege.includes('create')" (click)="add()">
+          <i class="fa fa-plus-circle me-2"></i>Add
+        </button>
+      </div>
+      <hr />
+    </div>
+
+    <section class="custom-table-wrapper">
+      <kendo-grid [kendoGridBinding]="seaports" [filterable]="true" [resizable]="true" [height]="500" [pageSize]="10"
+        [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+          justifyContent: 'center',
+          
+        }" field="seaportName" title="Name" [width]="100">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          {{ dataItem.seaportName }}
+        </ng-template>
+      </kendo-grid-column>
+        <kendo-grid-column [style]="{
+            'text-align': 'left',
+            padding: '5px',
+            
+          }" [headerStyle]="{
+            justifyContent: 'center',
+            
+          }" field="seaportCode" title="Code" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.seaportCode }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}" [headerStyle]="{'justifyContent': 'center'}"
+        field="countryName" title="country" [width]="100">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          {{dataItem.countryName}}
+        </ng-template>
+      </kendo-grid-column>
+        <!-- <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+            justifyContent: 'center',
+            
+          }" field="countryName" title=" Country">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.countryName }}
+          </ng-template>
+        </kendo-grid-column> -->
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}" [headerStyle]="{'justifyContent': 'center'}"
+          field="cityName" title="City" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{dataItem.cityName}}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}" [headerStyle]="{'justifyContent': 'center'}"
+        field="portType" title="PortType" [width]="100">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          {{dataItem.portType}}
+        </ng-template>
+      </kendo-grid-column>
+        <!-- <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}" [headerStyle]="{'justifyContent': 'center'}"
+          field="latitude" title="Latitude">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{dataItem.latitude}}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}" [headerStyle]="{'justifyContent': 'center'}"
+          field="longitude" title="Longitude">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{dataItem.longitude}}
+          </ng-template>
+        </kendo-grid-column> -->
+
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+            justifyContent: 'center',
+            
+          }" field="livestatus" filter="boolean" title="Active" [width]="90">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <mat-checkbox class="example-margin" [disabled]="true" [(ngModel)]="dataItem.livestatus"></mat-checkbox>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+            justifyContent: 'center',
+            
+          }" title="Action" [width]="80" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <a type="button" (click)="onEdit(dataItem)" *ngIf="pagePrivilege.includes('edit')"><i class="fas fa-square-pen"></i></a>&nbsp;
+            <a type="button" (click)="onDelete(dataItem)" *ngIf="pagePrivilege.includes('delete')"><i class="fas fa-trash"></i></a>&nbsp;
+            <a type="button" (click)="onview(dataItem)" *ngIf="pagePrivilege.includes('view')"><i class="fas fa-eye"></i></a>&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+        <ng-template kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+      </kendo-grid>
+    </section>
+  </div>
+</div>
+

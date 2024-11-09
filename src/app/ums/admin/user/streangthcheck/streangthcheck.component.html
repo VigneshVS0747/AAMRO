@@ -1,0 +1,6 @@
+<div class="strength" *ngIf="visible">&nbsp;
+    <ul class="strengthBar">
+        <li class="point" *ngFor="let color of bar" [style.background]="color"></li>
+    </ul>
+    <br>
+  </div>

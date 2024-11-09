@@ -1,0 +1,28 @@
+/* .ng-autocomplete{
+    position: absolute;
+    width: auto;
+} */
+
+/* ::ng-deep .autocomplete-container .suggestions-container{
+    position: fixed !important;
+    width: auto !important;
+}
+::ng-deep .autocomplete-container .suggestions-container ul li a {
+    width: 215px !important;
+} */
+
+/* ::ng-deep.autocomplete-overlay {
+    position: fixed;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index:9999999999999999999999999999999999999999999999999999;
+} */
+
+.Page-Short{
+    padding-left: 500px;
+  }

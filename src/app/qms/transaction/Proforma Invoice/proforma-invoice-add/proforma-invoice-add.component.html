@@ -1,0 +1,561 @@
+<div class="mt-2 mb-2 mx-3">
+    <div>
+        <div class="mb-3">
+            <div class="header-container d-flex justify-content-between align-items-center flex-wrap">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Vendor Contract - FFS" />
+                    <span>Proforma Invoice</span>
+                </h3>
+                <button class="btn btn-primary returntolistbtn" type="button" (click)="Return()">
+                    <i class="fas fa-list me-2"></i> Return to List
+                </button>
+            </div>
+            <mat-divider></mat-divider>
+        </div>
+    </div>
+
+    <mat-card class="mt-3 mb-3">
+        <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedIndex" #matgroup>
+            <mat-tab class="my-2">
+                <ng-template mat-tab-label>
+                    <i class="fas fa-house px-1" aria-hidden="true"></i>
+                    General
+                </ng-template>
+                <div class="table-list-display">
+                    <div class="mt-3 mb-3">
+                        <form [formGroup]="PIGeneralForm" class="mt-2 mb-3">
+                            <div class="row mt-2">
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Proforma Invoice Number</mat-label>
+                                        <input formControlName="proformaInvoiceControl" matInput
+                                            placeholder="Proforma Invoice Number">
+                                        <mat-error
+                                            *ngIf="f1.proformaInvoiceControl.touched && f1.proformaInvoiceControl.hasError('required')">Customer
+                                            Proforma Invoice Number is required</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Invoice Date</mat-label>
+                                        <input matInput formControlName="InvoiceDateControl" [matDatepicker]="picker1"
+                                            [matDatepickerFilter]="dateFilter" placeholder="DD/MM/YYYY">
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                        <mat-error
+                                            *ngIf="f1.InvoiceDateControl.touched && f1.InvoiceDateControl.hasError('required')">Invoice
+                                            Date
+                                            is
+                                            required</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Due Date</mat-label>
+                                        <input matInput formControlName="DueDateControl" placeholder="DD/MM/YYYY" [matDatepicker]="picker2"
+                                            [matDatepickerFilter]="futuredateFilter">
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                        <mat-error
+                                            *ngIf="f1.DueDateControl.touched && f1.DueDateControl.hasError('required')">Due
+                                            Date
+                                            is
+                                            required</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">SAP Invoice</mat-label>
+                                        <input formControlName="SAPInvoiceControl" matInput placeholder="SAP Invoice">
+                                        <mat-error *ngIf="f1.SAPInvoiceControl.hasError('maxlength')">
+                                            SAP Invoice Number cannot exceed 25 characters
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Customer Name</mat-label>
+                                        <input type="text" placeholder="Customer Name" aria-label="Number" matInput
+                                            formControlName="customerNameControl" [matAutocomplete]="auto1">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #auto1="matAutocomplete"
+                                            (optionSelected)="OnCustomerChangeEvent($event)">
+                                            <mat-option *ngFor="let option of filteredCustomer | async"
+                                                [value]="option?.customerName">
+                                                {{option?.customerName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error
+                                            *ngIf="f1.customerNameControl.touched && f1.customerNameControl.hasError('required')">Customer
+                                            Name is required</mat-error>
+                                        <mat-error *ngIf="f1.customerNameControl.hasError('invalidOption')">Invalid
+                                            Option</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Billing Currency</mat-label>
+                                        <input type="text" placeholder="Billing Currency" aria-label="Number" matInput
+                                            formControlName="billingCurrencyControl" [matAutocomplete]="auto2">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #auto2="matAutocomplete"
+                                            (optionSelected)="OnBillingchangeEvent($event)">
+                                            <mat-option *ngFor="let option of filteredBillingCurrencyControl | async"
+                                                [value]="option?.currencyName">
+                                                {{option?.currencyName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error
+                                            *ngIf="f1.billingCurrencyControl.touched && f1.billingCurrencyControl.hasError('required')">Billing
+                                            Currency is required</mat-error>
+                                        <mat-error *ngIf="f1.billingCurrencyControl.hasError('invalidOption')">Invalid
+                                            Option</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Exchange Rate</mat-label>
+                                        <input type="number" step="any" formControlName="exchangeRateControl" matInput
+                                            placeholder="Exchange Rate">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Customer Address</mat-label>
+                                        <input type="text" placeholder="Customer Address" aria-label="Number" matInput
+                                            formControlName="customerAddressControl" [matAutocomplete]="auto3">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #auto3="matAutocomplete"
+                                            (optionSelected)="OnchangeEvent($event)">
+                                            <mat-option *ngFor="let option of filteredCustomerAddress | async"
+                                                [value]="option?.addressName">
+                                                {{option?.addressName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error
+                                            *ngIf="f1.customerAddressControl.touched && f1.customerAddressControl.hasError('required')">Customer
+                                            Address is required</mat-error>
+                                        <mat-error *ngIf="f1.customerAddressControl.hasError('invalidOption')">Invalid
+                                            Option</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Contact Person</mat-label>
+                                        <input type="text" placeholder="Contact Person" aria-label="Number" matInput
+                                            formControlName="contactPersonControl" [matAutocomplete]="auto4">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #auto4="matAutocomplete"
+                                            (optionSelected)="OnchangeEvent($event)">
+                                            <mat-option *ngFor="let option of filteredContactPersonControl | async"
+                                                [value]="option?.contactPerson">
+                                                {{option?.contactPerson}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error
+                                            *ngIf="f1.contactPersonControl.touched && f1.contactPersonControl.hasError('required')">Customer
+                                            Contact Person is required</mat-error>
+                                        <mat-error *ngIf="f1.contactPersonControl.hasError('invalidOption')">Invalid
+                                            Option</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolorGray">Status</mat-label>
+                                        <input type="text" placeholder="Status" aria-label="Number" matInput
+                                            formControlName="status" [matAutocomplete]="auto5">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #auto5="matAutocomplete"
+                                            (optionSelected)="OnStatusChangeEvent($event)">
+                                            <mat-option *ngFor="let option of filteredStatus | async"
+                                                [value]="option?.piStatus" [disabled]="statusDisableOption(option)">
+                                                {{option?.piStatus}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="f1.status.touched && f1.status.hasError('required')">Status is
+                                            required</mat-error>
+                                        <mat-error
+                                            *ngIf="f1.status.touched && f1.status.hasError('invalidOption')">Invalid
+                                            Option</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolorGray">Approval Status</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            formControlName="approvalStatus" [matAutocomplete]="auto6">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #auto6="matAutocomplete"
+                                            (optionSelected)="OnchangeEvent($event)">
+                                            <mat-option *ngFor="let option of filteredApprovalStatus | async"
+                                                [value]="option?.approvalStatus">
+                                                {{option?.approvalStatus}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error
+                                            *ngIf="f1.approvalStatus.touched && f1.approvalStatus.hasError('required')">Approval
+                                            Status is required</mat-error>
+                                        <mat-error
+                                            *ngIf="f1.approvalStatus.touched && f1.approvalStatus.hasError('invalidOption')">Invalid
+                                            Option</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100" *ngIf="showCancelFields">
+                                        <mat-label class="labelcolor">Close Reason</mat-label>
+                                        <input type="text"  aria-label="Number" matInput
+                                            formControlName="cancelReasonControl" [matAutocomplete]="auto14">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #auto14="matAutocomplete"
+                                            (optionSelected)="OnchangeEvent($event)">
+                                            <mat-option *ngFor="let option of filteredcancelReasonControl | async"
+                                                [value]="option?.reasonName">
+                                                {{option?.reasonName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="f1.cancelReasonControl.hasError('required')">
+                                            Cancel Reason is required
+                                        </mat-error>
+                                        <mat-error *ngIf="f1.cancelReasonControl.hasError('invalidOption')">Invalid
+                                            Option</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4" *ngIf="showCancelFields">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Close Remark</mat-label>
+                                        <input formControlName="cancelRemarkControl" matInput
+                                            >
+                                            <mat-error *ngIf="f1.cancelRemarkControl.hasError('required')">
+                                                Cancel Remark is required
+                                            </mat-error>
+                                            <mat-error *ngIf=" f1.cancelRemarkControl.hasError('maxlength')">
+                                                Cancel Remarks cannot exceed 500 characters
+                                              </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Remarks</mat-label>
+                                        <textarea formControlName="remarksControl" matInput rows="2"
+                                            placeholder="Remarks"></textarea>
+                                        <mat-error *ngIf="f1.remarksControl.hasError('maxlength')">
+                                            Remarks cannot exceed 500 characters
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- *ngIf="(PILineItemList ?? []).length === 1" -->
+                        <form [formGroup]="JobNumberForm" class="mt-3 mb-1" *ngIf="show">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Origin</mat-label>
+                                        <input type="text" placeholder="Origin" aria-label="Number" matInput
+                                            formControlName="originCountryControl" [matAutocomplete]="auto15">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #auto15="matAutocomplete"
+                                            (optionSelected)="OnchangeEvent($event)">
+                                            <mat-option *ngFor="let option of filteredoriginCountryControl | async"
+                                                [value]="option?.countryName">
+                                                {{option?.countryName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="f2.originCountryControl.hasError('required')">
+                                            Origin is required
+                                        </mat-error>
+                                        <mat-error *ngIf="f2.originCountryControl.hasError('invalidOption')">Invalid
+                                            Option</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Destination</mat-label>
+                                        <input type="text" placeholder="Destination" aria-label="Number"
+                                            matInput formControlName="destinationCountryControl"
+                                            [matAutocomplete]="auto16">
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-autocomplete #auto16="matAutocomplete"
+                                            (optionSelected)="OnchangeEvent($event)">
+                                            <mat-option *ngFor="let option of filtereddestinationCountryControl | async"
+                                                [value]="option?.countryName">
+                                                {{option?.countryName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="f2.destinationCountryControl.hasError('required')">
+                                            Destination is required
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="f2.destinationCountryControl.hasError('invalidOption')">Invalid
+                                            Option</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Commodity</mat-label>
+                                        <mat-select formControlName="commodityControl" [multiple]="true">
+                                            <mat-option *ngFor="let item of CommodityList" [value]="item?.commodityId">
+                                                {{ item?.commodityName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Vessel / Flight Number</mat-label>
+                                        <input formControlName="VesselFlightNumberControl" matInput
+                                            placeholder="Vessel / Flight Number">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">HAWB No / HBL No</mat-label>
+                                        <input formControlName="HAWBNoHBLNoControl" matInput
+                                            placeholder="HAWB No / HBL No">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">MAWB No / MBL No</mat-label>
+                                        <input formControlName="MAWBNoMBLNoControl" matInput
+                                            placeholder="MAWB No / MBL No">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">No of Packages</mat-label>
+                                        <input formControlName="NoofPackagesControl" matInput
+                                            placeholder="No of Packages">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">Gross Weight</mat-label>
+                                        <input formControlName="GrossWeightControl" matInput
+                                            placeholder="Gross Weight">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">CIF Value</mat-label>
+                                        <input formControlName="CIFValueControl" matInput
+                                            placeholder="CIF Value">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">CIF Currency</mat-label>
+                                        <input formControlName="CIFCurrencyControl" matInput
+                                            placeholder="CIF Currency">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <mat-form-field class="w-100">
+                                        <mat-label class="labelcolor">CBM in cm</mat-label>
+                                        <input formControlName="CBMincmControl" matInput
+                                            placeholder="CBM in cm">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <mat-tab class="my-2">
+                <ng-template mat-tab-label>
+                    <i class="fa-solid fa-sitemap px-1" aria-hidden="true"></i>
+                    Line Item
+                </ng-template>
+            
+                <div class="table-list-display">
+                    <div class="mb-1 d-flex justify-content-end">
+                        <button [disabled]="hasViewRoute" class="btn btn-primary savebtn me-1" type="submit" (click)="filter()"><i
+                                class="fas fa fa-filter me-2"></i> Fliter
+                        </button>
+                    </div>
+
+                    <div class="mt-3 mb-3" *ngIf="PILineItemList?.length != 0">
+                        <kendo-grid [kendoGridBinding]="PILineItemList" [filterable]="true" [resizable]="true" [height]="500"
+                        [pageSize]="pageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [skip]="skip"
+                        (pageChange)="pageChange($event)">
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center'}" field="jobOrderNumber" title="Job Number"
+                            [width]="120">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="jobOrderDate" title="Job Date"
+                            filter="date" format="{0:dd/MMM/yyyy}" [width]="120">
+                            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                {{dataItem.jobOrderDate | date: 'dd/MMM/yyyy'}}
+                            </ng-template>
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="lineItemCode" title="Line Item Code" filter="text"
+                            [width]="140">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="lineItemName" title="Line Item Description" filter="text"
+                            [width]="175">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="lineItemCategoryName" title="Line Item Category" filter="text"
+                            [width]="165">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="sapInvoiceNumber" title="SAP Invoice Number" filter="text"
+                            [width]="170">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="aliasName" title="Alias Name" filter="text"
+                            [width]="110">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="regionName" title="Region" filter="text"
+                            [width]="110">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="calculationParameter" title="Calculation Parameter" filter="text"
+                            [width]="160">
+                        </kendo-grid-column>
+ 
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="calculationType" title="Calculation Type" filter="text"
+                            [width]="160">
+                        </kendo-grid-column>
+ 
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="unitPrice" title="Unit Price in Customer Currency" filter="text"
+                            [width]="180">
+                        </kendo-grid-column>
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="sapInvoiceUnitPrice" title="SAP Invoice Unit Price" filter="text"
+                            [width]="180">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="quantity" title="Quantity" filter="text"
+                            [width]="110">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="taxPer" title="Tax %" filter="text"
+                            [width]="110">
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="taxValue" title="Tax Value" filter="text"
+                            [width]="110">
+                            <ng-template *ngIf="total" kendoGridFooterTemplate let-aggregates>
+                               Total:
+                             </ng-template>
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="totalinCustomerCurrency" title="Net Payable in Customer Currency" filter="text"
+                            [width]="180">
+                              <ng-template  kendoGridFooterTemplate let-aggregates>
+                                {{ total2}}
+                             </ng-template>
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="totalinCompanyCurrency" title="Net Payable in Company Currency" filter="text"
+                            [width]="195">
+                            <ng-template  kendoGridFooterTemplate let-aggregates>
+                                {{ total }}
+                              </ng-template>
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="invoiceAmount" title="Invoice Amount (in Cus Curr)" filter="text"
+                            [width]="195">
+                            <ng-template  kendoGridFooterTemplate let-aggregates>
+                                {{ total3}}
+                             </ng-template>
+                        </kendo-grid-column>
+        
+                        <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                            [headerStyle]="{justifyContent: 'center',}" field="remarks" title="Remarks" filter="text"
+                            [width]="140">
+                        </kendo-grid-column>
+
+                        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{justifyContent: 'center'}"
+                            title="Action" [width]="100" [sticky]="true" >
+                            <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                                <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <a [class.disabled]="this.hasViewRoute" type="submit" (click)="Edit(dataItem,rowIndex)">
+                                        <i class="fas fa-square-pen"></i>
+                                    </a>&nbsp;
+                                    <a [class.disabled]="this.hasViewRoute" type="submit"
+                                        (click)="Delete(dataItem,rowIndex)">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    <a type="submit" (click)="View(dataItem,rowIndex)">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </ng-template>
+                        </kendo-grid-column>
+                    </kendo-grid>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+        <div class="mb-2 mt-2 d-flex align-items-center justify-content-end gap-2 me-2">
+            <button [disabled]="hasViewRoute" class="btn btn-warning savebtn me-1 " type="submit" *ngIf="isDraft" (click)="saveAll('Draft')"><i
+                    class="fas fa fa-clock me-2 "></i> Draft
+            </button>
+            
+            <button *ngIf="!this.ProformaInvoiceId" [disabled]="hasViewRoute" class="btn btn-primary savebtn me-1" type="submit" (click)="saveAll('Save')"><i
+                    class="fas fa-save me-2"></i> Save
+            </button>
+            <button *ngIf="this.ProformaInvoiceId" [disabled]="hasViewRoute" class="btn btn-primary savebtn me-1" type="submit" (click)="saveAll('Save')"><i
+                    class="fas fa-save me-2"></i> Update
+            </button>
+            
+            <button [disabled]="hasViewRoute" type="button" class="btn btn-danger resetbtn" (click)="reset()"><i
+                    class="fas fa-times-circle"></i>
+                Reset
+            </button>
+        </div>
+    </mat-card>
+</div>

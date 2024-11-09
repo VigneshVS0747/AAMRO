@@ -1,0 +1,84 @@
+<div class="table-list-display">
+    <div class="component-list">
+        <h3 class="box-title">
+            <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+            <span>Expiry List</span>
+        </h3>
+        <div class="text-end"></div>
+        <hr class="mt-0 mb-4" />
+        <section class="custom-table-wrapper">
+            <kendo-grid [kendoGridBinding]="enquiry"  filterable="menu" [resizable]="true" [height]="560" [pageSize]="20"
+                [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="enquiryNumber" title="Enquiry Code" [width]="85">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{ dataItem.enquiryNumber }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="enquiryDate" title="Date" [width]="85">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{ dataItem.enquiryDate | date: 'dd/MMM/yyyy' }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="jobCategory" title="Job Category" [width]="95">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{ dataItem.jobCategory }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [width]="100"
+                    [headerStyle]="{ justifyContent: 'center' }" field="jobTypeName" title="Job Type">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{ dataItem.jobTypeName }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="salesowner" title="Sales Owner" [width]="100">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{ dataItem.salesowner }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="customerName" title="Customer Name" [width]="100">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{ optionSelectedCustomername(dataItem.customerId, dataItem.customerCategoryId) }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="enquiryStatus" title="Status" [width]="90">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{ dataItem.enquiryStatus }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" field="expiryDate"
+                  title="ExpiryDate"
+                  format="MM/dd/yyyy"
+                  filter="date"
+                    [headerStyle]="{ justifyContent: 'center' }"  [width]="90">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{ dataItem.expiryDate | date: 'MM/dd/yyyy' }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="lineItemName" title="Select" [width]="90">
+                    <ng-template kendoGridHeaderTemplate>
+                        <mat-checkbox (change)="toggleSelectAll($event)" ></mat-checkbox>
+                    </ng-template>
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                        <mat-checkbox [(ngModel)]="dataItem.selected" (change)="toggleSelect($event)">
+                        </mat-checkbox>
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+        </section>
+        <div class="text-end my-2">
+            <button class="btn btn-secondary" type="submit" (click)="Closemodal()">
+                Close
+             </button> &nbsp;
+            <button class="btn btn-primary" [disabled]="!isChecked" type="submit" (click)="Close()">
+              Close Expiry
+           </button> &nbsp;
+          </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+<kendo-grid [data]="view | async" [loading]="isLoading" [pageSize]="5" [skip]="skip" [pageable]="true" scrollable="none"
+    (pageChange)="pageChange($event)" [navigable]="true" kendoGridFocusable>
+    <kendo-grid-column *ngFor="let column of columns" [field]="column.field" [title]="column.title"
+        [width]="column.width" [filter]="column.filter" [filterable]="column.filterable ?? true"
+        [sortable]="column.sortable ?? true" [editable]="column.editable ?? true">
+    </kendo-grid-column>
+</kendo-grid>

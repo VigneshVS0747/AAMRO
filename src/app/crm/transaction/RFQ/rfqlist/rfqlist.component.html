@@ -1,0 +1,129 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <h3 class="box-title">
+      <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+      <span>RFQ List</span>
+    </h3>
+    <div class="text-end">
+      <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" type="button" (click)="Add()">
+        <i class="fa fa-plus-circle me-2"></i>Add
+      </button>
+    </div>
+
+    <hr class="mt-0 mb-4" />
+
+    <section class="custom-table-wrapper">
+      <kendo-grid [kendoGridBinding]="RFQLIST" [filterable]="true" RFQLIST [resizable]="true" [height]="600"
+        [pageSize]="10" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="rfqNumber" title="RFQ Id"  [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.rfqNumber }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="rfqAgainstName" title="RFQ Against"
+           [width]="105">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.rfqAgainstName }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="refNumber" title="Reference Number"
+           [width]="80" >
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.refNumber }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="rfqDate" title="Date"  [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.rfqDate | date: 'dd/MMM/yyyy'}}
+          </ng-template>
+        </kendo-grid-column>
+
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="jobTypeName" title="JobType"  [width]="89">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{dataItem.jobTypeName}}
+          </ng-template>
+        </kendo-grid-column>
+
+        <!-- <kendo-grid-column
+  [style]="{ 'text-align': 'left', padding: '5px' }"
+  [headerStyle]="{ justifyContent: 'center' }"
+  field="salesowner"
+  title="salesowner"
+>
+  <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+    
+  </ng-template>
+</kendo-grid-column> -->
+        <!-- <kendo-grid-column
+  [style]="{ 'text-align': 'left', padding: '5px' }"
+  [headerStyle]="{ justifyContent: 'center' }"
+  field="customerName"
+  title="customerName"
+>
+  <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+   
+  </ng-template>
+</kendo-grid-column> -->
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="statusname" title="RFQ Status"  [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{dataItem.statusname}}
+          </ng-template>
+        </kendo-grid-column>
+
+
+
+
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }"
+          title="Action"  [width]="80" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <a type="submit" (click)="onEdit(dataItem.rfqId)" *ngIf="pagePrivilege.includes('edit')"><i class="fas fa-square-pen"></i></a>&nbsp;
+            <a type="submit" (click)="view(dataItem.rfqId)" *ngIf="pagePrivilege.includes('view')"><i class="fas fa-eye"></i></a>&nbsp;
+            <a type="submit" (click)="
+                Delete(dataItem)
+                " *ngIf="pagePrivilege.includes('delete')"><i class="fas fa-trash"></i></a>&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+            justifyContent: 'center',
+          }" title="ACT"  [width]="65" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <a type="submit" matTooltip="Mail" matTooltipPosition="above"
+            (click)="SendMail(dataItem.rfqId)"> <i class="fas fa-envelope"></i></a>&nbsp;   
+            <a type="button" matTooltip="PQ" matTooltipPosition="above" (click)="PQ(dataItem.rfqId,dataItem.statusId)"><i
+                class="fas fa-arrows-rotate"></i></a>&nbsp;
+            <a type="submit" matTooltip="Follow Up History" matTooltipPosition="above"
+              (click)="OpenHistory(4,dataItem.rfqId,dataItem.statusId)"><i class="fas fa-clock-rotate-left"></i></a>&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+            justifyContent: 'center',
+          }" title="Compare"  [width]="55" [sticky]="true">
+          
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <a type="submit"  (click)="PQCompare()"><i class="fas fa-scale-balanced"></i></a>&nbsp;
+
+          </ng-template>
+        </kendo-grid-column>
+
+        <ng-template kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+      </kendo-grid>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,660 @@
+<div class="table-list-display">
+  <div class="component-creation">
+    <div class="header-container">
+      <h3 class="box-title">
+        <img src="./assets/images/billing-storage.png" alt="Job Type" />
+        <span>Part Master</span>
+      </h3>
+
+      <button class="btn btn-primary returntolistbtn" type="button" routerLink="/crm/master/partlist">
+        <i class="fa fa-list me-2"></i> Return to List
+      </button>
+    </div>
+
+    <!-- <hr class="mt-0 mb-4" /> -->
+
+    <mat-card>
+      <mat-card-title class="title cus-title">
+        {{titile}}
+      </mat-card-title>
+      <br />
+      <div class="cus-tab-group">
+        <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedIndex" #matgroup>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <i class="fas fa-house"></i>
+              General
+            </ng-template>
+
+            <div class="table-list-display">
+              <div class="component-creation">
+                <div class="header-container">
+
+
+                </div>
+
+                <!-- <hr class="mt-0 mb-4" /> -->
+
+                <mat-card>
+                  <mat-card-title class="title">
+                    <!-- {{titile}} -->
+                  </mat-card-title>
+                  <br />
+
+                  <mat-card-content>
+                    <form [formGroup]="Part">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <mat-form-field>
+                            <mat-label class="labelcolor">Part Number</mat-label>
+                            <input matInput type="text" [readonly]="disablefields" maxlength="20"
+                              formControlName="partNumber" placeholder="Part Number" autocomplete="off" />
+                            <mat-error *ngIf="
+                                    Part.controls['partNumber'].dirty &&
+                                    Part.hasError(
+                                        'required',
+                                        'partNumber'
+                                      )
+                                    " class="text-danger">Part Number is required*</mat-error>
+                          </mat-form-field>
+                        </div>
+
+
+                        <div class="col-md-4">
+                          <mat-form-field>
+                            <mat-label class="labelcolor">Part Name</mat-label>
+                            <input matInput type="text" [readonly]="disablefields" maxlength="100"
+                              formControlName="partName" placeholder="Part Name" autocomplete="off" />
+                            <mat-error *ngIf="
+                                    Part.controls['partName'].dirty &&
+                                    Part.hasError(
+                                        'required',
+                                        'partName'
+                                      )
+                                    " class="text-danger">Part Name is required*</mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                          <div style="float: inline-end;margin: -45px 0px 0px 22px;">
+                            <div class="my-2">
+                              <div class="backgroundBorder" *ngFor="let row of ImageDataArray;">
+                                <img *ngIf="row.defaultImage && row.livestatus" src="{{path}}{{row.imageName}}"
+                                  class="gallery-imges" (click)="showImage($event)">
+                                <!-- Add other image elements similarly -->
+                              </div>
+                              <!-- <div class="gallery" *ngIf="ImageDataArray.length === 0" >
+                                      <img  src="../../../../../assets/image/image (4).png" 
+                                         class="gallery-altimage">
+                                      <Add other image elements similarly -->
+                              <!-- </div> -->
+                            </div>
+                          </div>
+                        </div>
+                        <ng-template let-data #ImagePreview>
+                          <div class="d-flex justify-content-between">
+                            <h2 mat-dialog-title> Preview </h2>
+                            <mat-icon class="m-2" mat-dialog-close style="color: red;cursor: pointer;">close</mat-icon>
+                          </div>
+
+                          <img src="{{data}}" alt="" style="max-width: 700px;">
+
+                        </ng-template>
+
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <mat-form-field>
+                            <mat-label class="labelcolor">Model Number</mat-label>
+                            <input matInput [readonly]="disablefields" maxlength="50" type="text"
+                              formControlName="modelNumber" placeholder="Model Number" autocomplete="off">
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                          <mat-form-field>
+                              <mat-label class="labelcolor">Origin Country</mat-label>
+                              <input matInput formControlName="countryId" (keydown)="CEmpty($event)" [matAutocomplete]="autoCountry">
+                          </mat-form-field>
+                          <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayCountryLabelFn"
+                              (optionSelected)="CountrySelectedoption($event)">
+                              <mat-option *ngFor="let country of filteredCountryOptions$ | async" [value]="country"
+                                  [value]="country" [disabled]="country.isNotFound">
+                                  {{ country.countryName }}
+                              </mat-option>
+
+                          </mat-autocomplete>
+                      </div>
+                       
+
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <mat-form-field>
+                            <mat-label class="labelcolor">Description </mat-label>
+                            <textarea matInput [readonly]="disablefields" maxlength="500" type="text"
+                              formControlName="partDescription" placeholder="Description" autocomplete="off"></textarea>
+                          </mat-form-field>
+                        </div>
+
+
+                        <div class="col-md-4">
+                          <mat-checkbox class="example-margin" formControlName="livestatus">Active</mat-checkbox>
+                        </div>
+
+                      </div>
+
+                    </form>
+                    <div class="image-popup-container" id="imagePopup">
+                      <span class="close-button" (click)="closeImage()">×</span>
+                      <img src="" alt="Popup Image" id="popupImage">
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+            <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+              <!-- <button
+                      class="btn btn-primary savebtn me-1"
+                      type="submit"
+                      (click)="Savedata()"
+                      *ngIf="Showsave"
+                    >
+                      <i class="fa fa-save me-2"></i>Save
+                    </button> -->
+
+              <!-- <button
+                    class="btn btn-primary savebtn me-1"
+                    type="submit"
+                    (click)="Update()"
+                    *ngIf="ShowUpdate"
+                  >
+                    <i class="fa fa-save me-2"></i>Update
+                  </button> -->
+
+              <!-- <button
+                      type="submit"
+                      class="btn btn-danger resetbtn"
+                      (click)="reset()"
+                      *ngIf="ShowReset"
+                    >
+                      <i class="fa fa-times-circle me-2"></i>Reset
+                    </button>  -->
+            </div>
+
+
+          </mat-tab>
+
+          <mat-tab>
+
+            <ng-template mat-tab-label>
+              <i class="fas fa-bag-shopping"></i>
+              Brand Details
+            </ng-template>
+
+            <div class="col-md mx-3">
+              <button type="submit" class="btn btn-primary Addentry" (click)="openDialog()">
+                <i class="fa fa-plus-circle me-2"></i>Add
+              </button>
+            </div>
+
+            <div class="border border-1 rounded-4">
+              <table class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed">
+                <thead class="bg-light">
+                  <tr>
+                    <th class="center-header">S.No</th>
+                    <th class="center-header">Brand Name</th>
+                    <th class="center-header">Length(cm)</th>
+                    <th class="center-header">Breadth(cm)</th>
+                    <th class="center-header">Height(cm)</th>
+                    <th class="center-header">Weight(kg)</th>
+                    <!-- <th class="center-header">UOM</th> -->
+                    <th class="center-header">Storage Type</th>
+                    <th class="center-header" [hidden]="disablefields">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of BrandDetailsArray; let i = index">
+                    <td class="center-align">
+                      {{ i+1 }}
+                    </td>
+                    <td class="center-align">
+                      <span *ngIf="row.brandId">
+                        {{row.brandName}}
+                      </span>
+                    </td>
+                    <td class="center-align">
+                      {{row.length | number:'1.2-2'}}
+                    </td>
+                    <td class="center-align">
+                      {{row.breadth | number:'1.2-2'}}
+                    </td>
+                    <td class="center-align">
+                      {{row.height | number:'1.2-2'}}
+                    </td>
+                    <td class="center-align">
+                      {{row.weight | number:'1.2-2'}}
+                    </td>
+                    <!-- <td class="center-align">
+                            <span *ngIf="row.storageUOMId">
+                                {{ getSelecteduom(row.storageUOMId) }}
+                              </span>
+                          </td> -->
+                    <td class="center-align">
+                      <span *ngIf="row.storageTypeId">
+                        {{row.storageTypeName }}
+                      </span>
+                    </td>
+
+                    <td class="center-align" [hidden]="disablefields">
+
+                      <a type="submit" (click)="View(row,i)"><i class="fas fa-eye"></i></a>&nbsp;
+                      <a type="submit" (click)="Edit(row,i)"><i class="fas fa-square-pen"></i></a>&nbsp;
+                      <a type="submit" (click)="DeleteBrand(row,i)"><i class="fas fa-trash"></i></a>&nbsp;
+                    </td>
+                  </tr>
+                </tbody>
+                <!-- <div class="align" *ngIf="ApprovalData.length === 0">
+                        <p>Add Approvals Here.</p>
+                      </div> -->
+              </table>
+            </div>
+
+
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <i class="fas fa-image"></i>
+              Image Details
+            </ng-template>
+            <form>
+              <div class="cus-border border border-1 rounded-4">
+                <table class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed">
+                  <thead class="bg-light">
+                    <tr>
+                      <th class="center-header">File</th>
+                      <th class="center-header">Default</th>
+                      <th class="center-header">Active</th>
+                      <th class="center-header" [hidden]="disablefields">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <td [hidden]="disablefields">
+                      <input type="file" [readonly]="disablefields" (change)="selectFile($event)" [multiple]="true"
+                        class="form-control" width="50%" />
+
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td class="center-align">
+                      <!-- <div class="col-md mx-3" >
+                                <button
+                                  type="submit"
+                                  class="btn btn-primary "  
+                                  (click)="addRow()"
+                                >
+                                <i class="fas fa-upload"></i>
+                                </button>
+                              </div> -->
+                    </td>
+                    <tr *ngFor="let row of ImageDataArray; let i = index">
+                      <td>
+                        <input type="text" [readonly]="true" [(ngModel)]="row.imageName" name="imagepath{{i}}"
+                          class="form-control" width="50%" />
+                      </td>
+                      <td class="center-align">
+                        <mat-checkbox class="example-margin" [(ngModel)]="row.defaultImage" (change)="toggleCheckbox(i)"
+                          name="defaultImage{{i}}"></mat-checkbox>
+                      </td>
+                      <td class="center-align">
+                        <mat-checkbox class="example-margin" [(ngModel)]="row.livestatus"
+                          (change)="togglelivestatus(i,$event)" name="livestatus{{i}}"></mat-checkbox>
+                      </td>
+                      <td class="center-align" [hidden]="disablefields">
+                        <a type="submit" (click)="downloadImage(row.imageName)"><i
+                            class="fas fa-cloud-arrow-down"></i></a>&nbsp;
+                        <a type="submit" (click)="DeleteImage(row,i)"><i class="fas fa-trash"></i></a>&nbsp;
+                        <a type="submit" (click)="show(row.imageName)" target="_blank"><i
+                            class="fas fa-eye"></i></a>&nbsp;
+                      </td>
+                    </tr>
+                  </tbody>
+                  <div class="image-popup-container" id="imagePopup">
+                    <span class="close-button" (click)="closeImage()">×</span>
+                    <img src="" alt="Popup Image" id="popupImage">
+                  </div>
+                  <!-- <div class="align" *ngIf="ApprovalData.length === 0">
+                        <p>Add Approvals Here.</p>
+                      </div> -->
+                </table>
+              </div>
+            </form>
+
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <i class="fas fa-photo-film"></i>
+              Gallery view
+            </ng-template>
+            <div class="align-download my-2 me-2">
+              <button type="submit" class="btn btn-primary returntolistbtn" (click)="downloadMultipleImage()"><i
+                  class="fas fa-cloud-arrow-down"></i>&nbsp;Download</button>
+            </div>
+
+            <div class="gallery-container my-2">
+              <div class="col-md-3 gallery" *ngFor="let row of ImageDataArray;">
+                <mat-checkbox class="example-margin" [(ngModel)]="row.selected"></mat-checkbox>
+                <img src="{{path}}{{row.imageName}}" alt="Image 2" class="gallery-img" (click)="showImage($event)">
+                <!-- Add other image elements similarly -->
+              </div>
+            </div>
+
+            <div class="image-popup-container" id="imagePopup">
+              <span class="close-button" (click)="closeImage()">×</span>
+              <img src="" alt="Popup Image" id="popupImage">
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <!-- <mat-card-content>
+          <form (submit)="onSaveBranch(branchForm)" #branchForm="ngForm">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Branch Code</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    required
+                    [readonly]="disablefields"
+                    maxlength="10"
+                    placeholder="Branch Code"
+                    [ngModel]="editedBranch?.branchCode"
+                    name="branchCode"
+                    #branchCode="ngModel"
+                    autocomplete="off"
+                  />
+                  <mat-error *ngIf="branchCode.invalid && isSubmitted">
+                    Branch Code is required*
+                  </mat-error>
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Branch Name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    required
+                    [readonly]="disablefields"
+                    maxlength="100"
+                    placeholder="Branch Name"
+                    [ngModel]="editedBranch?.branchName"
+                    name="branchName"
+                    #branchName="ngModel"
+                    autocomplete="off"
+                    (ngModelChange)="updateAliasName($event)"
+                  />
+  
+                  <mat-error *ngIf="branchName.invalid && isSubmitted">
+                    Branch Name is required*
+                  </mat-error>
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Alias Name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    required
+                    [readonly]="disablefields"
+                    maxlength="100"
+                    placeholder="Alias Name"
+                    [ngModel]="editedBranch?.aliasName"
+                    name="aliasName"
+                    #aliasName="ngModel"
+                    autocomplete="off"
+                  />
+  
+                  <mat-error *ngIf="aliasName.invalid && isSubmitted">
+                    Alias Name is required*
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Contact Person</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    required
+                    maxlength="40"
+                    [readonly]="disablefields"
+                    placeholder="Contact Person"
+                    [ngModel]="editedBranch?.contactPerson"
+                    name="contactPerson"
+                    #contactPerson="ngModel"
+                    autocomplete="off"
+                  />
+                  <mat-error *ngIf="contactPerson.invalid && isSubmitted"
+                    >Contact Person is required*</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Contact Number</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    required
+                    maxlength="15"
+                    [readonly]="disablefields"
+                    placeholder="Contact Number"
+                    [ngModel]="editedBranch?.contactNumber"
+                    name="contactNumber"
+                    #contactNumber="ngModel"
+                    autocomplete="off"
+                    (keydown)="onKeydown($event)"
+                  />
+                  <mat-error *ngIf="contactNumber.invalid && isSubmitted"
+                    >Contact Number is required*</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Currency</mat-label>
+                  <input
+                    matInput
+                    [matAutocomplete]="autoCurrency"
+                    [readonly]="disablefields"
+                    name="currency"
+                    #currencyInput="ngModel"
+                    [(ngModel)]="currentCurrency"
+                    (ngModelChange)="doFilter(4)"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
+                      currencyInput.invalid &&
+                      (currencyInput.dirty || currencyInput.touched) &&
+                      isSubmitted
+                    "
+                  >
+                    Currency is required*.
+                  </mat-error>
+                </mat-form-field>
+  
+                <mat-autocomplete #autoCurrency="matAutocomplete">
+                  <mat-option
+                    *ngFor="let currency of filteredCurrencies"
+                    [value]="currency.currencyName"
+                    (onSelectionChange)="onCurrencySelected($event, currency)"
+                    [disabled]="currency.isNotFound"
+                  >
+                    {{ currency.currencyName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Branch Address Line1</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    required
+                    maxlength="40"
+                    [readonly]="disablefields"
+                    placeholder="Branch Address Line1"
+                    [ngModel]="editedBranch?.branchAddressLine1"
+                    name="branchAddressLine1"
+                    #branchAddressLine1="ngModel"
+                    autocomplete="off"
+                  />
+                  <mat-error *ngIf="branchAddressLine1.invalid && isSubmitted"
+                    >Branch Address Line1 is required*</mat-error
+                  >
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Branch Address Line2</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    maxlength="40"
+                    placeholder="Branch Address Line2"
+                    [ngModel]="editedBranch?.branchAddressLine2"
+                    name="branchAddressLine2"
+                    [readonly]="disablefields"
+                    #branchAddressLine2="ngModel"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Country</mat-label>
+                  <input
+                    matInput
+                    [matAutocomplete]="autoCountry"
+                    [readonly]="disablefields"
+                    name="country"
+                    #countryInput="ngModel"
+                    [(ngModel)]="currentCountry"
+                    (ngModelChange)="doFilter(1)"
+                    required
+                  />
+                  <mat-error *ngIf="countryInput.invalid && isSubmitted">
+                    Country is required*.
+                  </mat-error>
+                </mat-form-field>
+                <mat-autocomplete #autoCountry="matAutocomplete">
+                  <mat-option
+                    *ngFor="let country of filteredCountries"
+                    [value]="country.countryName"
+                    (onSelectionChange)="onCountrySelected($event, country)"
+                    [disabled]="country.isNotFound"
+                  >
+                    {{ country.countryName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+  
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">State</mat-label>
+                  <input
+                    matInput
+                    [matAutocomplete]="autoState"
+                    [readonly]="disablefields"
+                    name="state"
+                    #stateInput="ngModel"
+                    [(ngModel)]="currentState"
+                    (ngModelChange)="doFilter(2)"
+                    required
+                  />
+                  <mat-error *ngIf="stateInput.invalid && isSubmitted">
+                    State is required*.
+                  </mat-error>
+                </mat-form-field>
+  
+                <mat-autocomplete #autoState="matAutocomplete">
+                  <mat-option
+                    *ngFor="let state of filteredStates"
+                    [value]="state.stateName"
+                    (onSelectionChange)="onStateSelected($event, state)"
+                    [disabled]="state.isNotFound"
+                  >
+                    {{ state.stateName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+  
+  <div class="col-md-4">
+  
+    <mat-form-field>
+      <mat-label class="labelcolor">City</mat-label>
+      <input matInput [matAutocomplete]="autoCity"    [readonly]="disablefields" name="city" #cityInput="ngModel" [(ngModel)]="currentCity" (ngModelChange)="doFilter(3)" required> 
+      <mat-error *ngIf="cityInput.invalid && isSubmitted">
+        City is required*.
+       </mat-error>
+       
+    </mat-form-field>
+    <mat-autocomplete #autoCity="matAutocomplete">
+      
+      <mat-option *ngFor="let city of filteredCities" [value]="city.cityName" (onSelectionChange)="onCitySelected($event,city)"
+      [disabled]="city.isNotFound">
+        {{ city.cityName }}
+      </mat-option>
+      
+    </mat-autocomplete>
+  
+  </div>
+  <div class="col-md-4">
+    <mat-label class="labelcolor">Branch Type<span [ngStyle]="{'color': isSubmitted && selectedBranchType === undefined ? 'red' : 'grey'}">*</span></mat-label><br>
+    <mat-radio-group aria-label="Select a branch type"   [disabled]="disablefields" [(ngModel)]="selectedBranchType" name="branchType" required>
+      <mat-radio-button value="1" >Warehouse</mat-radio-button>
+      <mat-radio-button value="2" >Office</mat-radio-button>
+      <mat-error *ngIf="isSubmitted && selectedBranchType === undefined && isSubmitted" style="font-size: 11px;">Branch Type is required*</mat-error>
+    </mat-radio-group>
+   
+  </div>
+  
+  
+  
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+  <mat-checkbox class="statusmargin"
+      name="branchStatus"
+      [checked]="branchStatus"
+      [disabled]="disablefields"
+      (change)="valueChange($event)">
+       Active</mat-checkbox>
+    </div>
+  </div>
+  
+  </form>
+  </mat-card-content> -->
+    </mat-card>
+  </div>
+</div>
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+  <button *ngIf="!edit" class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit" (click)="SavePartMaster()">
+    <i class="fa fa-save me-2"></i> Save
+  </button>
+  <button *ngIf="edit" class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit" (click)="SavePartMaster()">
+    <i class="fa fa-save me-2"></i> Update
+  </button>
+  <button type="button" [hidden]="disablefields" class="btn btn-danger resetbtn" (click)="Reset()">
+    <i class="fa fa-times-circle"></i> Reset
+  </button>
+</div>

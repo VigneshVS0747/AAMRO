@@ -1,0 +1,134 @@
+<div class="mb-3 px-3 py-2">
+    <h3 *ngIf="this.data?.list == undefined || this.data?.list == null" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        Add
+    </h3>
+    <h3 *ngIf="this.data?.list && !this.data?.view" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        Update
+    </h3>
+    <h3 *ngIf="this.data?.view" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        View
+    </h3>
+    <mat-divider></mat-divider>
+</div>
+<div mat-dialog-content>
+    <div>
+        <form [formGroup]="RoadTransportForm">
+            <div class="row mt-2">
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Transport Tracking Number</mat-label>
+                    <input type="text" placeholder="Transport Tracking Number" matInput formControlName="transportTrackingNumberControl">
+                    <mat-error
+                        *ngIf="f.transportTrackingNumberControl.touched && f.transportTrackingNumberControl.hasError('required') && !f.transportTrackingNumberControl.hasError('maxlength')">
+                        Transport Tracking Number is required
+                    </mat-error>
+                    <mat-error *ngIf="f.transportTrackingNumberControl.hasError('maxlength')">
+                        Transport Tracking Number cannot exceed 25 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Transport Type</mat-label>
+                    <input type="text" placeholder="Transport Type" aria-label="Number" matInput formControlName="transportTypeControl"
+                        [matAutocomplete]="auto1">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredTransportTypeControl | async" [value]="option?.transportType">
+                            {{option?.transportType}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f.transportTypeControl.touched && f.transportTypeControl.hasError('required')">Transport Type is
+                        required</mat-error>
+                    <mat-error *ngIf="f.transportTypeControl.hasError('invalidOption')">Invalid
+                        Option</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Trailer Type</mat-label>
+                    <input type="text" placeholder="Trailer Type" aria-label="Number" matInput formControlName="trailerTypeControl"
+                        [matAutocomplete]="auto2">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredTrailerTypeControl | async" [value]="option?.trailerTypeName">
+                            {{option?.trailerTypeName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f.trailerTypeControl.touched && f.trailerTypeControl.hasError('required')">Trailer Type is
+                        required</mat-error>
+                    <mat-error *ngIf=" f.trailerTypeControl.hasError('invalidOption')">Invalid
+                        Option</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">ETD</mat-label>
+                    <input matInput formControlName="ETDControl" [matDatepicker]="picker1" placeholder="DD/MM/YYYY">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">ETA</mat-label>
+                    <input matInput formControlName="ETAControl" [matDatepicker]="picker2" placeholder="DD/MM/YYYY">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error *ngIf="f.ETAControl.touched && f.ETAControl.hasError('dateRange')">
+                        ETA cannot be earlier than ETD
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Stage</mat-label>
+                    <input type="text" placeholder="Stage" aria-label="Number" matInput formControlName="stageControl"
+                        [matAutocomplete]="auto3">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredStage | async" [value]="option?.jobStage">
+                            {{option?.jobStage}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f.stageControl.touched && f.stageControl.hasError('required')">Stage is
+                        required</mat-error>
+                    <mat-error *ngIf="f.stageControl.hasError('invalidOption')">Invalid
+                        Option</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Status</mat-label>
+                    <input type="text" placeholder="Stage" aria-label="Number" matInput formControlName="statusControl"
+                        [matAutocomplete]="auto4">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto4="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredStatus | async"
+                            [value]="option?.jobStageStatus">
+                            {{option?.jobStageStatus}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f.statusControl.touched && f.statusControl.hasError('required')">Status is
+                        required</mat-error>
+                    <mat-error *ngIf="f.statusControl.hasError('invalidOption')">Invalid
+                        Option</mat-error>
+                </mat-form-field>
+            </div>
+
+
+        </form>
+
+    </div>
+</div>
+<div mat-dialog-actions style="float: right;" class="d-flex gap-2">
+    <button (click)="Close()" class="btn btn-secondary canceltbtn" type="submit">
+        Cancel
+    </button> &nbsp;&nbsp;
+    <button *ngIf="this.data?.list == undefined || this.data?.list == null" class="btn btn-primary returntolistbtn"
+        type="submit" (click)="save()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+    <button [disabled]="this.data?.view" *ngIf="this.data?.list" class="btn btn-primary returntolistbtn" type="submit"
+        (click)="save()">
+        <i class="fa fa-list me-2"></i>Update List
+    </button>
+
+</div>

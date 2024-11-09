@@ -1,0 +1,31 @@
+/* Container to center the icon */
+.weight-scale-icon-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+/* Define keyframes for zooming in and fading out */
+@keyframes zoomInFadeOut {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Apply the animation to the weight scale icon */
+.weight-scale-icon {
+    font-size: 00px;
+    color: #000; /* Adjust color as needed */
+    animation: zoomInFadeOut 3s ease-in-out;
+}

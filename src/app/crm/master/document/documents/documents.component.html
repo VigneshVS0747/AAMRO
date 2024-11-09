@@ -1,0 +1,113 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <h3 class="box-title" >
+      <img src="./assets/images/billing-storage.png" alt="Department Details">
+      <span>Documents</span>
+    </h3>
+    <div class="text-end">
+      <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" type="button" (click)="Add()"><i
+          class="fa fa-plus-circle me-2"></i>Add</button>
+    </div>
+    <hr class="mt-0 mb-4">
+    <section class="custom-table-wrapper">
+      <kendo-grid [kendoGridBinding]="documents" [filterable]="true" [resizable]="true" [height]="500" [pageSize]="10"
+        [sortable]="true" [pageable]="true" [selectable]="{enabled: true}"(pageChange)="pageChange($event)"
+        [skip]="skip">
+        
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+          [headerStyle]="{'justifyContent': 'center'}" field="documentName" title="Name *" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="dataItem.Isedit">
+              <input type="text" class="form-control" maxlength="100" [(ngModel)]="dataItem.documentName">
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              {{dataItem.documentName}}
+            </div>
+            <div class="text-danger" *ngIf="ValidateField(dataItem.documentName)">
+              <span>Document Name is required*</span>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+          [headerStyle]="{'justifyContent': 'center'}" field="documentCode" title="Code *" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="dataItem.Isedit">
+              <input type="text" class="form-control" maxlength="10" [(ngModel)]="dataItem.documentCode">
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              {{dataItem.documentCode}}
+            </div>
+            <div class="text-danger" *ngIf="ValidateField(dataItem.documentCode)">
+              <span>Document code is required*</span>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [width]="300" [style]="{'text-align': 'left','padding': '5px' }"
+        [headerStyle]="{'justifyContent': 'center'}" field="remarks" title="Remarks" [width]="150">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          <div *ngIf="dataItem.Isedit" style=" max-height: 85px;">
+            <!-- Use mat-form-field with autosize textarea for editing (as before) -->
+            <mat-form-field style="width: 100%;">
+              <mat-label>Remarks</mat-label>
+              <textarea matInput cdkTextareaAutosize class="custom-textarea" #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2" cdkAutosizeMaxRows="2" maxlength="500" [value]="dataItem.remarks"
+                (input)="onRemarksInput($event, dataItem)"></textarea>
+            </mat-form-field>
+          </div>
+          <div *ngIf="!dataItem.Isedit" style="overflow:auto; max-height: 50px;">
+            {{dataItem.remarks}}
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align': 'center'}" [headerStyle]="{'justifyContent': 'center'}"
+          field="livestatus" filter="boolean" title="Active" [width]="90">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.Isedit">
+              <mat-checkbox class="example-margin" [(ngModel)]="dataItem.livestatus"
+                (change)="handleChange($event, dataItem)"></mat-checkbox>
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              <mat-checkbox class="example-margin" [disabled]="true" [(ngModel)]="dataItem.livestatus"></mat-checkbox>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align': 'center'}" [headerStyle]="{'justifyContent': 'center'}"
+          title="Action" [width]="80" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="!dataItem.Isedit">
+              <a type="submit" *ngIf="pagePrivilege.includes('edit')" (click)="Edit(dataItem)"><i class="fas fa-square-pen"></i></a>&nbsp;
+              <a type="submit" *ngIf="pagePrivilege.includes('delete')" (click)="Delete(dataItem.documentId)"><i class="fas fa-trash"></i></a>
+            </div>
+            <div *ngIf="dataItem.Isedit">
+              <a type="submit" #submitButton tabindex="0" (keydown.enter)="hndlKeyPress($event , dataItem)"
+                (change)="hndlChange($event)" (click)="showAddRow ? Save(dataItem) : Update(dataItem)">
+                <ng-container *ngIf="showAddRow; else editIcon">
+                  <i class="fas fa-sd-card"></i>
+                </ng-container>
+                <ng-template #editIcon>
+                  <i class="fas fa-sd-card"></i>
+                </ng-template>
+              </a>&nbsp;
+              <a type="submit" #cancelButton tabindex="0" (keydown.enter)="handleKeyPress($event , dataItem)"
+                (click)="oncancel(dataItem)"><i class="fas fa-xmark"></i></a>
+            </div>
+
+          </ng-template>
+
+        </kendo-grid-column>
+
+        <ng-template kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+      </kendo-grid>
+    </section>
+
+
+  </div>
+</div>

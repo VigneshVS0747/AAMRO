@@ -1,0 +1,63 @@
+<div class="px-1 mt-2">
+    <form [formGroup]="filterForm">
+      <div class=" flex-wrap align-items-center justify-content-between">
+        <div class="row">
+          <div class="col-12 col-md-3">
+            <mat-form-field class="w-100">
+              <mat-label class="labelcolor">From Date</mat-label>
+              <input matInput [matDatepicker]="picker1" formControlName="fromDate">
+              <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-12 col-md-3">
+            <mat-form-field class="w-100">
+              <mat-label class="labelcolor">To Date</mat-label>
+              <input matInput [matDatepicker]="picker2" formControlName="toDate">
+              <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-12 col-md-3">
+            <mat-form-field class="w-100">
+                <mat-label class="labelcolor">Sales Owner</mat-label>
+                <mat-select formControlName="salesOwner" [multiple]="true">
+                  <mat-option *ngFor="let item of salesOwnerList" [value]="item.employeeId">
+                    {{item.employeeName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+            <mat-form-field class="w-100">
+                <mat-label class="labelcolor">Sales Executive</mat-label>
+                <mat-select formControlName="salesExecutive" [multiple]="true">
+                  <mat-option *ngFor="let item of salesOwnerList" [value]="item.employeeId">
+                    {{item.employeeName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-3">
+                <mat-form-field class="w-100">
+                    <mat-label class="labelcolor">Country</mat-label>
+                    <mat-select formControlName="country" [multiple]="true">
+                      <mat-option *ngFor="let item of country" [value]="item.countryId">
+                        {{item.countryName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+            <div class="col-12 col-md-9" style="align-content: center;">
+              <button class="btn btn-primary" style="font-size: 13px;" (click)="onSearch()">
+                <i class="fa fa-search ms-2"></i>Search
+              </button>
+            </div>
+          </div>
+          
+      </div>
+  
+    </form>
+  </div>

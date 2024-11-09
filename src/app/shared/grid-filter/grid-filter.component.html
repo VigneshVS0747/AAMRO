@@ -1,0 +1,64 @@
+<div class="px-1 mt-2">
+  <form [formGroup]="filterForm">
+    <div class="d-flex flex-wrap align-items-center justify-content-between">
+      <div class="row">
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100">
+            <mat-label class="labelcolor">From Date</mat-label>
+            <input matInput [matDatepicker]="picker1" formControlName="fromDate">
+            <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100">
+            <mat-label class="labelcolor">To Date</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="toDate">
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100">
+            <mat-label class="labelcolor">Search By</mat-label>
+            <mat-select formControlName="searchBy">
+              <mat-option *ngFor="let item of selectOptions" [value]="item.searchBy">
+                {{item.searchBy}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100" *ngIf="getSelectedFieldType() === 'input'">
+            <mat-label class="labelcolor">Search Text</mat-label>
+            <input matInput formControlName="searchText">
+          </mat-form-field>
+
+          <mat-form-field class="w-100" *ngIf="getSelectedFieldType() === 'date'">
+            <mat-label class="labelcolor">Select Date</mat-label>
+            <input matInput [matDatepicker]="picker3" formControlName="searchText" onblur="getOptionsForSelectedField()">
+            <mat-datepicker-toggle matIconSuffix [for]="picker3"></mat-datepicker-toggle>
+            <mat-datepicker #picker3></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field class="w-100" *ngIf="getSelectedFieldType() === 'select'">
+            <mat-label class="labelcolor">Select Option</mat-label>
+            <mat-select formControlName="searchText">
+              <mat-option *ngFor="let option of searchTextDrp" [value]="option.value">
+                {{option.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div>
+        <div class="col-12">
+          <button class="btn btn-primary" style="font-size: 13px;" (click)="onSearch()">
+            <i class="fa fa-search me-2"></i>Search
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>

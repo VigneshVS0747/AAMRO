@@ -1,0 +1,107 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <h3 class="box-title">
+      <img src="./assets/images/billing-storage.png" alt="Department Details" />
+      <span>Service Type</span>
+    </h3>
+    <div class="text-end">
+      <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" type="button" (click)="Add()">
+        <i class="fa fa-plus-circle me-2"></i>Add
+      </button>
+    </div>
+    <hr class="mt-0 mb-4" />
+    <section class="custom-table-wrapper">
+      <kendo-grid [kendoGridBinding]="ServiceType" [filterable]="true" [resizable]="true" [height]="500" [pageSize]="10"
+        [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" (pageChange)="pageChange($event)"
+        [skip]="skip">
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" media="(min-width: 450px)"
+          [headerStyle]="{ justifyContent: 'center' }" field="serviceTypeName" title="Name *" [width]="105">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="dataItem.Isedit">
+              <input type="text" class="form-control" maxlength="100" [(ngModel)]="dataItem.serviceTypeName" />
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              {{ dataItem.serviceTypeName }}
+            </div>
+            <div class="text-danger" *ngIf="ValidateField(dataItem.serviceTypeName)">
+              <span>Name is required*</span>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" media="(min-width: 450px)"
+        [headerStyle]="{ justifyContent: 'center' }" field="serviceTypeCode" title="Code *" [width]="90">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          <div *ngIf="dataItem.Isedit">
+            <input type="text" class="form-control" maxlength="10" [(ngModel)]="dataItem.serviceTypeCode" />
+          </div>
+          <div *ngIf="!dataItem.Isedit">
+            {{ dataItem.serviceTypeCode }}
+          </div>
+          <div class="text-danger" *ngIf="ValidateField(dataItem.serviceTypeCode)">
+            <span> Code is required*</span>
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+        <kendo-grid-column  [style]="{'text-align': 'left','padding': '5px' }" media="(min-width: 450px)"
+        [headerStyle]="{'justifyContent': 'center'}" field="serviceDescription" title="Description" [width]="220">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          <div *ngIf="dataItem.Isedit" style=" max-height: 85px;">
+            <!-- Use mat-form-field with autosize textarea for editing (as before) -->
+            <mat-form-field style="width: 100%;">
+              <mat-label>Description</mat-label>
+              <textarea matInput cdkTextareaAutosize class="custom-textarea" #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2" cdkAutosizeMaxRows="2" maxlength="500" [value]="dataItem.serviceDescription"
+                (input)="onDescriptionInput($event, dataItem)"></textarea>
+            </mat-form-field>
+          </div>
+          <div *ngIf="!dataItem.Isedit" style="overflow:auto; max-height: 50px;"
+          (dblclick)="openDescriptionDialog(dataItem.serviceDescription)">
+            {{dataItem.serviceDescription}}
+          </div>
+        </ng-template>
+      </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }" media="(min-width: 450px)"
+          field="livestatus" filter="boolean" title="Active" [width]="90">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.Isedit">
+              <mat-checkbox class="example-margin" [(ngModel)]="dataItem.livestatus"
+                (change)="handleChange($event, dataItem)"></mat-checkbox>
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              <mat-checkbox class="example-margin" [disabled]="true" [(ngModel)]="dataItem.livestatus"></mat-checkbox>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }" media="(min-width: 450px)" [width]="90"
+          title="Action" [width]="80" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="!dataItem.Isedit">
+              <a type="submit" (click)="Edit(dataItem)" *ngIf="pagePrivilege.includes('edit')"><i class="fas fa-square-pen"></i></a>&nbsp;
+              <a type="submit" (click)="Delete(dataItem.serviceTypeId)" *ngIf="pagePrivilege.includes('delete')"><i class="fas fa-trash"></i></a>
+            </div>
+            <div *ngIf="dataItem.Isedit">
+              <a type="submit" #submitButton tabindex="0" *ngIf="pagePrivilege.includes('create')" (keydown.enter)="hndlKeyPress($event, dataItem)"
+                (change)="hndlChange($event)" (click)="showAddRow ? Save(dataItem) : Update(dataItem)">
+                <ng-container *ngIf="showAddRow; else editIcon">
+                  <i class="fas fa-sd-card"></i>
+                </ng-container>
+                <ng-template #editIcon>
+                  <i class="fas fa-sd-card"></i> </ng-template></a>&nbsp;
+              <a type="submit" #cancelButton tabindex="0" (keydown.enter)="handleKeyPress($event, dataItem)"
+                (click)="oncancel(dataItem)"><i class="fas fa-xmark"></i></a>
+            </div>
+          </ng-template>
+         </kendo-grid-column>
+         <ng-template kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+      </kendo-grid>
+    </section>
+  </div>
+</div>

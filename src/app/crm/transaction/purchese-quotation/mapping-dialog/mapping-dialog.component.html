@@ -1,0 +1,282 @@
+<!-- 
+<div class="table-list-display">
+                    <div class="component-list">
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <div class="text-end">
+                                <button class="btn btn-primary Addbtn" type="button"  *ngIf="!viewMode" (click)="AddLineItem()">
+                                    <i class="fa fa-plus-circle me-2"></i>Add
+                                </button>
+                            </div>
+                            <hr class="mt-0 mb-4" />
+                            <section class="custom-table-wrapper">
+                                <kendo-grid [kendoGridBinding]="LineItems" [filterable]="true" [resizable]="true"
+                                    [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                    [selectable]="{enabled: true}">
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                    [headerStyle]="{ justifyContent: 'center' }" field="lineItemCategoryName"
+                                    title="Line Item*">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditLineItem">
+                                            <div class="ng-autocomplete">
+                                                <ng-autocomplete [data]="lineItemCtgDatalist"
+                                                    [searchKeyword]="keywordlineItemCategory" placeholder="Line Item Category"
+                                                    (selected)="selectLineCatevent($event)"
+                                                    [itemTemplate]="itemTemplate"
+                                                    [(ngModel)]="dataItem.lineItemCategoryName"
+                                                    [notFoundTemplate]="notFoundTemplate">
+                                                </ng-autocomplete>
+                                                <ng-template #itemTemplate let-item>
+                                                    <a [innerHTML]="item.lineItemCategoryName"></a>
+                                                </ng-template>
+                                                <ng-template #notFoundTemplate let-notFound>
+                                                    <div [innerHTML]="notFound"></div>
+                                                </ng-template>
+                                                <div class="text-danger"
+                                                    *ngIf="ValidateFieldLine(dataItem.lineItemCategoryName)">
+                                                    <span>Line Item Category is required*</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditLineItem">
+                                            {{ dataItem.lineItemCategoryName }}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                        [headerStyle]="{ justifyContent: 'center' }" field="lineItemName"
+                                        title="Line Item*">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <div *ngIf="dataItem.IseditLineItem">
+                                                <div class="ng-autocomplete">
+                                                    <ng-autocomplete [data]="lineItemDatalist"
+                                                        [searchKeyword]="keywordLine" placeholder="Select item"
+                                                        (selected)="selectLineevent($event)"
+                                                        [itemTemplate]="itemTemplate"
+                                                        [(ngModel)]="dataItem.lineItemName"
+                                                        [notFoundTemplate]="notFoundTemplate">
+                                                    </ng-autocomplete>
+                                                    <ng-template #itemTemplate let-item>
+                                                        <a [innerHTML]="item.lineItemName"></a>
+                                                    </ng-template>
+                                                    <ng-template #notFoundTemplate let-notFound>
+                                                        <div [innerHTML]="notFound"></div>
+                                                    </ng-template>
+                                                    <div class="text-danger"
+                                                        *ngIf="ValidateFieldLine(dataItem.lineItemName)">
+                                                        <span>Item is required*</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="!dataItem.IseditLineItem">
+                                                {{ dataItem.lineItemName }}
+                                            </div>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                                        [headerStyle]="{'justifyContent': 'center'}" field="value"
+                                        title="value">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <div *ngIf="dataItem.IseditLineItem">
+                                                <input type="text" class="form-control" [(ngModel)]="value">
+                                            </div>
+                                            <div *ngIf="!dataItem.IseditLineItem">
+                                                {{dataItem.value}}
+                                            </div>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{'text-align': 'center'}"
+                                        [headerStyle]="{'justifyContent': 'center'}" title="Action">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <div *ngIf="!dataItem.IseditLineItem">
+                                                <a type="button" *ngIf="!viewMode" (click)="EditLineItem(dataItem)"><i
+                                                        class="fas fa-square-pen"></i></a>&nbsp;
+                                                <a type="submit" *ngIf="!viewMode" (click)="DeleteLineItem(dataItem)"><i
+                                                        class="fas fa-trash"></i></a>
+                                            </div>
+                                            <div *ngIf="dataItem.IseditLineItem">
+                                                <a type="submit" *ngIf="!viewMode" #submitButton tabindex="0"
+                                                    (keydown.enter)="hndlKeyPressLineItem($event , dataItem)"
+                                                    (change)="hndlChangeLineItem($event)"
+                                                    (click)="showAddRowLineItem ? SaveLineItem(dataItem) : UpdateLineItem(dataItem)">
+                                                    <ng-container *ngIf="showAddRowLineItem; else editIcon">
+                                                        <i class="fas fa-sd-card"></i>
+                                                    </ng-container>
+                                                    <ng-template #editIcon>
+                                                        <i class="fas fa-sd-card"></i>
+                                                    </ng-template>
+                                                </a>&nbsp;
+                                                <a type="submit" *ngIf="!viewMode" #cancelButton tabindex="0"
+                                                    (keydown.enter)="handleKeyPressLineItem($event , dataItem)"
+                                                    (click)="oncancelLineItem(dataItem)"><i
+                                                        class="fas fa-xmark"></i></a>
+                                            </div>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-row-index></kendo-grid-row-index>
+                                </kendo-grid>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+
+ -->
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Line Item" />
+                    <span>Line Item Mapping</span>
+                </h3>
+                <div class="text-end">
+                    <button class="btn btn-primary Addbtn" type="button" *ngIf="!viewMode"
+                        (click)="AddLineItem()">
+                        <i class="fa fa-plus-circle me-2"></i>Add
+                    </button>
+                </div>
+                <hr class="mt-0 mb-4" />
+                <mat-card>
+                    <mat-card-title class="title">
+                        <!-- {{titile}} -->
+                    </mat-card-title>
+                    <br />
+                    <mat-card-content>
+                        <div class="table-list-display">
+                            <div class="component-list">
+                                <div fxLayout="row" fxLayoutWrap="wrap">
+
+                                    <section class="custom-table-wrapper">
+                                        <kendo-grid [kendoGridBinding]="lineItems" [filterable]="true"
+                                            [resizable]="true" [height]="500" [pageSize]="20" [sortable]="true"
+                                            [pageable]="true" [selectable]="{enabled: true}">
+                                            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                                [headerStyle]="{ justifyContent: 'center' }"
+                                                field="lineItemCategoryName" title="Category *">
+                                                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                                    <div *ngIf="dataItem.IseditLineItem">
+                                                        <div class="ng-autocomplete">
+                                                            <ng-autocomplete [data]="lineItemCtgDatalist"
+                                                                [searchKeyword]="keywordlineItemCategory"
+                                                                placeholder="Line Item Category"
+                                                                (selected)="selectLineCatevent($event,dataItem)"
+                                                                [itemTemplate]="itemTemplate"
+                                                                (input)="onInputChangelineitemCtg($event, dataItem)"
+                                                                [(ngModel)]="dataItem.lineItemCategoryName"
+                                                                [notFoundTemplate]="notFoundTemplate">
+                                                            </ng-autocomplete>
+                                                            <ng-template #itemTemplate let-item>
+                                                                <a [innerHTML]="item.lineItemCategoryName"></a>
+                                                            </ng-template>
+                                                            <ng-template #notFoundTemplate let-notFound>
+                                                                <div [innerHTML]="notFound"></div>
+                                                            </ng-template>
+                                                            <div class="text-danger"
+                                                                *ngIf="ValidateFieldLine(dataItem.lineItemCategoryName)">
+                                                                <span>Line Item Category is required*</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="!dataItem.IseditLineItem">
+                                                        {{ dataItem.lineItemCategoryName }}
+                                                    </div>
+                                                </ng-template>
+                                            </kendo-grid-column>
+                                            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                                [headerStyle]="{ justifyContent: 'center' }" field="lineItemName"
+                                                title="Aamro Line Item *">
+                                                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                                    <div *ngIf="dataItem.IseditLineItem">
+                                                        <div class="ng-autocomplete">
+                                                            <ng-autocomplete [data]="lineItemDatalist"
+                                                                [searchKeyword]="keywordLine" placeholder="Select item"
+                                                                (selected)="selectLineevent($event,dataItem)"
+                                                                [itemTemplate]="itemTemplate"
+                                                                (input)="onInputChangelineitem($event, dataItem)"
+                                                                [(ngModel)]="dataItem.lineItemName"
+                                                                [notFoundTemplate]="notFoundTemplate">
+                                                            </ng-autocomplete>
+                                                            <ng-template #itemTemplate let-item>
+                                                                <a [innerHTML]="item.lineItemName"></a>
+                                                            </ng-template>
+                                                            <ng-template #notFoundTemplate let-notFound>
+                                                                <div [innerHTML]="notFound"></div>
+                                                            </ng-template>
+                                                            <div class="text-danger"
+                                                                *ngIf="ValidateFieldLine(dataItem.lineItemName)">
+                                                                <span>Item is required*</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="!dataItem.IseditLineItem">
+                                                        {{ dataItem.lineItemName }}
+                                                    </div>
+                                                </ng-template>
+                                            </kendo-grid-column>
+                                            <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                                                [headerStyle]="{'justifyContent': 'center'}" field="value"
+                                                title="value *">
+                                                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                                    <div *ngIf="dataItem.IseditLineItem">
+                                                        <input  class="form-control" [(ngModel)]="dataItem.value" (input)="inputvalue($event,dataItem)" required>
+                                                    </div>
+                                                    <div class="text-danger"
+                                                                *ngIf="ValidateField(dataItem.value)">
+                                                                <span>Value is required*</span>
+                                                            </div>
+                                                    <div *ngIf="!dataItem.IseditLineItem">
+                                                        {{dataItem.value}}
+                                                    </div>
+                                                </ng-template>
+                                                
+                                            </kendo-grid-column>
+                                            <kendo-grid-column [style]="{'text-align': 'center'}"
+                                                [headerStyle]="{'justifyContent': 'center'}" title="Action">
+                                                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                                    <div *ngIf="!dataItem.IseditLineItem">
+                                                        <a class="edit"type="button" *ngIf="!viewMode"
+                                                            (click)="EditLineItem(dataItem)"><i
+                                                                class="fas fa-square-pen"></i></a>&nbsp;
+                                                        <a  class="delete"type="submit" *ngIf="!viewMode"
+                                                            (click)="DeleteLineItem(dataItem)"><i
+                                                                class="fas fa-trash"></i></a>
+                                                    </div>
+                                                    <div *ngIf="dataItem.IseditLineItem">
+                                                        <a type="submit" class="edit" *ngIf="!viewMode" #submitButton tabindex="0"
+                                                            (keydown.enter)="hndlKeyPressLineItem($event , dataItem)"
+                                                            (change)="hndlChangeLineItem($event)"
+                                                            (click)="showAddRowLineItem ? SaveLineItem(dataItem) : UpdateLineItem(dataItem)">
+                                                            <ng-container *ngIf="showAddRowLineItem; else editIcon">
+                                                                <i class="fas fa-sd-card"></i>
+                                                            </ng-container>
+                                                            <ng-template #editIcon>
+                                                                <i class="fas fa-sd-card"></i>
+                                                            </ng-template>
+                                                        </a>&nbsp;
+                                                        <a type="submit" class="delete" *ngIf="!viewMode" #cancelButton tabindex="0"
+                                                            (keydown.enter)="handleKeyPressLineItem($event , dataItem)"
+                                                            (click)="oncancelLineItem(dataItem)"><i
+                                                                class="fas fa-xmark"></i></a>
+                                                    </div>
+                                                </ng-template>
+                                            </kendo-grid-column>
+                                            <kendo-grid-row-index></kendo-grid-row-index>
+                                        </kendo-grid>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</mat-dialog-actions>
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+        Cancel
+    </button> &nbsp;&nbsp;
+    <button class="btn btn-primary returntolistbtn" *ngIf="!viewMode" type="submit" (click)="AddtoList()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+</mat-dialog-actions>

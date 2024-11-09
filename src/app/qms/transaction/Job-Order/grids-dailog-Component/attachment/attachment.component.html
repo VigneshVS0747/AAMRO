@@ -1,0 +1,87 @@
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Document" />
+                    <span>Document</span>
+                </h3>
+            </div>
+        </div>
+        <hr class="mt-0 mb-4" />
+        <mat-card>
+            <mat-card-title class="title">
+                <!-- {{titile}} -->
+            </mat-card-title>
+            <br />
+            <mat-card-content>
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="customerDoc" #form="ngForm" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field class="w-100">
+                                            <mat-label [ngClass]="{'labelcolor': isFieldEnabled(), 'labelcolorGray': !isFieldEnabled()}">Document Name</mat-label>
+                                            <input matInput formControlName="documentId" [readonly]="disablefields"
+                                                [matAutocomplete]="autoCVtype" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!customerDoc.controls['documentId'].value">Document Name
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoCVtype="matAutocomplete"
+                                            [displayWith]="displayDocumentListLabelFn"
+                                            (optionSelected)="DocumentListSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let documentsList of filteredDocumentListOptions$ | async"
+                                                [value]="documentsList" [disabled]="documentsList.isNotFound">
+                                                {{ documentsList.documentName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4 mt-4">
+                                        <mat-label class="labelcolorGray">Mandatory</mat-label>
+                                        <mat-checkbox formControlName="mandatory"></mat-checkbox>
+                                    </div>
+                                    <div class="col-md-4 mt-4">
+                                        <mat-label class="labelcolor">IsCollected</mat-label>
+                                        <mat-checkbox formControlName="isCollected"></mat-checkbox>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill" class="w-100">
+                                            <mat-label class="labelcolor">Collected Date</mat-label>
+                                            <input matInput [matDatepicker]="collectedDatePicker" placeholder="DD/MM/YYYY"
+                                                formControlName="collectedDate" [max]="maxDate">
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="collectedDatePicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #collectedDatePicker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4 mt-4">
+                                        <input class="w-100" type="file" formControlName="documentName" (change)="selectFile($event)"
+                                            [multiple]="true" class="form-control" width="50%" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field class="w-100">
+                                            <mat-label class="labelcolor">Remarks</mat-label>
+                                            <textarea matInput type="text" formControlName="remarks" rows="1" maxlength="500"
+                                                placeholder="Remarks"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</mat-dialog-actions>
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+        Cancel
+    </button> &nbsp;&nbsp;
+    <button class="btn btn-primary returntolistbtn" *ngIf="!viewMode" type="submit" (click)="AddtodocumentList()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+</mat-dialog-actions>

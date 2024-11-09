@@ -1,0 +1,64 @@
+<div class="table-list-display">
+    <div class="component-list">
+      <h3 class="box-title">
+        <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+        <span>Comparision</span>
+      </h3>
+      <div class="text-end">
+        <button class="btn btn-primary Addbtn"  type="button" (click)="close()">
+          <i class="fa fa-plus-circle me-2"></i>Return
+        </button>
+      </div>
+  
+      <hr class="mt-0 mb-4" />
+  
+      <section class="custom-table-wrapper">
+<div style="display: flex; justify-content: space-between;">
+    <!-- First Grid -->
+    <div style="flex: 1; margin-right: 10px;">
+        <kendo-grid [data]="gridData1 | async" [loading]="isLoading" [height]="650" [width]="100" [navigable]="true">
+            <kendo-grid-column
+                field="vendorName"
+                title="Vendor"
+                [headerStyle]="{ 'text-align': 'center' }"
+                [style]="{ 'text-align': 'left', 'padding': '5px' }">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{dataItem.vendorName}}
+                </ng-template>
+            </kendo-grid-column>
+    
+            <ng-template kendoGridDetailTemplate let-dataItem>
+                <app-subgrid01 [pqPrice]="dataItem.pqPrice"></app-subgrid01>
+            </ng-template>
+        </kendo-grid>
+    </div>
+
+    <!-- Second Grid -->
+    <div style="flex: 1; margin-left: 10px;">
+        <kendo-grid [data]="gridData2 | async" [loading]="isLoading" [height]="650" [width]="100" [navigable]="true">
+            <kendo-grid-column
+                field="vendorName"
+                title="Vendor"
+                [headerStyle]="{ 'text-align': 'center' }"
+                [style]="{ 'text-align': 'left', 'padding': '5px' }">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{dataItem.vendorName}}
+                </ng-template>
+            </kendo-grid-column>
+    
+            <ng-template kendoGridDetailTemplate let-dataItem>
+                <app-subgrid01 [pqPrice]="dataItem.pqPrice"></app-subgrid01>
+            </ng-template>
+        </kendo-grid>
+    </div>
+</div>
+      </section>
+    </div>
+</div>
+
+
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary" (click)="close()" type="submit" >
+        Close
+     </button> &nbsp;&nbsp;
+</mat-dialog-actions>

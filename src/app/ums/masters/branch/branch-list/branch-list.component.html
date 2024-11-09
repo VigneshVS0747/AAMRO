@@ -1,0 +1,70 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <h3 class="box-title" *ngIf="branches.length > 0">
+      <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+      <span>Branch</span>
+    </h3>
+    <div class="text-end" *ngIf="pagePrivilege.includes('create')">
+      <button class="btn btn-primary Addbtn" type="button" (click)="addBranch()">
+        <i class="fa fa-plus-circle me-2"></i>Add
+      </button>
+    </div>
+    <hr class="mt-0 mb-4" />
+    <section class="custom-table-wrapper">
+      <kendo-grid [kendoGridBinding]="branches" [filter]="filter" [filterable]="true" [resizable]="true" [height]="500"
+        [pageSize]="pageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }"
+        (filterChange)="onFilterChange($event)">
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="branchName" title="Name">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.branchName }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="branchCode" title="Code">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.branchCode }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="aliasName" title="Alias Name">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.aliasName }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="branchTypeName" title="Branch Type">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.branchTypeName }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }"
+          field="livestatus" filter="boolean" title="Active">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <mat-checkbox class="example-margin" [disabled]="true" [(ngModel)]="dataItem.livestatus"></mat-checkbox>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }"
+          title="Action">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <!-- <a type="submit" routerLink="/ums/authmat/{{dataItem.authorizationMatrixID}}"><i class="fas fa-eye"></i></a>&nbsp; -->
+            <a type="submit" *ngIf="pagePrivilege.includes('edit')"
+              routerLink="/ums/master/branches/edit/{{ dataItem.branchId }}"><i class="fas fa-square-pen"></i></a>&nbsp;
+            <a type="submit" *ngIf="pagePrivilege.includes('delete')" (click)="onDelete(dataItem)"><i
+                class="fas fa-trash"></i></a>&nbsp;
+            <a type="submit" *ngIf="pagePrivilege.includes('view')"
+              routerLink="/ums/master/branches/view/{{ dataItem.branchId }}"><i class="fas fa-eye"></i></a>&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+        <ng-template kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+      </kendo-grid>
+    </section>
+  </div>
+</div>

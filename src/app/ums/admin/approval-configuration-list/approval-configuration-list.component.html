@@ -1,0 +1,96 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <h3 class="box-title">
+      <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+      <span>ApprovalConfiguration List</span>
+    </h3>
+    <div class="text-end" *ngIf="pagePrivilege.includes('edit')">
+      <button
+        class="btn btn-primary Addbtn"
+        type="button"
+        routerLink="/ums/activity/approvalconfiguration/create"
+      >
+        <i class="fa fa-plus-circle me-2"></i>Add
+      </button>
+    </div>
+
+    <hr class="mt-0 mb-4" />
+
+    <section class="custom-table-wrapper">
+      <kendo-grid
+        [kendoGridBinding]="ApprovalActivity"
+        [filterable]="true"
+        [filter]="filter"
+        [resizable]="true"
+        [height]="500"
+        [pageSize]="pageSize"
+        [sortable]="true"
+        [pageable]="true"
+        [selectable]="{ enabled: true }"
+        (filterChange)="onFilterChange($event)"
+      >
+        <kendo-grid-column
+          [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }"
+          field="menuName"
+          title="Menu Name"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.menuName }}
+          </ng-template>
+        </kendo-grid-column>
+        <!-- <kendo-grid-column
+          [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }"
+          field="activityName"
+          title="Activity Name"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.activityName }}
+          </ng-template>
+        </kendo-grid-column> -->
+        <kendo-grid-column
+          [style]="{ 'text-align': 'center' }"
+          [headerStyle]="{ justifyContent: 'center' }"
+          title="Action"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <a
+              *ngIf="pagePrivilege.includes('edit')"
+              type="submit"
+              routerLink="/ums/activity/approvalconfiguration/edit/{{
+                dataItem.subMenuId
+              }}"
+              ><i class="fas fa-square-pen"></i></a
+            >&nbsp;
+            <a
+              *ngIf="pagePrivilege.includes('delete')"
+              type="submit"
+              (click)="onDelete(dataItem.subMenuId)"
+              ><i class="fas fa-trash"></i></a
+            >&nbsp;
+            <a
+              *ngIf="pagePrivilege.includes('view')"
+              type="submit"
+              routerLink="/ums/activity/approvalconfiguration/view/{{
+                dataItem.subMenuId
+              }}"
+              ><i class="fas fa-eye"></i></a
+            >&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+        <ng-template
+        kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons
+          [buttonCount]="buttonCount"
+        ></kendo-pager-numeric-buttons>
+        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+       
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template> 
+      </kendo-grid>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+<div class="table-list-display">
+    <div class="component-creation">
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Job Type" />
+                <span>Joborder</span>
+            </h3>
+
+            <button class="btn btn-primary returntolistbtn" type="button" routerLink="/crm/transaction/enquirylist">
+                <i class="fa fa-list me-2"></i> Return to List
+            </button>
+        </div>
+
+        <hr class="mt-0 mb-4" />
+
+        <mat-card>
+            <mat-card-title class="title cus-title">
+                <!-- //{{titile}} -->
+            </mat-card-title>
+            <br />
+            <div class="cus-tab-group hideOverflow">
+                <mat-tab-group animationDuration="0ms">
+
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <i class="fas fa-house"></i>
+                            General
+                        </ng-template>
+                        <div class="table-list-display">
+                            <div class="component-creation">
+                                <div class="header-container">
+
+
+                                </div>
+
+                                <!-- <hr class="mt-0 mb-4" /> -->
+
+                                <mat-card>
+                                    <mat-card-title class="title">
+                                        <!-- {{titile}} -->
+                                    </mat-card-title>
+                                    <br />
+
+                                    <mat-card-content>
+                                       <form>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <mat-form-field>
+                                                    <mat-label class="labelcolorGray">Job Order Number</mat-label>
+                                                    <input matInput type="text" formControlName="jobOrderNumber"
+                                                    placeholder="Job Order Number" />
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <mat-form-field appearance="fill">
+                                                    <mat-label class="labelcolor">JobOrderDate</mat-label>
+                                                    <input matInput [matDatepicker]="JobOrderDateDatePicker"
+                                                        formControlName="enquiryDate" 
+                                                        [matDatepickerFilter]="dateFilter1">
+                                                    <mat-datepicker-toggle matSuffix
+                                                        [for]="JobOrderDateDatePicker"></mat-datepicker-toggle>
+                                                    <mat-datepicker #JobOrderDateDatePicker></mat-datepicker>
+                                                    <!-- <mat-error *ngIf="
+                                       Enquiry.controls['enquiryDate'].touched &&
+                                       Enquiry.hasError('required', 'enquiryDate')
+                                    " class="text-danger">Enquiry Date is required*</mat-error> -->
+                                                </mat-form-field>
+    
+                                            </div>
+                                        </div>
+                                     
+                                       </form>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </div>
+                        <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+
+                        </div>
+                    
+                    </mat-tab>
+
+                  
+
+                
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <i class="fas fa-paperclip"></i>
+                            Attachments
+                        </ng-template>
+
+                   
+
+                       
+
+
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </mat-card>
+    </div>
+</div>
+<!-- <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+    <button class="btn btn-primary savebtn me-1" *ngIf="showewdirectbutton" type="submit">
+        <i class="fa fa-save me-2"></i> Convert to Quote
+    </button>
+    <button class="btn btn-primary savebtn me-1" *ngIf="showewdirectbutton"  (click)="EnqtoFollowup()" type="submit">
+        <i class="fa fa-save me-2"></i>Follow Up
+    </button>
+    <button class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit"
+        (click)="SaveEnquiry()">
+        <i class="fa fa-save me-2"></i> Save
+    </button>
+    <button type="button" [hidden]="disablefields" class="btn btn-danger resetbtn"
+        (click)="Reset()">
+        <i class="fa fa-times-circle"></i> Reset
+    </button>
+</div>
+<ng-template let-data #ImagePreview>
+    <div class="d-flex justify-content-between">
+      <h2 mat-dialog-title> Preview  </h2>
+        <mat-icon class="m-2" mat-dialog-close style="color: red;cursor: pointer;">close</mat-icon>
+    </div>
+    <img src="{{data}}" alt="" style="max-width: 700px;">
+  </ng-template> -->

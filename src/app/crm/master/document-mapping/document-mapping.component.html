@@ -1,0 +1,125 @@
+<div class="table-list-display">
+    <div class="component-creation">
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Job Type" />
+                <span>Document Mapping</span>
+            </h3>
+        </div>
+    </div>
+    <div class="component-list">
+        <div class="text-end">
+            <button class="btn btn-primary Addbtn" type="button" *ngIf="pagePrivilege.includes('create')" (click)="AddDocument()"><i
+                    class="fa fa-plus-circle me-2"></i>Add</button>
+        </div>
+        <hr class="mt-0 mb-4">
+        <section class="custom-table-wrapper">
+            <kendo-grid [kendoGridBinding]="documentMappingList" [filterable]="true" [resizable]="true" [height]="500"
+                [pageSize]="10" [sortable]="true" [pageable]="true" [selectable]="{enabled: true}"(pageChange)="pageChange($event)"
+                [skip]="skip">
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px',overflow: 'visible' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="documentName" title="Document Name *"
+                    [width]="100">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="dataItem.IseditDoc">
+                            <div class="ng-autocomplete">
+                                <ng-autocomplete [data]="documents" [searchKeyword]="keywordDoc"
+                                    placeholder="Select Document" (selected)="selectDocevent($event)"
+                                    [itemTemplate]="itemTemplate" [(ngModel)]="dataItem.documentName"
+                                    [notFoundTemplate]="notFoundTemplate">
+                                </ng-autocomplete>
+                                <ng-template #itemTemplate let-item>
+                                    <a [innerHTML]="item.documentName"></a>
+                                </ng-template>
+                                <ng-template #notFoundTemplate let-notFound>
+                                    <div [innerHTML]="notFound"></div>
+                                </ng-template>
+                                <div class="text-danger" *ngIf="ValidateFieldDoc(dataItem.documentName)">
+                                    <span>Document is required*</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="!dataItem.IseditDoc">
+                            {{ dataItem.documentName }}
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px', overflow: 'visible' }"
+                [headerStyle]="{ justifyContent: 'center' }" field="screen" title="Screen Name *"
+                [width]="100">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    <div *ngIf="dataItem.IseditDoc">
+                        <div class="ng-autocomplete">
+                            <ng-autocomplete [data]="documentsCheckList" [searchKeyword]="keywordScreen"
+                                placeholder="Select Screen" (selected)="selectScreenvent($event)"
+                                [itemTemplate]="itemTemplate" [(ngModel)]="dataItem.screen"
+                                [notFoundTemplate]="notFoundTemplate">
+                            </ng-autocomplete>
+                            <ng-template #itemTemplate let-item>
+                                <a [innerHTML]="item.screen"></a>
+                            </ng-template>
+                            <ng-template #notFoundTemplate let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                            <div class="text-danger" *ngIf="ValidateFieldDoc(dataItem.screen)">
+                                <span>Screen Type is required*</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="!dataItem.IseditDoc">
+                        {{ dataItem.screen }}
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+                <kendo-grid-column [style]="{'text-align': 'center'}" [headerStyle]="{'justifyContent': 'center'}"
+                    field="mandatory" filter="boolean" title="Mandatory" [width]="100">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <div *ngIf="dataItem.IseditDoc">
+                            <mat-checkbox class="example-margin" [(ngModel)]="dataItem.mandatory"
+                                (change)="handleChangeDoc($event, dataItem)"></mat-checkbox>
+                        </div>
+                        <div *ngIf="!dataItem.IseditDoc">
+                            <mat-checkbox class="example-margin" [disabled]="true"
+                                [(ngModel)]="dataItem.mandatory"></mat-checkbox>
+                        </div>
+                    </ng-template>
+            </kendo-grid-column>
+                <kendo-grid-column [style]="{'text-align': 'center'}" [headerStyle]="{'justifyContent': 'center'}"
+                    title="Action" [width]="80" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="!dataItem.IseditDoc">
+                            <a type="button" *ngIf="pagePrivilege.includes('edit')" (click)="EditDoc(dataItem)"><i
+                                    class="fas fa-square-pen"></i></a>&nbsp;
+                            <a type="submit"  *ngIf="pagePrivilege.includes('delete')"(click)="Deletedoc(dataItem)"><i
+                                    class="fas fa-trash"></i></a>
+                        </div>
+                        <div *ngIf="dataItem.IseditDoc">
+                            <a type="submit"  #submitButton tabindex="0"
+                                (keydown.enter)="hndlKeyPressDoc($event , dataItem)" (change)="hndlChangeDoc($event)"
+                                (click)="showAddRowDoc ? SaveDoc(dataItem) : UpdateDoc(dataItem)">
+                                <ng-container *ngIf="showAddRowDoc; else editIcon">
+                                    <i class="fas fa-sd-card"></i>
+                                </ng-container>
+                                <ng-template #editIcon>
+                                    <i class="fas fa-sd-card"></i>
+                                </ng-template>
+                            </a>&nbsp;
+                            <a type="submit"  #cancelButton tabindex="0"
+                                (keydown.enter)="handleKeyPressDoc($event , dataItem)"
+                                (click)="oncancelDoc(dataItem)"><i class="fas fa-xmark"></i></a>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-row-index></kendo-grid-row-index>
+                <ng-template kendoPagerTemplate>
+                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                    <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+          
+                    <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+                    <kendo-pager-info></kendo-pager-info>
+                  </ng-template>
+                </kendo-grid>
+              </section>
+    </div>
+</div>

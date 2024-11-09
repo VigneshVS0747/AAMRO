@@ -1,0 +1,141 @@
+
+  <div class="table-list-display">
+    <div class="component-creation">
+      <div class="header-container">
+        <!-- <h3 class="box-title">
+          <img src="./assets/images/billing-storage.png" alt="Employee" />
+          <span>Follow Up</span>
+        </h3> -->
+      </div>
+      <hr class="mt-0 mb-4" />
+      <mat-card>
+        <mat-card-title class="title">
+          <!-- {{titile}} -->
+        </mat-card-title>
+        <br />
+      
+    
+<section class="custom-table-wrapper">
+    <kendo-grid
+      [kendoGridBinding]="vendorcontactlist"
+      [filterable]="true"
+      [resizable]="true"
+      [height]="500"
+      [pageSize]="20"
+      [sortable]="true"
+      [pageable]="true"
+      [selectable]="{ enabled: true }"
+    >
+   
+      <kendo-grid-column
+        [style]="{ 'text-align': 'left', padding: '5px' }"
+        [headerStyle]="{ justifyContent: 'center' }"
+        field="contactPerson"
+        title="Contact Person"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+         {{dataItem.contactPerson}}
+        </ng-template>
+      </kendo-grid-column>
+    
+    <kendo-grid-column
+    [style]="{ 'text-align': 'left', padding: '5px' }"
+    [headerStyle]="{ justifyContent: 'center' }"
+    field="contactTypeName"
+    title="ContactType Name"
+  >
+    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+     {{dataItem.contactTypeName}}
+    </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-column
+  [style]="{ 'text-align': 'left', padding: '5px' }"
+  [headerStyle]="{ justifyContent: 'center' }"
+  field="departmentName"
+  title="Department"
+>
+  <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+   {{dataItem.departmentName}}
+  </ng-template>
+</kendo-grid-column>
+  <kendo-grid-column
+      [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }"
+      field="designation"
+      title="Designation"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+       {{dataItem.designation}}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+    [style]="{ 'text-align': 'left', padding: '5px' }"
+    [headerStyle]="{ justifyContent: 'center' }"
+    field="contactPerson"
+    title="Phone"
+  >
+    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+     {{dataItem.contactPersonPhone}}
+    </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-column
+  [style]="{ 'text-align': 'left', padding: '5px' }"
+  [headerStyle]="{ justifyContent: 'center' }"
+  field="contactPerson"
+  title="Email"
+>
+  <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+   {{dataItem.contactPersonEmail}}
+  </ng-template>
+</kendo-grid-column>
+<kendo-grid-column
+[style]="{ 'text-align': 'left', padding: '5px' }"
+[headerStyle]="{ justifyContent: 'center' }"
+field="primaryContact"
+filter="boolean"
+title="Primary Contact"
+>
+<ng-template kendoGridCellTemplate let-dataItem="dataItem">
+ <mat-checkbox
+                class="example-margin"
+                [disabled]="true"
+                [(ngModel)]="dataItem.primaryContact"
+              ></mat-checkbox>
+</ng-template>
+</kendo-grid-column>
+      <kendo-grid-column
+      [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }"
+      field="Select"
+      title="Select" 
+    >
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+        <div *ngIf="dataItem.active==1">
+            <mat-checkbox
+              class="example-margin"
+              [(ngModel)]="dataItem.active"
+              [disabled]="disableselect"
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="dataItem.active!=1">
+            <mat-checkbox
+            class="example-margin"
+            (change)="toggleCheckbox(rowIndex)"
+            [disabled]="disableselect"
+          ></mat-checkbox>
+          </div>
+      </ng-template>
+    </kendo-grid-column>
+    </kendo-grid>
+  </section>
+      </mat-card>
+    </div>
+  </div>
+  <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+    <button class="btn btn-secondary my-2" type="submit"  (click)="Close()">
+        Cancel
+     </button> &nbsp;&nbsp;
+    <button class="btn btn-primary savebtn me-1" type="submit" [hidden]="hideselect" (click)="Addtolist()" >
+      <i class="fas fa-list-ul"></i>Add to List
+    </button>
+   

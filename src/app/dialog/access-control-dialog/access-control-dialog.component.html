@@ -1,0 +1,51 @@
+<mat-dialog-content>
+  <form></form>
+  <!-- <div class="w-100">
+    <mat-form-field class="w-100">
+      <mat-label class="labelcolor"> Authorization Matrix Name</mat-label>
+
+      <mat-select
+        name="selectedAuthorization"
+        [(ngModel)]="selectedAuthorizationId"
+        required
+      >
+        <mat-option [value]="null" disabled>Select Authorization</mat-option>
+        <mat-option *ngFor="let am of ams" [value]="am.authorizationMatrixID">
+          {{ am.authorizationMatrixName }}
+        </mat-option>
+      </mat-select>
+      <<mat-error *ngIf="!selectedAuthorization">Authorization name is required</mat-error>
+     </mat-form-field>
+  </div> -->
+
+  <div class="w-100">
+    <mat-form-field class="custom-form-field w-100">
+      <mat-label class="labelcolor"> Access Control Template</mat-label>
+
+      <mat-select
+        name="selectedAccessControl"
+        [(ngModel)]="selectedAccessControl"
+        [required]="isCreatedFlag"
+        [value]="selectedAccessControl"
+      >
+        <mat-option [value]="null" disabled>Select Access Control</mat-option>
+        <mat-option *ngFor="let act of acts" [value]="act">
+          {{ act.accessControlName }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!selectedAccessControl"
+        >Access Control Template is required</mat-error
+      >
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button
+    mat-button
+    (click)="formSubmit()"
+    [disabled]="!selectedAccessControl"
+  >
+    OK
+  </button>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+</mat-dialog-actions>

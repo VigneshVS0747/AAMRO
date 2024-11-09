@@ -1,0 +1,77 @@
+<div class="email-container" [formGroup]="mail">
+    <!-- Left content for mail information -->
+        <div class="left-content">
+            <h2 class="section-heading">Mail Information</h2>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>From</mat-label>
+                <input matInput readonly placeholder="Enter from" formControlName="from">
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>To</mat-label>
+                <input matInput readonly placeholder="Enter recipient" formControlName="to">
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>CC</mat-label>
+                <input type="text"
+                matInput
+                formControlName="cc"
+                (blur)="saveEmail()">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Bcc</mat-label>
+                <input matInput  placeholder="Enter bcc" formControlName="bcc">
+            </mat-form-field>
+            
+    
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Subject</mat-label>
+                <input matInput placeholder="Enter subject" formControlName="subject">
+            </mat-form-field>
+    
+            <div class="content-border">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Body</mat-label>
+                    <textarea matInput placeholder="Enter message body" rows="5" formControlName="body"></textarea>
+                </mat-form-field>
+            </div>
+    
+            <div class="button-container">
+                <button  type="submit"  class="btn btn-success resetbtn me-1" (click)="SendMail()"><i class="fas fa-paper-plane me-1"></i>Send</button>
+                <!-- <button  class="btn btn-warning resetbtn me-1" type="submit" (click)="Download()"><i class="fas fa-circle-arrow-down me-1"></i>Download</button> -->
+                <button  class="btn btn-danger resetbtn" (click)="Reset()"> <i class="fa fa-times-circle me-1"></i>Reset</button>
+            </div>
+        </div>
+    
+        <!-- Right content for attachments -->
+        <div class="right-content">
+            <h2 class="section-heading">Attachments</h2>
+            <div class="content-border">
+                <div class="input-with-icon">
+                    <input matInput class="form-control" readonly formControlName="attachment" />
+                    <i class="fas fa-paperclip"></i>
+                </div>
+            </div>
+
+            <h2 class="section-heading">Internal Documents</h2>
+            <div class="content-border">
+                <div class="input-with-icon">
+                    <input type="file" class="form-control" (change)="onFileSelected($event)" />
+                    <i class="fas fa-paperclip"></i>
+                </div>
+            </div>
+            <div class="imgenv">
+                <img src="../../../../assets/image/download.png">
+            </div>
+        </div>
+</div>
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary" type="submit" (click)="Close()">
+        Close
+     </button> &nbsp;&nbsp;
+
+</mat-dialog-actions>
+  

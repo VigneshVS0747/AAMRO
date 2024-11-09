@@ -1,0 +1,121 @@
+<div class="table-list-display">
+    <div class="component-list">
+      <div class="d-flex justify-content-between flex-wrap">
+        <h3 class="box-title">
+          <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+          <span>Enquiry Report</span>
+        </h3>
+      </div>
+
+      <hr class="mt-0 mb-4" />
+      <div>
+        <app-report-filter (filterChange)="onFilterChange($event)"></app-report-filter>
+        <!-- <button class="btn btn-primary custombtn" style="font-size: 13px;" (click)="openDialogWithTemplateRef(customColumnDialog)"><i class="fa-brands fa-intercom me-2"></i>Customize</button> -->
+      </div>
+  
+      <section class="custom-table-wrapper">
+  
+        <kendo-grid [kendoGridBinding]="enquiryReport" [filterable]="true" [resizable]="true" [height]="500" [pageSize]="10"
+          [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [excel]="{ fileName: 'Enquiries.xlsx', allPages: true, filterable: true }">
+
+        <kendo-grid-column format="{0:dd/MMM/yyyy}" filter="date" [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="enquiryDate" title="Enquiry Date" [width]="85">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.enquiryDate | date: 'dd/MMM/yyyy' }}
+          </ng-template>
+        </kendo-grid-column>
+  
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="enquiryNumber" title="Enquiry Number" [width]="85">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.enquiryNumber }}
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="originCountryName" title="Origin CountryName" [width]="85">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.originCountryName }}
+          </ng-template>
+        </kendo-grid-column>
+
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="customercategory" title="Customer Category" [width]="95">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.customercategory }}
+            </ng-template>
+          </kendo-grid-column>
+  
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }" [width]="100"
+            [headerStyle]="{ justifyContent: 'center' }" field="customerName" title="Customer Name">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.customerName }}
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="salesOwnerName" title="Sales Owner" [width]="100">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.salesOwnerName }}
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="salesExecutiveName" title="Sales Executive" [width]="100">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.salesExecutiveName}}
+            </ng-template>
+          </kendo-grid-column>
+  
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="jobTypeName" title="Job Type" [width]="90">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.jobTypeName }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-excel fileName="Enquiries.xlsx" [fetchData]="allData"  [filterable]="true"></kendo-grid-excel>
+        <ng-template kendoPagerTemplate>
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+            <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+            <kendo-pager-next-buttons></kendo-pager-next-buttons>
+            <button type="button" kendoGridExcelCommand class="ml-2" [svgIcon]="fileExcelIcon" style="background-color: #dddcdc !important">
+              Export to Excel
+            </button>
+            <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+            <kendo-pager-info></kendo-pager-info>
+          </ng-template>
+        </kendo-grid>
+      </section>
+    </div>
+  </div>
+  <ng-template #customColumnDialog>
+    <h2 mat-dialog-title>User Detail</h2>
+    <div mat-dialog-content>
+      <div class="table">
+        <div class="border border-1 rounded-4">
+          <kendo-grid [kendoGridBinding]="enquiryCustomizeColumns" [filterable]="true" [resizable]="true" [height]="500" [pageSize]="10"
+          [sortable]="true" [pageable]="true"  [selectable]="true" [excel]="{ fileName: 'Enquiries.xlsx', allPages: true, filterable: true }">
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="ColumnName" title="Column" [width]="85">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.columnName }}
+          </ng-template>
+        </kendo-grid-column>
+  
+          <kendo-grid-column  [style]="{ 'text-align': 'right', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="orderNo" title="Oreder Number" [width]="85">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.orderNo }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-checkbox-column class="chk" [style]="{ 'text-align': 'center', padding: '5px' }" [showSelectAll]="true" [width]="40"></kendo-grid-checkbox-column>
+        </kendo-grid>
+        </div>
+    </div>
+    </div>
+    <div mat-dialog-actions>
+      <button class="btn btn-primary" style="font-size: 13px;" (click)="closeDialog()">Cancel</button>&nbsp;
+      <button class="btn btn-primary" style="font-size: 13px;" (click)="closeDialog()">Save</button>
+    </div>
+  </ng-template>

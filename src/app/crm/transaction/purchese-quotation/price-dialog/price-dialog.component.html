@@ -1,0 +1,174 @@
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Price" />
+                    <span>Price Details</span>
+                </h3>
+            </div>
+        </div>
+        <hr class="mt-0 mb-4" />
+        <mat-card>
+            <mat-card-title class="title">
+                <!-- {{titile}} -->
+            </mat-card-title>
+            <br />
+            <mat-card-content>
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="priceForm" #form="ngForm" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Line Item Category</mat-label>
+                                            <input matInput formControlName="categoryId"
+                                                [matAutocomplete]="autolineItem" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!priceForm.controls['categoryId'].value">Line item
+                                                category
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autolineItem="matAutocomplete"
+                                            [displayWith]="displayLineItemCtgLabelFn"
+                                            (optionSelected)="LineItemCtgSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let lineItemCtgDatalist of filteredLineItemCtgOptions$ | async"
+                                                [value]="lineItemCtgDatalist"
+                                                [disabled]="lineItemCtgDatalist.isNotFound">
+                                                {{ lineItemCtgDatalist.lineItemCategoryName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <!-- <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Our Line Item</mat-label>
+                                        <input matInput formControlName="lineItemId" [matAutocomplete]="autolineItemId"  required>
+                                        <mat-error *ngIf="!priceForm.controls['lineItemId'].value">Our Line Item
+                                            is required*</mat-error>
+                                    </mat-form-field>
+                                    <mat-autocomplete #autolineItemId="matAutocomplete"
+                                        [displayWith]="displaylineitemLabelFn"
+                                        (optionSelected)="lineItemDatalistSelectedoption($event)">
+                                        <mat-option *ngFor="let lineItemDatalist of filteredlineitemOptions$ | async"
+                                            [value]="lineItemDatalist" [disabled]="lineItemDatalist.isNotFound">
+                                            {{ lineItemDatalist.lineItemName}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div> -->
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Vendor Line Item</mat-label>
+                                            <input matInput type="text" formControlName="vendorLineItemDesc"
+                                                maxlength="100" placeholder="Vendor Line Item" autocomplete="off"
+                                                required>
+                                            <mat-error *ngIf="!priceForm.controls['vendorLineItemDesc'].value">Vendor
+                                                line
+                                                item
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Calculation Parameter</mat-label>
+                                            <input matInput formControlName="calculationParameterId"
+                                                [matAutocomplete]="autocalculationParameterId" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error
+                                                *ngIf="!priceForm.controls['calculationParameterId'].value">Calculation
+                                                parameter
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocalculationParameterId="matAutocomplete"
+                                            [displayWith]="displayculationParLabelFn"
+                                            (optionSelected)="CalculationParSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let CalculationParlist of filteredCalculationParOptions$ | async"
+                                                [value]="CalculationParlist" [disabled]="CalculationParlist.isNotFound">
+                                                {{ CalculationParlist.calculationParameter}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label [ngClass]="{'labelcolorGray': calculationTypeReadonly, 'labelcolor': !calculationTypeReadonly}">Calculation Type</mat-label>
+                                            <input matInput formControlName="calculationTypeId"
+                                                [matAutocomplete]="autocalculationTypeId" required  [readonly]="calculationTypeReadonly">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error
+                                                *ngIf="!priceForm.controls['calculationTypeId'].value">Calculation
+                                                type
+                                                is required*</mat-error></mat-form-field>
+                                        <mat-autocomplete #autocalculationTypeId="matAutocomplete"
+                                            [displayWith]="displayculationTypeLabelFn"
+                                            (optionSelected)="CalculationTypeSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let CalculationTyplist of filteredCalculationTypeOptions$ | async"
+                                                [value]="CalculationTyplist" [disabled]="CalculationTyplist.isNotFound">
+                                                {{ CalculationTyplist.calculationType}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Value</mat-label>
+                                            <input matInput formControlName="value" (input)="value($event)"
+                                                placeholder="Value" autocomplete="off" required>
+                                            <mat-error *ngIf="!priceForm.controls['value'].value">Value
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Tax Name</mat-label>
+                                            <input matInput formControlName="taxId" (keydown)="emptytaxper($event)"
+                                                [matAutocomplete]="taxId">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #taxId="matAutocomplete" [displayWith]="displayTaxCodeLabelFn"
+                                            (optionSelected)="TaxCodeSelectedoption($event)">
+                                            <mat-option *ngFor="let taxcodelist of filteredTaxCodeOptions$ | async"
+                                                [value]="taxcodelist" [disabled]="taxcodelist.isNotFound">
+                                                {{ taxcodelist.taxCodeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">Tax Percentage</mat-label>
+                                            <input matInput type="text" formControlName="taxPer"
+                                                placeholder="Tax percentage" autocomplete="off" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Minimum Value</mat-label>
+                                            <input matInput formControlName="minValue" (input)="minValues($event)"
+                                                placeholder="Minimum Value" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Remarks</mat-label>
+                                            <textarea matInput cols="8" rows="2" maxlength="500" placeholder="Remarks"
+                                                formControlName="remarks"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</mat-dialog-actions>
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+        Cancel
+    </button> &nbsp;&nbsp;
+    <button class="btn btn-primary returntolistbtn" *ngIf="!viewMode" type="submit" (click)="AddtoList()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+</mat-dialog-actions>

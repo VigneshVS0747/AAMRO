@@ -1,0 +1,1333 @@
+<div *ngIf="ShowRFQAgainst">
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Employee" />
+                    <span>RFQ</span>
+                </h3>
+
+                <button class="btn btn-primary returntolistbtn" type="button" (click)="returntolist()">
+                    <i class="fa fa-list me-2"></i> Return to List
+                </button>
+            </div>
+            <hr class="mt-0 mb-4" />
+            <mat-card>
+                <mat-card-title class="title">
+                    {{titile}}
+                </mat-card-title>
+                <br />
+                <mat-card-content>
+                    <form [formGroup]="RfqForm">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field>
+                                    <mat-label class="labelcolor">RFQ Against</mat-label>
+                                    <input matInput (input)="deselect()" formControlName="rfqAgainstId"
+                                        [matAutocomplete]="rfqAgainst" [readonly]="disablefromnextform" />
+                                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                    <mat-autocomplete #rfqAgainst="matAutocomplete"
+                                        (optionSelected)="optionSelectedRfqAgainst($event)">
+                                        <mat-option *ngFor="let rfq of filteredRfqAgainst | async"
+                                            [value]="rfq.rfqAgainst">
+                                            {{ rfq.rfqAgainst }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="
+                            RfqForm.controls['rfqAgainstId'].touched &&
+                            RfqForm.hasError('required', 'rfqAgainstId')
+                            " class="text-danger">RFQ Against is required*</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3" *ngIf="SelectedRfqAgainstId !== 0 && SelectedRfqAgainstId !== 3">
+                                <mat-form-field>
+                                    <mat-label class="labelcolor">Reference Number </mat-label>
+                                    <input matInput formControlName="refNumberId" [readonly]="disablefromnextform"
+                                        [matAutocomplete]="refNumberId" />
+                                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                    <mat-autocomplete #refNumberId="matAutocomplete"
+                                        (optionSelected)="optionSelectedRefNumber($event)">
+                                        <mat-option *ngFor="let ref of filteredRefNumberIds | async" [value]="ref.code">
+                                            {{ ref.code }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="
+                        RfqForm.controls['refNumberId'].touched &&
+                        RfqForm.hasError('required', 'refNumberId')
+                        " class="text-danger">Reference Number ID is required*</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3" *ngIf="SelectedRfqAgainstId == 3">
+                                <mat-form-field>
+                                    <mat-label class="labelcolor">Job Type</mat-label>
+                                    <input matInput formControlName="jobTypeId" [matAutocomplete]="jobType" />
+                                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                    <mat-autocomplete #jobType="matAutocomplete"
+                                        (optionSelected)="optionSelectedJobTypeAgainstDirect($event)">
+                                        <mat-option *ngFor="let type of filteredJobTypes | async"
+                                            [value]="type.jobTypeName">
+                                            {{ type.jobTypeName }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </form>
+                </mat-card-content>
+                <div class="border border-1 rounded-4">
+                    <table class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="center-header">Line Item </th>
+                                <th class="center-header">Select
+                                    <mat-checkbox [checked]="selectall"
+                                        (change)="toggleSelectAll($event)"></mat-checkbox>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngFor="let row of rfqlineitem; let i = index">
+
+                                <td class="center-align">
+                                    {{row.lineItemName}}
+                                </td>
+                                <td class="center-align">
+                                    <mat-checkbox class="example-margin" [checked]="checked"
+                                        (change)="toggleCheckbox(i)"></mat-checkbox>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <!-- <div class="align" *ngIf="ApprovalData.length === 0">
+                      <p>Add Approvals Here.</p>
+                    </div> -->
+                    </table>
+                </div>
+                <!-- <div class="border border-1 rounded-4" *ngIf="showforstandalone">
+                    <div class="text-end my-2">
+                        <button class="btn btn-primary" [disabled]="enable" (click)="addRow()"> <i
+                                class="fa fa-plus-circle me-2"></i>
+                            Add
+                        </button>
+                    </div>
+                    <table class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="center-header header-width">Line Item </th>
+                                <th class="center-header ">Select</th>
+
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td class="center-align">
+                                <mat-form-field>
+                                    <mat-label class="labelcolor">Line Item</mat-label>
+                                    <input matInput [(ngModel)]="lineItemId" [matAutocomplete]="lineItem" />
+                                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                    <mat-autocomplete #lineItem="matAutocomplete"
+                                        (optionSelected)="optionSelectedLineItem($event)">
+                                        <mat-option *ngFor="let item of filteredLineItems | async"
+                                            [value]="item.lineItemName">
+                                            {{ item.lineItemName }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="
+                            RfqForm.controls['lineItemId'].touched &&
+                            RfqForm.hasError('required', 'lineItemId')
+                            " class="text-danger">Line Item is required*</mat-error>
+                                </mat-form-field>
+                            </td>
+                            <td class="center-align">
+                            </td>
+                        </tr>
+
+                        <tbody>
+                            <tr *ngFor="let row of standalonearray; let i = index">
+                                <td class="center-align" (dblclick)="editCell(i)">
+                                    <span *ngIf="!editingIndex || editingIndex !== i">
+                                        {{row.lineItemName}}
+                                    </span>
+                                    <ng-container *ngIf="editingIndex === i">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Line Item</mat-label>
+                                            <input matInput [ngModel]="row.lineItemName" name="lineItemId{{i}}"
+                                                [matAutocomplete]="lineItem" />
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-autocomplete #lineItem="matAutocomplete"
+                                                (optionSelected)="optionSelectedLineItem($event)">
+                                                <mat-option *ngFor="let item of filteredLineItems | async"
+                                                    [value]="item.lineItemName">
+                                                    {{ item.lineItemName }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error
+                                                *ngIf="RfqForm.controls['lineItemId'].touched && RfqForm.hasError('required', 'lineItemId')"
+                                                class="text-danger">Line Item is required*</mat-error>
+                                        </mat-form-field>
+                                    </ng-container>
+                                </td>
+                                <td class="center-align">
+                                    <mat-checkbox class="example-margin" (change)="toggle(i)"></mat-checkbox>
+                                </td>
+                            </tr>
+
+
+                            <tr *ngFor="let row of standalonearray">
+
+                                <td class="center-align">
+                                    <span *ngIf="row.lineItemId">
+                                        {{getSelectedlineitem(row.lineItemId)}}
+                                    </span>
+                                </td>
+                                <td class="center-align">
+                                    <mat-checkbox class="example-margin"></mat-checkbox>
+                                </td>
+                            </tr> -->
+                <!-- </tbody>
+                      
+                    </table>
+                </div>  -->
+
+                <!-- <div class="table-list-display" *ngIf="showforstandalone">
+                    <div class="component-list">
+                           
+                            <hr class="mt-0 mb-4" />
+                            <section class="custom-table-wrapper">
+                                <div class="text-end">
+                                    <button class="btn btn-primary d-flex align-items-center" type="button" 
+                                        (click)="AddLineItem()">
+                                        <i class="fa fa-plus-circle me-2"></i>Add
+                                    </button>
+                                </div>
+                                <kendo-grid [kendoGridBinding]="standalonearray" [filterable]="true" [resizable]="true"
+                                    [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                    [selectable]="{enabled: true}">
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                        [headerStyle]="{ justifyContent: 'center' }" field="lineItemName"
+                                        title="Line Item *" [width]="100">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <div *ngIf="dataItem.IseditLineItem">
+                                                <mat-form-field>
+                                                    <mat-label class="labelcolor">Line Item</mat-label>
+                                                    <input matInput [(ngModel)]="dataItem.lineItemName" [matAutocomplete]="lineItem" />
+                                                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                    <mat-autocomplete #lineItem="matAutocomplete"
+                                                        (optionSelected)="optionSelectedLineItem($event)">
+                                                        <mat-option *ngFor="let item of filteredLineItems | async"
+                                                            [value]="item.lineItemName">
+                                                            {{ item.lineItemName }}
+                                                        </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
+                                                <div class="text-danger"
+                                                *ngIf="ValidateFieldLine(dataItem.lineItemName)">
+                                                <span>lineItemName is required*</span>
+                                            </div>
+                                            </div>
+                                            <div *ngIf="!dataItem.IseditLineItem">
+                                                {{ dataItem.lineItemName }}
+                                            </div>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                                        [headerStyle]="{'justifyContent': 'center'}" field="select"
+                                        title="Select" [width]="100"  filter="boolean">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <div *ngIf="dataItem.IseditLineItem">
+                                                <mat-checkbox class="example-margin" [(ngModel)]="dataItem.select" ></mat-checkbox>
+                                            </div>
+                                            <div *ngIf="!dataItem.IseditLineItem">
+                                                <mat-checkbox class="example-margin" [disabled]="true" [(ngModel)]="dataItem.select"></mat-checkbox>
+                                            </div>
+                                        </ng-template>
+                                    </kendo-grid-column>
+
+                                    <kendo-grid-column [style]="{'text-align': 'center'}"
+                                        [headerStyle]="{'justifyContent': 'center'}" title="Action" [width]="80" [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                                            <div *ngIf="!dataItem.IseditLineItem">
+                                                <a type="button"  (click)="EditLineItem(dataItem,rowIndex)"><i
+                                                        class="fas fa-square-pen"></i></a>&nbsp;
+                                                <a type="submit" (click)="DeleteLineItem(dataItem,rowIndex)"><i
+                                                        class="fas fa-trash"></i></a>
+                                            </div>
+                                            <div *ngIf="dataItem.IseditLineItem">
+                                                <a type="submit"  #submitButton tabindex="0"
+                                                    (click)="showAddRowLineItem ? SaveLineItem(dataItem) : UpdateLineItem(dataItem,rowIndex)">
+                                                    <ng-container *ngIf="showAddRowLineItem; else editIcon">
+                                                        <i class="fas fa-sd-card"></i>
+                                                    </ng-container>
+                                                    <ng-template #editIcon>
+                                                        <i class="fas fa-square-pen"></i>
+                                                    </ng-template>
+                                                </a>&nbsp;
+                                                <a type="submit"  #cancelButton tabindex="0"
+                                                    (click)="oncancelLineItem(dataItem,rowIndex)"><i
+                                                        class="fas fa-xmark"></i></a>
+                                            </div>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-row-index></kendo-grid-row-index>
+                                </kendo-grid>
+                            </section>
+                    </div>
+                </div> -->
+            </mat-card>
+        </div>
+    </div>
+    <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+        <button class="btn btn-primary savebtn me-1" type="submit" (click)="generateRFQ()">
+            <i class="fa fa-save me-2"></i> Generate RFQ
+        </button>
+    </div>
+</div>
+
+
+
+<div *ngIf="ShowgenerateRFQ">
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Job Type" />
+                    <span>RFQ</span>
+                </h3>
+
+                <button class="btn btn-primary returntolistbtn" type="button" (click)="returntolist()">
+                    <i class="fa fa-list me-2"></i> Return to List
+                </button>
+            </div>
+
+            <hr class="mt-0 mb-4" />
+
+            <mat-card>
+                <mat-card-title class="title cus-title">
+                    {{titile}}
+                </mat-card-title>
+                <br />
+                <div class="cus-tab-group">
+                    <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedIndex" #matgroup>
+
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <i class="fas fa-house"></i>
+                                General Details
+                            </ng-template>
+
+
+                            <div class="table-list-display">
+                                <div class="component-creation">
+                                    <div class="header-container">
+
+
+                                    </div>
+
+                                    <!-- <hr class="mt-0 mb-4" /> -->
+
+                                    <mat-card>
+                                        <mat-card-title class="title">
+                                            <!-- {{titile}} -->
+                                        </mat-card-title>
+                                        <br />
+
+                                        <mat-card-content>
+                                            <form [formGroup]="RfqgeneralForm">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolorGray">RFQ Against</mat-label>
+                                                            <input matInput [readonly]="true" type="text"
+                                                                [disabled]="true" formControlName="rfqAgainst"
+                                                                placeholder="RFQ Against" />
+                                                        </mat-form-field>
+
+                                                    </div>
+
+
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolorGray">Reference
+                                                                number</mat-label>
+                                                            <input matInput type="text" [readonly]="true"
+                                                                [disabled]="true" formControlName="refNumberId"
+                                                                placeholder="Reference number" />
+                                                        </mat-form-field>
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolorGray">RFQ number</mat-label>
+                                                            <input matInput type="text" [readonly]="true"
+                                                                [disabled]="true" formControlName="rfqNumber"
+                                                                placeholder="RFQ number" />
+                                                        </mat-form-field>
+
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Job Category</mat-label>
+                                                            <input matInput formControlName="jobCategoryId"
+                                                                [matAutocomplete]="jobCategory" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #jobCategory="matAutocomplete"
+                                                                (optionSelected)="optionSelectedJobCategory($event)">
+                                                                <mat-option
+                                                                    *ngFor="let category of filteredJobCategories | async"
+                                                                    [value]="category.jobCategory">
+                                                                    {{ category.jobCategory }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Job Type</mat-label>
+                                                            <input matInput formControlName="jobTypeId"
+                                                                [matAutocomplete]="jobType" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #jobType="matAutocomplete"
+                                                                (optionSelected)="optionSelectedJobType($event)">
+                                                                <mat-option
+                                                                    *ngFor="let type of filteredJobTypes | async"
+                                                                    [value]="type.jobTypeName">
+                                                                    {{ type.jobTypeName }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <mat-form-field appearance="fill">
+                                                            <mat-label class="labelcolor">Date</mat-label>
+                                                            <input matInput [matDatepicker]="rfqDateDatePicker"
+                                                                [readonly]="disablefields" formControlName="rfqDate"
+                                                                [matDatepickerFilter]="dateFilter1">
+                                                            <mat-datepicker-toggle matSuffix [disabled]="disablefields"
+                                                                [for]="rfqDateDatePicker"></mat-datepicker-toggle>
+                                                            <mat-datepicker #rfqDateDatePicker></mat-datepicker>
+                                                            <mat-error
+                                                                *ngIf="RfqgeneralForm.controls['rfqDate'].touched && RfqgeneralForm.hasError('required', 'rfqDate')"
+                                                                class="text-danger">Date is required*</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <mat-form-field appearance="fill">
+                                                            <mat-label class="labelcolor">Expected Quote
+                                                                Date</mat-label>
+                                                            <input matInput
+                                                                [matDatepicker]="expectedQuoteDateDatePicker"
+                                                                formControlName="expectedQuoteDate"
+                                                                [matDatepickerFilter]="dateFilter">
+                                                            <mat-datepicker-toggle matSuffix [disabled]="disablefields"
+                                                                [for]="expectedQuoteDateDatePicker"></mat-datepicker-toggle>
+                                                            <mat-datepicker
+                                                                #expectedQuoteDateDatePicker></mat-datepicker>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Status</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="statusId" [matAutocomplete]="status" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #status="matAutocomplete"
+                                                                (optionSelected)="optionSelectedStatus($event)">
+                                                                <mat-option
+                                                                    *ngFor="let status of filteredStatuses | async"
+                                                                    [value]="status.rfqStatus"
+                                                                    [disabled]="isOptionDisabled(status)">
+                                                                    {{ status.rfqStatus }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <!-- <mat-error *ngIf="
+                                            Enquiry.controls['statusId'].touched &&
+                                            Enquiry.hasError('required', 'statusId')
+                                        " class="text-danger">Status is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <!-- <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolorGray">Approval Status </mat-label>
+                                                            <input matInput formControlName="approvalStatusId"
+                                                                [matAutocomplete]="autoApprovalStatus" readonly>
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                        </mat-form-field>
+                                                        <mat-autocomplete #autoApprovalStatus="matAutocomplete"
+                                                            [displayWith]="displayApprovalStatusLabelFn"
+                                                            (optionSelected)="selectApprovalStatus($event)">
+                                                            <mat-option
+                                                                *ngFor="let approvalStatusList of filteredApprovalStatusOptions$ | async"
+                                                                [value]="approvalStatusList" [disabled]="approvalStatusList.isNotFound">
+                                                                {{ approvalStatusList.approvalStatus}}
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+                                                    </div> -->
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Remarks</mat-label>
+                                                            <textarea matInput maxlength="500" type="text"
+                                                                formControlName="remarks" [readonly]="disablefields"
+                                                                placeholder="Remarks"></textarea>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">tags</mat-label>
+                                                            <textarea matInput type="text" formControlName="tags"
+                                                                [readonly]="disablefields"
+                                                                placeholder="Tags"></textarea>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                            <div class="border border-1 rounded-4">
+                                                <table
+                                                    class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed">
+                                                    <thead class="bg-light">
+                                                        <tr>
+                                                            <th class="center-header">Category</th>
+                                                            <th class="center-header">Line Item </th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngFor="let row of ActiveLineitems">
+                                                            <td class="center-align">
+                                                                {{row.lineItemCategoryName}}
+                                                            </td>
+                                                            <td class="center-align">
+                                                                {{row.lineItemName}}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <!-- <div class="align" *ngIf="ApprovalData.length === 0">
+                                                  <p>Add Approvals Here.</p>
+                                                </div> -->
+                                                </table>
+                                            </div>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </div>
+                            <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+
+                            </div>
+
+                            <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+
+                                <button class="btn btn-warning draftbtn me-1" type="submit" *ngIf="isDraft"
+                                    [hidden]="disablefields" (click)="SaveRFQ(1)"><i class="fa fa-clock"></i>
+                                    Draft
+                                </button>&nbsp;
+                                <button *ngIf="!edit" class="btn btn-primary savebtn me-1" type="submit"
+                                    [hidden]="disablefields" (click)="SaveRFQ(2)">
+                                    <i class="fa fa-save me-2"></i> Save
+                                </button>
+                                <button *ngIf="edit === true" class="btn btn-primary savebtn me-1" type="submit"
+                                    [hidden]="disablefields" (click)="SaveRFQ(2)">
+                                    <i class="fa fa-save me-2"></i> Update
+                                </button>
+                                <button type="submit" class="btn btn-danger resetbtn" [hidden]="disablefields"
+                                    (click)="reset()">
+                                    <i class="fa fa-times-circle"></i> Reset
+                                </button>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <i class="fas fa-headset"></i>
+                                Service Details
+                            </ng-template>
+
+                            <div class="table-list-display">
+                                <div class="component-creation">
+                                    <div class="header-container">
+
+
+                                    </div>
+
+                                    <!-- <hr class="mt-0 mb-4" /> -->
+
+                                    <mat-card>
+                                        <mat-card-title class="title">
+                                            <!-- {{titile}} -->
+                                        </mat-card-title>
+                                        <br />
+
+                                        <mat-card-content>
+                                            <form [formGroup]="RfqgeneralForm">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Commodity</mat-label>
+                                                            <mat-select [multiple]="true" [readonly]="disablefields"
+                                                                (selectionChange)="onSelectCommodity()"
+                                                                formControlName="commodityId">
+                                                                <mat-option *ngFor="let row of Comodity"
+                                                                    [disabled]="disablefields"
+                                                                    [value]="row.commodityId">{{row.commodityName}}</mat-option>
+                                                            </mat-select>
+                                                            <!-- <mat-error
+                                                                *ngIf="Enquiry.controls['commodityId'].touched && Enquiry.hasError('required','commodityId')"
+                                                                class="text-danger">Contact person is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Inco Terms</mat-label>
+                                                            <mat-select [multiple]="true" [readonly]="disablefields"
+                                                                (selectionChange)="onSelectInco()"
+                                                                formControlName="incoTermId">
+                                                                <mat-option *ngFor="let row of incoterms"
+                                                                    [disabled]="disablefields"
+                                                                    [value]="row.incoTermId">{{row.incoTermDescription}}</mat-option>
+                                                            </mat-select>
+                                                            <!-- <mat-error
+                                                                *ngIf="Enquiry.controls['incoTermId'].touched && Enquiry.hasError('required','incoTermId')"
+                                                                class="text-danger">Contact person is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Mode of transport</mat-label>
+                                                            <mat-select [multiple]="true" [readonly]="disablefields"
+                                                                (selectionChange)="onSelectModeoftrns()"
+                                                                formControlName="transportModeId">
+                                                                <mat-option *ngFor="let row of Modeoftrasport"
+                                                                    [disabled]="disablefields"
+                                                                    [value]="row.modeofTransportId">{{row.modeofTransport}}</mat-option>
+                                                            </mat-select>
+                                                            <!-- <mat-error
+                                                                *ngIf="Enquiry.controls['incoTermId'].touched && Enquiry.hasError('required','incoTermId')"
+                                                                class="text-danger">Contact person is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4">
+
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Origin Country</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="originCountryId"
+                                                                [matAutocomplete]="originCountry" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #originCountry="matAutocomplete"
+                                                                (optionSelected)="optionSelectedOriginCountry($event)">
+                                                                <mat-option
+                                                                    *ngFor="let country of filteredOriginCountries | async"
+                                                                    [value]="country.countryName">
+                                                                    {{ country.countryName }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <mat-error *ngIf="
+                                            RfqgeneralForm.controls['originCountryId'].touched &&
+                                            RfqgeneralForm.hasError('required', 'originCountryId')
+                                        " class="text-danger">Origin Country is required*</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Destination
+                                                                Country</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="destCountryId"
+                                                                [matAutocomplete]="destCountry" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #destCountry="matAutocomplete"
+                                                                (optionSelected)="optionSelectedDestCountry($event)">
+                                                                <mat-option
+                                                                    *ngFor="let country of filteredDestCountries | async"
+                                                                    [value]="country.countryName">
+                                                                    {{ country.countryName }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <mat-error *ngIf="
+                                            RfqgeneralForm.controls['destCountryId'].touched &&
+                                            RfqgeneralForm.hasError('required', 'destCountryId')
+                                        " class="text-danger">Destination Country is required*</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Port of Loading</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="loadingPortId"
+                                                                [matAutocomplete]="loadingPort" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #loadingPort="matAutocomplete"
+                                                                (optionSelected)="optionSelectedLoadingPort($event)">
+                                                                <mat-option
+                                                                    *ngFor="let port of filteredLoadingPorts | async"
+                                                                    [value]="port.name">
+                                                                    {{ port.name }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <!-- <mat-error *ngIf="
+                                            Enquiry.controls['loadingPortId'].touched &&
+                                            Enquiry.hasError('required', 'loadingPortId')
+                                        " class="text-danger">Loading Port is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Port of
+                                                                Destination</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="destinationPortId"
+                                                                [matAutocomplete]="destinationPort" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #destinationPort="matAutocomplete"
+                                                                (optionSelected)="optionSelectedDestinationPort($event)">
+                                                                <mat-option
+                                                                    *ngFor="let port of filteredDestinationPorts | async"
+                                                                    [value]="port.name">
+                                                                    {{ port.name }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <!-- <mat-error *ngIf="
+                                            Enquiry.controls['destinationPortId'].touched &&
+                                            Enquiry.hasError('required', 'destinationPortId')
+                                        " class="text-danger">Destination Port is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+
+
+                                                    <div class="col-md-4" *ngIf="ShowOnlyroad">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Origin Location</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="originLocationId"
+                                                                [matAutocomplete]="originLocation" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #originLocation="matAutocomplete"
+                                                                (optionSelected)="optionSelectedOriginLocation($event)">
+                                                                <mat-option
+                                                                    *ngFor="let location of filteredOriginLocations | async"
+                                                                    [value]="location.cityName">
+                                                                    {{ location.cityName }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-md-4" *ngIf="ShowOnlyroad">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Destination
+                                                                Location</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="destLocationId"
+                                                                [matAutocomplete]="destLocation" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #destLocation="matAutocomplete"
+                                                                (optionSelected)="optionSelectedDestLocation($event)">
+                                                                <mat-option
+                                                                    *ngFor="let location of filteredDestLocations | async"
+                                                                    [value]="location.cityName">
+                                                                    {{ location.cityName }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <!-- <mat-error *ngIf="
+                                                Enquiry.controls['destLocationId'].touched &&
+                                                Enquiry.hasError('required', 'destLocationId')
+                                            " class="text-danger">Destination Location is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4" *ngIf="ShowOnlyroad">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Trailer Type</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="trailerTypeId"
+                                                                [matAutocomplete]="trailerType" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #trailerType="matAutocomplete"
+                                                                (optionSelected)="optionSelectedTrailerType($event)">
+                                                                <mat-option
+                                                                    *ngFor="let type of filteredTrailerTypes | async"
+                                                                    [value]="type.trailerTypeName">
+                                                                    {{ type.trailerTypeName }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <!-- <mat-error *ngIf="
+                                                Enquiry.controls['trailerTypeId'].touched &&
+                                                Enquiry.hasError('required', 'trailerTypeId')
+                                            " class="text-danger">Trailer Type is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4" *ngIf="ShowOnlyroad">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Transport Type</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="transportTypeId"
+                                                                [matAutocomplete]="transportType" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #transportType="matAutocomplete"
+                                                                (optionSelected)="optionSelectedTransportType($event)">
+                                                                <mat-option
+                                                                    *ngFor="let type of filteredTransportTypes | async"
+                                                                    [value]="type.transportType">
+                                                                    {{ type.transportType }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <!-- <mat-error *ngIf="
+                                                Enquiry.controls['transportTypeId'].touched &&
+                                                Enquiry.hasError('required', 'transportTypeId')
+                                            " class="text-danger">Transport Type is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <diV class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Pick Up Location</mat-label>
+                                                            <input matInput [readonly]="disablefields" type="text"
+                                                                formControlName="pickUpLocation"
+                                                                placeholder="Pick Up Location" />
+                                                        </mat-form-field>
+                                                    </diV>
+
+                                                    <diV class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Final Place Of
+                                                                Delivery</mat-label>
+                                                            <input matInput [readonly]="disablefields" type="text"
+                                                                formControlName="deliveryPlace"
+                                                                placeholder="Final Place Of Delivery" />
+                                                        </mat-form-field>
+                                                    </diV>
+                                                    <div class="col-md-4" *ngIf="ShowOnlysea">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Shipment Type</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="shipmentTypeId"
+                                                                [matAutocomplete]="shipmentType" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #shipmentType="matAutocomplete"
+                                                                (optionSelected)="optionSelectedShipmentType($event)">
+                                                                <mat-option
+                                                                    *ngFor="let type of filteredShipmentTypes | async"
+                                                                    [value]="type.shipmentType">
+                                                                    {{ type.shipmentType }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <mat-error *ngIf="
+                                                                RfqgeneralForm.controls['shipmentTypeId'].touched &&
+                                                                RfqgeneralForm.hasError('required', 'shipmentTypeId')
+                                            " class="text-danger">Shipment Type is required*</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-4" *ngIf="ShowOnlysea">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Container Type</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="containerTypeId"
+                                                                [matAutocomplete]="containerType" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #containerType="matAutocomplete"
+                                                                (optionSelected)="optionSelectedContainerType($event)">
+                                                                <mat-option
+                                                                    *ngFor="let type of filteredContainerTypes | async"
+                                                                    [value]="type.containerTypeName">
+                                                                    {{ type.containerTypeName }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <mat-error *ngIf="
+                                                                RfqgeneralForm.controls['containerTypeId'].touched &&
+                                                                RfqgeneralForm.hasError('required', 'containerTypeId')
+                                            " class="text-danger">Container Type is required*</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Cargo Type</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="cargoTypeid"
+                                                                [matAutocomplete]="cargoType" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #cargoType="matAutocomplete"
+                                                                (optionSelected)="optionSelectedCargoType($event)">
+                                                                <mat-option
+                                                                    *ngFor="let type of filteredCargoTypes | async"
+                                                                    [value]="type.cargoType">
+                                                                    {{ type.cargoType }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <!-- <mat-error *ngIf="
+                                            Enquiry.controls['cargoTypeid'].touched &&
+                                            Enquiry.hasError('required', 'cargoTypeid')
+                                        " class="text-danger">Cargo Type is required*</mat-error> -->
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <!-- <div class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Status</mat-label>
+                                                            <input matInput [readonly]="disablefields"
+                                                                formControlName="statusId" [matAutocomplete]="status" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #status="matAutocomplete"
+                                                                (optionSelected)="optionSelectedStatus($event)">
+                                                                <mat-option
+                                                                    *ngFor="let status of filteredStatuses | async"
+                                                                    [value]="status.rfqStatus">
+                                                                    {{ status.rfqStatus }}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                             <mat-error *ngIf="
+                                            Enquiry.controls['statusId'].touched &&
+                                            Enquiry.hasError('required', 'statusId')
+                                        " class="text-danger">Status is required*</mat-error> 
+                                                        </mat-form-field>
+                                                    </div> -->
+                                                    <diV class="col-md-4">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Temperature
+                                                                Required</mat-label>
+                                                            <input matInput maxlength="20" type="text"
+                                                                formControlName="temperatureReq"
+                                                                placeholder="Temperature" />
+                                                        </mat-form-field>
+                                                    </diV>
+
+                                                    <div class="col-md-8">
+                                                        <mat-form-field>
+                                                            <mat-label class="labelcolor">Remarks</mat-label>
+                                                            <textarea [readonly]="disablefields" maxlength="500"
+                                                                matInput type="text" formControlName="vendorRemarks"
+                                                                placeholder="Remarks"></textarea>
+                                                        </mat-form-field>
+                                                    </div>
+
+
+                                                </div>
+                                            </form>
+                                            <div>
+                                                <form [formGroup]="RfqgeneralForm">
+                                                    <div class="row">
+                                                        <div class="row" *ngIf="Showpakageheader">
+                                                            <div class="col-md-3">
+                                                                <mat-form-field>
+                                                                    <mat-label class="labelcolor">Storage
+                                                                        UOM</mat-label>
+                                                                    <input matInput [readonly]="disablefields"
+                                                                        formControlName="storageUomId"
+                                                                        [matAutocomplete]="storageUom" />
+                                                                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                                    <mat-autocomplete #storageUom="matAutocomplete"
+                                                                        (optionSelected)="optionSelectedStorageUom($event)">
+                                                                        <mat-option
+                                                                            *ngFor="let uom of filteredStorageUoms | async"
+                                                                            [value]="uom.uomName">
+                                                                            {{ uom.uomName }}
+                                                                        </mat-option>
+                                                                    </mat-autocomplete>
+                                                                    <mat-error *ngIf="
+                                                                    RfqgeneralForm.controls['storageUomId'].touched &&
+                                                                    RfqgeneralForm.hasError('required', 'storageUomId')
+                                                                " class="text-danger">Storage UOM is
+                                                                        required*</mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <mat-form-field appearance="fill">
+                                                                    <mat-label class="labelcolor">Storage
+                                                                        Value</mat-label>
+                                                                    <input matInput [readonly]="disablefields"
+                                                                        (input)="uomvalue()" type="number"
+                                                                        maxlength="17" formControlName="valuePerUom"
+                                                                        placeholder="Package Nos" autocomplete="off">
+                                                                </mat-form-field>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <mat-form-field appearance="fill">
+                                                                <mat-label class="labelcolor">No of Package</mat-label>
+                                                                <input matInput [readonly]="disablefields" type="number"
+                                                                    (input)="Numberogpks()" maxlength="10"
+                                                                    formControlName="packageNos"
+                                                                    placeholder="Package Nos" autocomplete="off">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-md-3 mt-3">
+                                                            <button class="btn btn-primary" [hidden]="disablefields"
+                                                                type="button" (click)="addPackage()">
+                                                                <i class="fa fa-plus-circle me-2"></i>Add
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+
+
+                                                <div class="border border-1 rounded-4">
+                                                    <table
+                                                        class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed">
+                                                        <thead class="bg-light">
+                                                            <tr>
+                                                                <th class="center-header">S.No</th>
+                                                                <th class="center-header">Type of Packages</th>
+                                                                <th class="center-header">Height(in Cm)</th>
+                                                                <th class="center-header">Length(in Cm)</th>
+                                                                <th class="center-header">Breadth(in Cm)</th>
+                                                                <th class="center-header">Commodity</th>
+                                                                <th class="center-header">CBM(kg)</th>
+                                                                <th class="center-header">Package Weight(kg)</th>
+                                                                <th class="center-header" [hidden]="chargablepackage">
+                                                                    Chargeable Package Weight</th>
+                                                                <th class="center-header" [hidden]="disablefields">
+                                                                    Action</th>
+
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let row of RFQPackage; let i = index">
+                                                                <td class="center-align">
+                                                                    {{ i+1 }}
+                                                                </td>
+                                                                <td class="center-align">
+                                                                    {{row.packageTypeName}}
+                                                                </td>
+                                                                <td class="center-align">
+                                                                    {{row.height | number:'1.2-2'}}
+                                                                </td>
+                                                                <td class="center-align">
+                                                                    {{row.length | number:'1.2-2'}}
+                                                                </td>
+                                                                <td class="center-align">
+                                                                    {{row.breadth | number:'1.2-2'}}
+                                                                </td>
+                                                                <td class="center-align">
+                                                                    {{row.commodityName}}
+                                                                </td>
+                                                                <td class="center-align">
+                                                                    {{row.cbm | number:'1.2-2'}}
+                                                                </td>
+                                                                <td class="center-align">
+                                                                    {{row.packWeightKg | number:'1.2-2'}}
+                                                                </td>
+                                                                <td class="center-align" [hidden]="chargablepackage">
+                                                                    {{row.chargePackWtKg | number:'1.2-2'}}
+                                                                </td>
+
+                                                                <td class="center-align" [hidden]="disablefields">
+                                                                    <a type="submit" (click)="Edit(row,i)"><i
+                                                                            class="fas fa-square-pen"></i></a>&nbsp;
+                                                                    <a type="submit" (click)="DeletepacKage(row,i)"><i
+                                                                            class="fas fa-trash"></i></a>&nbsp;
+                                                                    <a type="submit" (click)="View(row,i)"><i
+                                                                            class="fas fa-eye"></i></a>&nbsp;
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td class="center-align"><b>Total</b></td>
+                                                                <td class="center-align"><b>{{ getTotalCrossWeight()
+                                                                        }}</b></td>
+                                                                <td class="center-align" [hidden]="chargablepackage">
+                                                                    <b>{{ getTotalChargeableWeight() }}</b>
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
+                                                        <tfoot>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <!-- <td class="center-align"><b>Gross Weight</b></td>
+                                                                <td class="center-align" [hidden]="chargablepackage"><b>Chargable Weight</b></td>      -->
+                                                        </tfoot>
+
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </div>
+                            <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+
+                                <button class="btn btn-warning draftbtn me-1" type="submit" *ngIf="isDraft"
+                                [hidden]="disablefields" (click)="SaveRFQ(1)"><i class="fa fa-clock"></i>
+                                Draft
+                            </button>&nbsp;
+                            <button *ngIf="!edit" class="btn btn-primary savebtn me-1" type="submit"
+                                [hidden]="disablefields" (click)="SaveRFQ(2)">
+                                <i class="fa fa-save me-2"></i> Save
+                            </button>
+                            <button *ngIf="edit === true" class="btn btn-primary savebtn me-1" type="submit"
+                                [hidden]="disablefields" (click)="SaveRFQ(2)">
+                                <i class="fa fa-save me-2"></i> Update
+                            </button>
+                            <button type="submit" class="btn btn-danger resetbtn" [hidden]="disablefields"
+                                (click)="reset()">
+                                <i class="fa fa-times-circle"></i> Reset
+                            </button>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab>
+
+                            <ng-template mat-tab-label>
+                                <i class="fas fa-id-card"></i>
+                                Vendor Details
+                            </ng-template>
+                            <hr class="mt-0 mb-4" />
+
+                            <section class="custom-table-wrapper">
+                                <div class="text-end">
+                                    <button class="btn btn-primary Addbtn" type="button" [hidden]="disablefields"
+                                        (click)="VendorFilterDialog()">
+                                        <i class="fa fa-plus-circle me-2"></i>Add
+                                    </button>
+                                </div>
+                                <kendo-grid [kendoGridBinding]="vendorList" [filterable]="true" [resizable]="true"
+                                    [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                    [selectable]="{ enabled: true }" (pageChange)="pageChange($event)" [skip]="skip">
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                        [headerStyle]="{ justifyContent: 'center' }" field="vendorName" title="Name"
+                                        [width]="105">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{dataItem.vendorName}}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                        [headerStyle]="{ justifyContent: 'center' }" field="vendorName"
+                                        title="Vendor Type" [width]="105">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{dataItem.vendorType === 'V' ? 'Vendor' : potentialvendor}}
+                                        </ng-template>
+                                    </kendo-grid-column>
+
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                        [headerStyle]="{ justifyContent: 'center' }" field="vendorCode" title="Code"
+                                        [width]="70">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{dataItem.vendorCode}}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center', padding: '5px' }"
+                                        [headerStyle]="{ justifyContent: 'center' }" field="baseDocname" title="Action"
+                                        [hidden]="disablefields" [width]="90" [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem"
+                                            let-rowIndex="rowIndex">
+                                            <a type="submit" (click)="Deletevendor(rowIndex)"><i
+                                                    class="fas fa-trash"></i></a>&nbsp;
+                                        </ng-template>
+                                    </kendo-grid-column>
+
+                                    <kendo-grid-column [style]="{ 'text-align': 'center ', padding: '5px' }"
+                                        [headerStyle]="{ justifyContent: 'center' }" field="followUpperson" title="ACT"
+                                        [width]="60" [sticky]="true">
+
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem"
+                                            let-rowIndex="rowIndex">
+                                            <a type="submit" [hidden]="disablefields"
+                                                (click)="openContact(dataItem.vendorId,dataItem.vendorType,rowIndex,dataItem.rfqVendorId)"><i
+                                                    class="fas fa-address-book"></i></a>&nbsp;
+                                            <a type="submit" [hidden]="disableview"
+                                                (click)="openviewContact(dataItem.vendorId,dataItem.vendorType,rowIndex,dataItem.rfqVendorId)"><i
+                                                    class="fas fa-address-book"></i></a>&nbsp;
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                </kendo-grid>
+                            </section>
+                            <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+
+                                <button class="btn btn-warning draftbtn me-1" type="submit" *ngIf="isDraft"
+                                    [hidden]="disablefields" (click)="SaveRFQ(1)"><i class="fa fa-clock"></i>
+                                    Draft
+                                </button>&nbsp;
+                                <button *ngIf="!edit" class="btn btn-primary savebtn me-1" type="submit"
+                                    [hidden]="disablefields" (click)="SaveRFQ(2)">
+                                    <i class="fa fa-save me-2"></i> Save
+                                </button>
+                                <button *ngIf="edit === true" class="btn btn-primary savebtn me-1" type="submit"
+                                    [hidden]="disablefields" (click)="SaveRFQ(2)">
+                                    <i class="fa fa-save me-2"></i> Update
+                                </button>
+                                <button type="submit" class="btn btn-danger resetbtn" [hidden]="disablefields"
+                                    (click)="reset()">
+                                    <i class="fa fa-times-circle"></i> Reset
+                                </button>
+                            </div>
+                        </mat-tab>
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <i class="fas fa-paperclip"></i>
+                                Attachments
+                            </ng-template>
+                            <div class="table-list-display">
+                                <div class="component-list">
+                                    <section class="custom-table-wrapper">
+                                        <div class="addbutton d-flex align-items-center justify-content-end">
+                                            <button class="btn btn-primary d-flex align-items-center"
+                                                [hidden]="disablefields" type="button" (click)="AddDocument()"><i
+                                                    class="fa fa-plus-circle me-2"></i>Add</button>
+                                        </div>
+                                        <kendo-grid [kendoGridBinding]="rfqdocument" [filterable]="true"
+                                            [resizable]="true" [height]="500" [pageSize]="20" [sortable]="true"
+                                            [pageable]="true" [formGroup]="RFQDoc" (pageChange)="pageChange($event)"
+                                            [skip]="skip">
+
+                                            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                                [headerStyle]="{ justifyContent: 'center' }" field="documentId"
+                                                title="Document Name *" [width]="95">
+
+                                                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                                    <div *ngIf="dataItem.Isedit">
+                                                        <mat-form-field>
+                                                            <input matInput [readonly]="disablefields || isEditDocument"
+                                                                formControlName="documentId"
+                                                                [matAutocomplete]="documentId" />
+                                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                            <mat-autocomplete #documentId="matAutocomplete"
+                                                                (optionSelected)="optionSelecteddocumentId($event)">
+                                                                <mat-option
+                                                                    *ngFor="let FoU of filtereddocumentId | async"
+                                                                    [value]="FoU.documentName">
+                                                                    {{FoU.documentName}}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                            <mat-error *ngIf="
+                                                        RFQDoc.controls['documentId'].touched &&
+                                                        RFQDoc.hasError('required', 'documentId')
+                                                                  " class="text-danger">Document name is
+                                                                required*</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div *ngIf="!dataItem.Isedit">
+                                                        {{getSelectedDoc(dataItem.documentId)}}
+                                                    </div>
+                                                </ng-template>
+                                            </kendo-grid-column>
+
+                                            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                                [headerStyle]="{ justifyContent: 'center' }" field="documentName"
+                                                title="File *" [width]="95">
+                                                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                                    <div *ngIf="dataItem.Isedit">
+                                                        <input type="file" formControlName="documentName"
+                                                            [readonly]="disablefields" (change)="selectFile($event)"
+                                                            [multiple]="true" class="form-control" width="50%" />
+                                                    </div>
+                                                    <div *ngIf="!dataItem.Isedit">
+                                                        {{ dataItem.documentName }}
+                                                    </div>
+                                                </ng-template>
+                                            </kendo-grid-column>
+
+                                            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                                [headerStyle]="{ justifyContent: 'center' }" field="remarks"
+                                                title="Remarks" [width]="150">
+                                                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                                    <div *ngIf="dataItem.Isedit">
+                                                        <mat-form-field>
+                                                            <textarea matInput type="text" [readonly]="disablefields"
+                                                                formControlName="remarks" maxlength="500"
+                                                                placeholder="Remarks"></textarea>
+
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div *ngIf="!dataItem.Isedit">
+                                                        {{dataItem.remarks}}
+                                                    </div>
+
+                                                </ng-template>
+                                            </kendo-grid-column>
+
+                                            <kendo-grid-column title="Action" [width]="40" [sticky]="true">
+                                                <ng-template kendoGridCellTemplate let-dataItem="dataItem"
+                                                    let-rowIndex="rowIndex">
+                                                    <div *ngIf="dataItem.Isedit" [hidden]="disablefields">
+                                                        <a type="submit"
+                                                            (click)="showAddRowDoc ? addDocumentRow():Downloads()">
+                                                            <ng-container *ngIf="showAddRowDoc; else editIcon">
+                                                                <i class="fas fa-sd-card"></i>
+                                                            </ng-container>
+                                                            <ng-template #editIcon>
+
+                                                            </ng-template></a>&nbsp;
+                                                        <a type="submit" (click)="showAddRowDoc" #cancelButton
+                                                            tabindex="0" (click)="oncancelDoc(dataItem, rowIndex)"><i
+                                                                class="fas fa-xmark"></i></a>
+                                                    </div>
+                                                    <div *ngIf="!dataItem.Isedit" style="margin-left: 1rem;gap:2px;">
+                                                        <a type="submit" (click)="show(dataItem.documentName)"
+                                                            target="_blank"><i class="fas fa-eye"></i></a>
+                                                        <a type="submit" [hidden]="disablefields"
+                                                            (click)="DeleteImage(dataItem.documentId,rowIndex)"><i
+                                                                class="fas fa-trash"></i></a>&nbsp;
+                                                        <a type="button" *ngIf="!dataItem.documentName"
+                                                            (click)="EditDoc(dataItem, rowIndex)"><i
+                                                                class="fas fa-square-pen"></i></a>&nbsp;
+                                                    </div>
+                                                </ng-template>
+                                            </kendo-grid-column>
+
+                                            <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                                [style]="{ 'text-align': 'center' }"
+                                                [headerStyle]="{ justifyContent: 'center' }" title="ACT" [width]="40"
+                                                [sticky]="true">
+                                                <ng-template kendoGridCellTemplate let-dataItem="dataItem"
+                                                    let-rowIndex="rowIndex">
+                                                    <a type="submit" (click)="Download(dataItem.documentName)"><i
+                                                            class="fas fa-cloud-arrow-down"></i></a>
+                                                </ng-template>
+                                            </kendo-grid-column>
+
+                                            <kendo-grid-row-index></kendo-grid-row-index>
+                                        </kendo-grid>
+                                    </section>
+                                </div>
+                            </div>
+                            <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+                                <button class="btn btn-warning draftbtn me-1" type="submit" *ngIf="isDraft"
+                                    [hidden]="disablefields" (click)="SaveRFQ(1)"><i class="fa fa-clock"></i>
+                                    Draft
+                                </button>&nbsp;
+                                <button *ngIf="!edit" class="btn btn-primary savebtn me-1" type="submit"
+                                    [hidden]="disablefields" (click)="SaveRFQ(2)">
+                                    <i class="fa fa-save me-2"></i> Save
+                                </button>
+                                <button *ngIf="edit === true" class="btn btn-primary savebtn me-1" type="submit"
+                                    [hidden]="disablefields" (click)="SaveRFQ(2)">
+                                    <i class="fa fa-save me-2"></i> Update
+                                </button>
+                                <button type="submit" class="btn btn-danger resetbtn" [hidden]="disablefields"
+                                    (click)="reset()">
+                                    <i class="fa fa-times-circle"></i> Reset
+                                </button>
+                            </div>
+                        </mat-tab>
+
+                    </mat-tab-group>
+                </div>
+
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+<ng-template let-data #ImagePreview>
+    <div class="d-flex justify-content-between">
+        <h2 mat-dialog-title> Preview </h2>
+        <mat-icon class="m-2" mat-dialog-close style="color: red;cursor: pointer;">close</mat-icon>
+    </div>
+    <img src="{{data}}" alt="" style="max-width: 700px;">
+</ng-template>

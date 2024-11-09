@@ -1,0 +1,62 @@
+<div class="table-list-display">
+    <div class="component-list">
+      <div class="d-flex justify-content-between flex-wrap">
+        <h3 class="box-title">
+          <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+          <span>Employee Activity Report</span>
+        </h3>
+      </div>
+
+      <hr class="mt-0 mb-4" />
+      <div>
+        <app-empactivity-report-filter (filterChange)="onFilterChange($event)"></app-empactivity-report-filter>
+      </div>
+  
+      <section class="custom-table-wrapper">
+  
+        <kendo-grid [kendoGridBinding]="empActivityReport" [filterable]="true" [resizable]="true" [height]="500" [pageSize]="10"
+          [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [excel]="{ fileName: 'EmployeeActivityReport.xlsx', allPages: true, filterable: true }">
+  
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="employeeName" title="User Name" [width]="85">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.employeeName }}
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="followUpCode" title="Follow Up Id" [width]="85">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.followUpCode }}
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column format="{0:dd/MMM/yyyy}" filter="date" [style]="{ 'text-align': 'left', padding: '5px' }"
+        [headerStyle]="{ justifyContent: 'center' }" field="followUpDate" title="Follow Up Date" [width]="85">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          {{ dataItem.followUpDate | date: 'dd/MMM/yyyy' }}
+        </ng-template>
+      </kendo-grid-column>
+
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="followUpStatus" title="Status" [width]="95">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.followUpStatus }}
+            </ng-template>
+          </kendo-grid-column>
+  
+          <kendo-grid-excel fileName="EmployeeActivityReport.xlsx" [fetchData]="allData"  [filterable]="true"></kendo-grid-excel>
+        <ng-template kendoPagerTemplate>
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+            <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+            <kendo-pager-next-buttons></kendo-pager-next-buttons>
+            <button type="button" kendoGridExcelCommand class="ml-2" [svgIcon]="fileExcelIcon" style="background-color: #dddcdc !important">
+              Export to Excel
+            </button>
+            <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+            <kendo-pager-info></kendo-pager-info>
+          </ng-template>
+        </kendo-grid>
+      </section>
+    </div>
+  </div>

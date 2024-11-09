@@ -1,0 +1,283 @@
+<div class="table-list-display">
+  <div class="component-creation">
+    <div class="header-container">
+      <h3 class="box-title">
+        <img src="./assets/images/billing-storage.png" alt="Branch" />
+        <span>Branch</span>
+      </h3>
+
+      <button class="btn btn-primary returntolistbtn" type="button" (click)="returnToList()">
+        <i class="fa fa-list me-2"></i> Return to List
+      </button>
+    </div>
+
+    <hr class="mt-0 mb-4" />
+
+    <mat-card>
+      <mat-card-title class="title">
+        {{ title }}
+      </mat-card-title>
+      <br />
+
+      <mat-card-content>
+        <form (submit)="onSaveBranch(branchForm)" #branchForm="ngForm">
+          <div class="row">
+            <!-- <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Branch Name</mat-label>
+                <input matInput type="text" required [readonly]="disablefields" maxlength="100"
+                  (blur)="setName(branchName)" placeholder="Branch Name" [ngModel]="editedBranch?.branchName"
+                  name="branchName" #branchName="ngModel" autocomplete="off"
+                  (ngModelChange)="updateAliasName($event)" />
+
+                <mat-error *ngIf="branchName.invalid && isSubmitted">
+                  Branch Name is required*
+                </mat-error>
+              </mat-form-field>
+            </div> -->
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Branch Code</mat-label>
+                <input matInput type="text" required [readonly]="disablefields" maxlength="10" placeholder="Branch Code"
+                  [ngModel]="editedBranch?.branchCode" name="branchCode" #branchCode="ngModel" autocomplete="off" />
+                <mat-error *ngIf="branchCode.invalid && isSubmitted">
+                  Branch Code is required*
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Branch Name</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  required
+                  [readonly]="disablefields"
+                  maxlength="100"
+                  placeholder="Branch Name"
+                  [ngModel]="editedBranch?.branchName"
+                  name="branchName"
+                  #branchName="ngModel"
+                  #input1
+                  (ngModelChange)="updateAliasName($event)"
+                />
+
+                <mat-error *ngIf="branchName.invalid && isSubmitted">
+                  Branch Name is required*
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Alias Name</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  required
+                  [readonly]="disablefields"
+                  maxlength="100"
+                  placeholder="Alias Name"
+                  #input2
+                  [ngModel]="editedBranch?.aliasName"
+                  (focus)="patchValue(input1?.value,branchForm)"
+                  name="aliasName"
+                  #aliasName="ngModel"
+                />
+
+                <mat-error *ngIf="aliasName.invalid && (aliasName.dirty || aliasName.touched || isSubmitted)">
+                  Alias Name is required*
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Contact Person</mat-label>
+                <input matInput type="text" required maxlength="40" [readonly]="disablefields"
+                  placeholder="Contact Person" [ngModel]="editedBranch?.contactPerson" name="contactPerson"
+                  #contactPerson="ngModel" autocomplete="off" />
+                <mat-error *ngIf="contactPerson.invalid && isSubmitted">Contact Person is required*</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Contact Number</mat-label>
+                <input matInput type="text" required maxlength="15" [readonly]="disablefields"
+                  placeholder="Contact Number" [ngModel]="editedBranch?.contactNumber" name="contactNumber"
+                  #contactNumber="ngModel" autocomplete="off" (keydown)="onKeydown($event)" />
+                <mat-error *ngIf="contactNumber.invalid && isSubmitted">Contact Number is required*</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Currency</mat-label>
+                <input
+                  matInput
+                  [matAutocomplete]="autoCurrency"
+                  [readonly]="disablefields"
+                  name="currency"
+                  #currencyInput="ngModel"
+                  [(ngModel)]="currentCurrency"
+                  (ngModelChange)="doFilter(4)"
+                  required
+                />
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-error
+                  *ngIf="
+                    currencyInput.invalid &&
+                    (currencyInput.dirty || currencyInput.touched) &&
+                    isSubmitted
+                  ">
+                  Currency is required*.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-autocomplete #autoCurrency="matAutocomplete">
+                <mat-option *ngFor="let currency of filteredCurrencies" [value]="currency.currencyName"
+                  (onSelectionChange)="onCurrencySelected($event, currency)" [disabled]="currency.isNotFound">
+                  {{ currency.currencyName }}
+                </mat-option>
+              </mat-autocomplete>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Branch Address Line1</mat-label>
+                <input matInput type="text" required maxlength="40" [readonly]="disablefields"
+                  placeholder="Branch Address Line1" [ngModel]="editedBranch?.branchAddressLine1"
+                  name="branchAddressLine1" #branchAddressLine1="ngModel" autocomplete="off" />
+                <mat-error *ngIf="branchAddressLine1.invalid && isSubmitted">Branch Address Line1 is
+                  required*</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Branch Address Line2</mat-label>
+                <input matInput type="text" maxlength="40" placeholder="Branch Address Line2"
+                  [ngModel]="editedBranch?.branchAddressLine2" name="branchAddressLine2" [readonly]="disablefields"
+                  #branchAddressLine2="ngModel" autocomplete="off" />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Country</mat-label>
+                <input
+                  matInput
+                  [matAutocomplete]="autoCountry"
+                  [readonly]="disablefields"
+                  name="country"
+                  #countryInput="ngModel"
+                  [(ngModel)]="currentCountry"
+                  (ngModelChange)="doFilter(1)"
+                  required
+                />
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-error *ngIf="countryInput.invalid && isSubmitted">
+                  Country is required*.
+                </mat-error>
+              </mat-form-field>
+              <mat-autocomplete #autoCountry="matAutocomplete">
+                <mat-option *ngFor="let country of filteredCountries" [value]="country.countryName"
+                  (onSelectionChange)="onCountrySelected($event, country)" [disabled]="country.isNotFound">
+                  {{ country.countryName }}
+                </mat-option>
+              </mat-autocomplete>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">State</mat-label>
+                <input
+                  matInput
+                  [matAutocomplete]="autoState"
+                  [readonly]="disablefields"
+                  name="state"
+                  #stateInput="ngModel"
+                  [(ngModel)]="currentState"
+                  (ngModelChange)="doFilter(2)"
+                  required
+                />
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-error *ngIf="stateInput.invalid && isSubmitted">
+                  State is required*.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-autocomplete #autoState="matAutocomplete">
+                <mat-option *ngFor="let state of filteredStates" [value]="state.stateName"
+                  (onSelectionChange)="onStateSelected($event, state)" [disabled]="state.isNotFound">
+                  {{ state.stateName }}
+                </mat-option>
+              </mat-autocomplete>
+            </div>
+
+            <div class="col-md-4">
+
+  <mat-form-field>
+    <mat-label class="labelcolor">City</mat-label>
+    <input matInput [matAutocomplete]="autoCity"    [readonly]="disablefields" name="city" #cityInput="ngModel" [(ngModel)]="currentCity" (ngModelChange)="doFilter(3)" required> 
+    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+    <mat-error *ngIf="cityInput.invalid && isSubmitted">
+      City is required*.
+     </mat-error>
+     
+  </mat-form-field>
+  <mat-autocomplete #autoCity="matAutocomplete">
+    
+    <mat-option *ngFor="let city of filteredCities" [value]="city.cityName" (onSelectionChange)="onCitySelected($event,city)"
+    [disabled]="city.isNotFound">
+      {{ city.cityName }}
+    </mat-option>
+    
+  </mat-autocomplete>
+
+            </div>
+            <div class="col-md-4">
+              <mat-label class="labelcolor">Branch Type<span
+                  [ngStyle]="{'color': isSubmitted && selectedBranchType === undefined ? 'red' : 'grey'}">*</span></mat-label><br>
+              <mat-radio-group aria-label="Select a branch type" [disabled]="disablefields"
+                [(ngModel)]="selectedBranchType" name="branchType" required>
+                <mat-radio-button value="0">Warehouse</mat-radio-button>
+                <mat-radio-button value="1">Office</mat-radio-button>
+                <mat-error *ngIf="isSubmitted && selectedBranchType === undefined && isSubmitted"
+                  style="font-size: 11px;">Branch Type is required*</mat-error>
+              </mat-radio-group>
+
+            </div>
+
+
+
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <mat-checkbox class="statusmargin" name="branchStatus" [checked]="branchStatus" [disabled]="disablefields"
+                (change)="valueChange($event)">
+                Active</mat-checkbox>
+            </div>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+  
+  <button *ngIf="isCreatedFlag" class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit"
+    (click)="onSaveBranch(branchForm)">
+    <i class="fa fa-save me-2"></i> Save
+  </button>
+  <button *ngIf="!isCreatedFlag" class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit"
+    (click)="onSaveBranch(branchForm)">
+    <i class="fa fa-save me-2"></i> Update
+  </button>
+
+  <button type="button" class="btn btn-danger resetbtn" [hidden]="disablefields"
+    (click)="editedBranch?resetButtonClick():resetButtonClickforSave(branchForm)">
+    <i class="fa fa-times-circle"></i> Reset
+  </button>
+</div>

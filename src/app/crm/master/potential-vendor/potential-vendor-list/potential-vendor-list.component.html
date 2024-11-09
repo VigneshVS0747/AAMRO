@@ -1,0 +1,127 @@
+<div class="table-list-display">
+    <div class="component-list">
+      <div class="header-container">
+        <h3 class="box-title" >
+          <img src="./assets/images/billing-storage.png" alt="Currency Details" />
+          <span>Potential Vendor</span>
+        </h3>
+        <div class="text-end">
+          <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')"
+          type="button" (click)="add()">
+            <i class="fa fa-plus-circle me-2"></i>Add
+          </button>
+        </div>
+        <hr />
+      </div>
+  
+      <section class="custom-table-wrapper">
+        <kendo-grid [kendoGridBinding]="potentialVendor" [filterable]="true" [resizable]="true" [height]="500" [pageSize]="10"
+          [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+          <kendo-grid-column [style]="{
+              'text-align': 'left',
+              padding: '5px',
+              
+            }" [headerStyle]="{
+              justifyContent: 'center',
+              
+            }" field="potentialVendorCode" title="PV Id" [width]="80">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.potentialVendorCode }}
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+              justifyContent: 'center',
+              
+            }" field="vendorName" title="Name" [width]="100">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.vendorName }}
+            </ng-template>
+          </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+            justifyContent: 'center',
+            
+        }"field="countryName" title="Country" [width]="95">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          {{ dataItem.countryName }}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+        justifyContent: 'center',
+          
+        }" field="vendorPhone" title="Phone" [width]="95">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+          {{ dataItem.vendorPhone }}
+        </ng-template>
+      </kendo-grid-column>          
+      
+      <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+          justifyContent: 'center',
+            
+          }" field="vendorEmail" title="Email" [width]="95">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.vendorEmail }}
+          </ng-template>
+        </kendo-grid-column>          
+        
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+          justifyContent: 'center',
+            
+          }" field="pvStatus" title="Status" [width]="95">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.pvStatus }}
+          </ng-template>
+        </kendo-grid-column>  
+          
+          <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+              justifyContent: 'center',
+              
+            }" title="Action" [width]="80" [sticky]="true">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              <!-- <a type="button" (click)="onMail(dataItem)"><i class="fa-solid fa-envelope fa-lg"></i></a>&nbsp; -->
+              <a type="button" class="view" *ngIf="pagePrivilege.includes('view')" (click)="onview(dataItem)"><i class="fas fa-eye"></i></a>&nbsp;
+              <a type="button" class="edit"*ngIf="pagePrivilege.includes('edit')" (click)="onEdit(dataItem)"><i class="fas fa-square-pen"></i></a>&nbsp;
+              <a type="button" class="delete" *ngIf="pagePrivilege.includes('delete')" (click)="onDelete(dataItem)"><i class="fas fa-trash"></i></a>&nbsp;
+              
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+            justifyContent: 'center',
+            
+          }" title="ACT" [width]="50" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <a type="submit"class="history"  matTooltip="Follow Up History" matTooltipPosition="above" (click)="OpenHistory(3,dataItem.potentialVendorId,dataItem.pvStatusId)"><i
+              class="fas fa-clock-rotate-left"></i></a>&nbsp;
+            <!-- <a type="button"  matTooltip="Follow Up" matTooltipPosition="above" routerLink="/crm/transaction/followup/3/{{dataItem.potentialVendorId}}"><i class="fa-solid fa-user-plus fa-lg"></i></a>&nbsp; -->
+            <a type="button" class="movedto"matTooltip="PV to Vendor" matTooltipPosition="above" (click)="pVToVendor(dataItem)"><i class="fa-solid fa-people-arrows fa-lg"></i></a>&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+          
+          <!-- <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+            justifyContent: 'center',
+          }" title="Follow Up">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <a type="button" class="btn btn-primary btn-sml" routerLink="/crm/transaction/followup/3/{{dataItem.potentialVendorId}}">Follow Up</a>&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+        
+      <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+        justifyContent: 'center',
+      }" title="PC to Vendor">
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+        <a type="button" class="btn btn-primary btn-sml" (click)="pVToVendor(dataItem)">PV to Vendor</a>&nbsp;
+      </ng-template>
+    </kendo-grid-column> -->
+    <ng-template kendoPagerTemplate>
+      <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+      <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+      <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+      <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+      <kendo-pager-info></kendo-pager-info>
+    </ng-template>
+  </kendo-grid>
+</section>
+    </div>
+  </div>
+

@@ -1,0 +1,187 @@
+.header-container {
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: -0.9rem; /* Add spacing between header and hr */
+}
+
+.mat-header-cell {
+  text-align: center;
+  font-size: 18px;
+  width: auto;
+  white-space: nowrap;
+}
+
+.mat-cell {
+  font-size: 16px;
+}
+
+/*.centered-cell {
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  
+  }*/
+
+.centered-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.center-content {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gray-icon {
+  color: gray; /* You can use any gray color you prefer */
+}
+
+.blue-icon {
+  color: rgb(0, 0, 255); /* You can use any gray color you prefer */
+}
+
+.golden-icon {
+  color: goldenrod;
+}
+
+.mat-table {
+  font-size: 16px; /* Set font size for the entire table, including headers and data cells */
+}
+
+.mat-table th.mat-header-cell {
+  font-size: 14px; /* Set font size for header cells within the table */
+}
+
+.icon-checkbox-container {
+  /*display: flex;*/
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* You might need to adjust the following styles according to your specific design */
+.fa-star-of-david {
+  margin-right: 3px; /* Adjust spacing between the icon and checkbox */
+}
+
+.table-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  white-space: nowrap; /* Prevent text from wrapping */
+  max-width: 100%; /* Set a maximum width to allow horizontal scrolling */
+  max-height: 350px;
+  /* max-height: 84%; */
+  border-bottom: 1px solid #00447c; /* For the last row border */
+}
+
+.custom-form-field {
+  width: 250px;
+}
+
+.mdc-icon-button {
+  transform: scale(1.2);
+}
+
+.form-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inputs-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 80%;
+}
+
+.inputs-wrapper div {
+  width: fit-content;
+  margin-right: 1rem;
+}
+
+.info-div {
+  padding: 1rem;
+  text-align: center;
+  background: whitesmoke;
+  margin: 5px;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+.danger {
+  color: red;
+}
+
+
+
+.modal1-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 176%;
+  color: var(--bs-modal-color);
+  pointer-events: auto;
+  background-color: var(--bs-modal-bg);
+  background-clip: padding-box;
+  border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+  border-radius: var(--bs-modal-border-radius);
+  outline: 0;
+}
+::ng-deep .cdk-overlay-container {
+  z-index: 9999;
+}
+
+.btn-primary.savetemp {
+  float: right;
+  font-family: RobotoRegular;
+  height: 35px;
+  /* font-weight: bold; */
+  font-size: 15px;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  width: 135px;
+}
+.btn-primary.Addentry {
+  float: right;
+  font-family: RobotoRegular;
+  height: 35px;
+  /* font-weight: bold; */
+  font-size: 15px;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  width: 98px;
+}
+
+/* Password streangth*/
+.strength-weak {
+  background-color: red;
+}
+
+.strength-medium {
+  background-color: yellow;
+}
+
+.strength-strong {
+  background-color: green;
+}
+
+
+.password-strength-indicator {
+  height: 10px; /* Adjust height as needed */
+  margin-top: 5px; /* Adjust margin as needed */
+  width: 100%; /* Full width */
+}

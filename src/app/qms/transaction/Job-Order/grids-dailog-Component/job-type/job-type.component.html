@@ -1,0 +1,194 @@
+<div class="mb-3 px-3 py-2">
+    <h3 *ngIf="this.data?.list == undefined || this.data?.list == null" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        Add
+    </h3>
+    <h3 *ngIf="this.data?.list && !this.data?.view" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        Update
+    </h3>
+    <h3 *ngIf="this.data?.view" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        View
+    </h3>
+    <mat-divider></mat-divider>
+</div>
+<div mat-dialog-content>
+    <div>
+        <form [formGroup]="JTForm">
+            <div class="row mt-2">
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Part Number</mat-label>
+                    <input type="text" placeholder="Part Number" aria-label="Number" matInput formControlName="partNumberControl"
+                        [matAutocomplete]="auto1">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="getPartDes($event)">
+                        <mat-option *ngFor="let option of filteredpartNumberControl | async" [value]="option?.partNumber">
+                            {{option?.partNumber}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f.partNumberControl.touched && f.partNumberControl.hasError('required')">Part Number is
+                        required</mat-error>
+                    <mat-error *ngIf="f.partNumberControl.hasError('invalidOption')">Invalid
+                        Option</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Part Description</mat-label>
+                    <input type="text" placeholder="Transport Tracking Number" matInput formControlName="partDescriptionControl">
+                    <mat-error
+                        *ngIf="f.partDescriptionControl.touched && f.partDescriptionControl.hasError('required') && !f.partDescriptionControl.hasError('maxlength')">
+                        Part Description is required
+                    </mat-error>
+                    <mat-error *ngIf="f.partDescriptionControl.hasError('maxlength')">
+                        Part Description cannot exceed 100 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">HS Code Destination</mat-label>
+                    <input type="text" placeholder="HS Code Destination" aria-label="Number" matInput formControlName="HSCodeDestinationControl"
+                        [matAutocomplete]="auto2">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredHSCodeDestinationControl | async" [value]="option?.hsCode">
+                            {{option?.hsCode}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f.HSCodeDestinationControl.touched && f.HSCodeDestinationControl.invalid">HS Code Destination is
+                        required</mat-error>
+                    <mat-error *ngIf="f.HSCodeDestinationControl.touched && f.HSCodeDestinationControl.hasError('invalidOption')">Invalid
+                        Option</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">HS Code Origin</mat-label>
+                    <input type="text" placeholder="HS Code Origin" aria-label="Number" matInput formControlName="HSCodeOriginControl"
+                        [matAutocomplete]="auto3">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredHSCodeOriginControl | async" [value]="option?.hsCode">
+                            {{option?.hsCode}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f.HSCodeOriginControl.touched && f.HSCodeOriginControl.invalid">HS Code Origin is
+                        required</mat-error>
+                    <mat-error *ngIf="f.HSCodeOriginControl.touched && f.HSCodeOriginControl.hasError('invalidOption')">Invalid
+                        Option</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Part CIF Value</mat-label>
+                    <input type="number" step="any" placeholder="Part CIF Value" matInput formControlName="partCIFValueControl"
+                    (input)="trimNegativeValue($event,'partCIFValueControl')">
+                    <mat-error
+                        *ngIf="f.partCIFValueControl.touched && f.partCIFValueControl.hasError('required') && !f.partCIFValueControl.hasError('maxlength')">
+                        Part CIF Value is required
+                    </mat-error>
+                    <!-- <mat-error *ngIf="f.partCIFValueControl.hasError('decimal')">
+                        Part CIF Value must be a valid decimal with up to 14 digits and 2 decimal places
+                      </mat-error> -->
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Duty%</mat-label>
+                    <input type="number" step="any" placeholder="Duty" matInput formControlName="dutyControl"
+                    (input)="trimNegativeValue($event,'dutyControl')">
+                    <mat-error
+                        *ngIf="f.dutyControl.touched && f.dutyControl.hasError('required') && !f.dutyControl.hasError('maxlength')">
+                        Duty is required
+                    </mat-error>
+                    <!-- <mat-error *ngIf="f.dutyControl.hasError('decimal')">
+                        Duty must be a valid decimal with up to 6 digits and 2 decimal places
+                      </mat-error> -->
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Duty Value</mat-label>
+                    <input type="number" placeholder="Duty Value" matInput formControlName="dutyValueControl" (input)="trimNegativeValue($event,'dutyValueControl')">
+                    <mat-error
+                        *ngIf="f.dutyValueControl.touched && f.dutyValueControl.hasError('required') && !f.dutyValueControl.hasError('maxlength')">
+                        Duty is required
+                    </mat-error>
+                    <mat-error *ngIf="f.dutyValueControl.hasError('maxlength')">
+                        Duty cannot exceed 50 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Additional Tax%</mat-label>
+                    <input type="number" step="any" placeholder="Additional Tax" matInput formControlName="additionalTaxControl" (input)="addTax($event)">
+                    <mat-error
+                        *ngIf="f.additionalTaxControl.touched && f.additionalTaxControl.hasError('required') && !f.additionalTaxControl.hasError('maxlength')">
+                        Additional Tax is required
+                    </mat-error>
+                    <mat-error *ngIf="f.additionalTaxControl.hasError('decimal')">
+                        Additional Tax must be a valid decimal with up to 6 digits and 2 decimal places
+                      </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Additional Tax Value</mat-label>
+                    <input type="number" step="any" placeholder="Additional Tax Value" matInput formControlName="additionalTaxValueControl" (input)="additionalTaxValue($event)">
+                    <mat-error
+                        *ngIf="f.additionalTaxValueControl.touched && f.additionalTaxValueControl.hasError('required') && !f.additionalTaxValueControl.hasError('maxlength')">
+                        Additional Tax Value is required
+                    </mat-error>
+                    <mat-error *ngIf="f.additionalTaxValueControl.hasError('decimal')">
+                        Additional Tax Value must be a valid decimal with up to 6 digits and 2 decimal places
+                      </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">ECCN Number</mat-label>
+                    <input placeholder="ECCN Number" matInput formControlName="ECCNNumberControl">
+                    <mat-error *ngIf="f.ECCNNumberControl.hasError('maxlength')" class="text-danger">
+                        Maximum length is 25 characters.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Quantity</mat-label>
+                    <input type="number" step="any" placeholder="Quantity" matInput formControlName="quantityControl" (input)="trimNegativeValue($event,'quantityControl')">
+                    <mat-error
+                        *ngIf="f.quantityControl.touched && f.quantityControl.hasError('required') && !f.quantityControl.hasError('maxlength')">
+                        Quantity is required
+                    </mat-error>
+                    <mat-error *ngIf="f.quantityControl.hasError('maxlength')">
+                        Quantity cannot exceed 100 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Total Net Weight</mat-label>
+                    <input type="number" step="any" placeholder="Total Net Weight" matInput formControlName="totalNetWeightControl" (input)="trimNegativeValue($event,'totalNetWeightControl')">
+                    <mat-error
+                        *ngIf="f.totalNetWeightControl.touched && f.totalNetWeightControl.hasError('required') && !f.totalNetWeightControl.hasError('maxlength')">
+                        Total Net Weight is required
+                    </mat-error>
+                    <mat-error *ngIf="f.totalNetWeightControl.hasError('decimal')">
+                        Total Net Weight must be a valid decimal with up to 6 digits and 2 decimal places
+                      </mat-error>
+                </mat-form-field>
+               
+            </div>
+
+
+        </form>
+
+    </div>
+</div>
+<div mat-dialog-actions style="float: right;" class="d-flex gap-2">
+    <button (click)="Close()" class="btn btn-secondary canceltbtn" type="submit">
+        Cancel
+    </button> &nbsp;&nbsp;
+    <button *ngIf="this.data?.list == undefined || this.data?.list == null" class="btn btn-primary returntolistbtn"
+        type="submit" (click)="save()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+    <button [disabled]="this.data?.view" *ngIf="this.data?.list" class="btn btn-primary returntolistbtn" type="submit"
+        (click)="save()">
+        <i class="fa fa-list me-2"></i>Update List
+    </button>
+
+</div>

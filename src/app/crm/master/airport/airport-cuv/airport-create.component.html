@@ -1,0 +1,139 @@
+<div class="table-list-display">
+    <div class="component-creation">
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Employee">
+                <span>Airport</span>
+            </h3>
+
+            <button class="btn btn-primary returntolistbtn" type="button" (click)="returnToList()">
+                <i class="fa fa-list me-2"></i> Return to List
+            </button>
+        </div>
+        <hr class="mt-0 mb-4">
+        <mat-card>
+            <mat-card-title class="title">
+                {{processTitle}}
+            </mat-card-title>
+            <br>
+            <mat-card-content>
+                <form [formGroup]="airportForm" #form="ngForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label class="labelcolor">Airport Code</mat-label>
+                                <input matInput type="text" formControlName="airportCode" required maxlength="10"
+                                    placeholder="Aiport Code" autocomplete="off">
+                                <mat-error *ngIf="!airportForm.controls['airportCode'].value">Airport Code is required*</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label class="labelcolor">Airport Name</mat-label>
+                                <input matInput type="text" formControlName="airportName" required maxlength="200"
+                                    placeholder="Airport Name" autocomplete="off">
+                                <mat-error *ngIf="!airportForm.controls['airportName'].value">Airport Name is required*</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label class="labelcolor">Country</mat-label>
+                                <input matInput formControlName="country" (keydown)="CEmpty()" [matAutocomplete]="autoCountry" required>
+                                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayCountryLabelFn"
+                                    (optionSelected)="CountrySelectedoption($event)">
+                                    <mat-option *ngFor="let country of filteredCountryOptions$ | async" [value]="country"
+                                        [value]="country" [disabled]="country.isNotFound">
+                                        {{ country.countryName }}
+                                    </mat-option>
+    
+                                </mat-autocomplete>
+                                <mat-error *ngIf="!airportForm.controls['country'].value">
+                                    Country is required*.
+                                </mat-error>
+                            </mat-form-field>
+        
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label class="labelcolor">State</mat-label>
+                                <input matInput placeholder="State Name" formControlName="state"
+                                    [matAutocomplete]="SelectedState" required>
+                                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                <mat-autocomplete #SelectedState="matAutocomplete" [displayWith]="displayStateLabelFn"
+                                    (optionSelected)="StateSelectedoption($event)">
+                                    <mat-option *ngFor="let stateList of filteredStateOptions$ | async"
+                                        [value]="stateList">
+                                        {{stateList.stateName}}
+                                    </mat-option>
+
+                                </mat-autocomplete>
+                                <!-- 
+                  <mat-icon style="cursor: pointer" matSuffix *ngIf="airportForm.controls['state'].value"
+                    (click)="clearStateNameData()">
+                    close
+                  </mat-icon> -->
+                 
+                                <mat-error *ngIf="!airportForm.controls['state'].value">
+                                    State is required*.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label class="labelcolor">City</mat-label>
+                                <input matInput placeholder="City Name" formControlName="city"
+                                    [matAutocomplete]="SelectedCity" required>
+                                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                <mat-autocomplete #SelectedCity="matAutocomplete" [displayWith]="displayCityLabelFn"
+                                    (optionSelected)="CitySelectedoption($event)">
+                                    <mat-option *ngFor="let cityList of filteredCityOptions$ | async"
+                                        [value]="cityList">
+                                        {{cityList.cityName}}
+                                    </mat-option>
+
+                                </mat-autocomplete>
+                    <!-- <mat-icon style="cursor: pointer" matSuffix *ngIf="airportForm.controls['state'].value"
+                                (click)="clearStateNameData()">close</mat-icon> -->
+
+                                <mat-error *ngIf="!airportForm.controls['city'].value"> 
+                                    City is required*
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label class="labelcolor">Latitude</mat-label>
+                                <input matInput type="text" formControlName="latitude"  maxlength="20"
+                                    placeholder="Latitude" name="latitude" autocomplete="off">
+                                <!-- <mat-error *ngIf="!airportForm.controls['latitude'].value">Latitude is required*</mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label class="labelcolor">Longitude</mat-label>
+                                <input matInput type="text" formControlName="longitude"  maxlength="20"
+                                    placeholder="Longitude" name="longitude" autocomplete="off">
+                                <!-- <mat-error *ngIf="!airportForm.controls['longitude'].value">Longitude is required*</mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-checkbox class="statusmargin" formControlName="livestatus">Active</mat-checkbox>
+                        </div>
+                    </div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px;">
+    <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="!viewMode && processTitle == 'Add'" (click)="onSaveAirport()"><i
+            class="fa fa-save me-2"></i> Save</button>
+    <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="!viewMode && processTitle == 'Edit'" (click)="onSaveAirport()"><i
+            class="fa fa-save me-2"></i> Update</button>
+    <button type="button" class="btn btn-danger resetbtn" (click)="reset(airportForm)" *ngIf="!viewMode"><i
+            class="fa fa-times-circle"></i> Reset</button>
+</div>

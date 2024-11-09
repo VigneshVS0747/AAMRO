@@ -1,0 +1,12 @@
+/* ::ng-deep .autocomplete-container .suggestions-container{
+    position: fixed !important;
+    width: auto !important;
+}
+
+::ng-deep .autocomplete-container .suggestions-container ul li a {
+    width: 173px !important;
+} */
+
+.Page-Short{
+    padding-left: 500px;
+}

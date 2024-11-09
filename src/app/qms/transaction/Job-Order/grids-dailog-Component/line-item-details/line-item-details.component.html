@@ -1,0 +1,173 @@
+<div class="mb-3 px-3 py-2">
+    <h3 *ngIf="this.data?.list == undefined || this.data?.list == null" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        Add
+    </h3>
+    <h3 *ngIf="this.data?.list && !this.data?.view" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        Update
+    </h3>
+    <h3 *ngIf="this.data?.view" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        View
+    </h3>
+    <mat-divider></mat-divider>
+</div>
+<div mat-dialog-content>
+    <div>
+        <form [formGroup]="LineItemForm">
+            <div class="row mt-2">
+        
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Line Item Code</mat-label>
+                    <input type="text" placeholder="Line Item Code" matInput formControlName="lineItemCodeControl">
+                    <mat-error
+                        *ngIf="f['lineItemCodeControl'].touched && f['lineItemCodeControl'].hasError('required') && !f['lineItemCodeControl'].hasError('maxlength')">
+                        Line Item Code is required
+                    </mat-error>
+                    <mat-error *ngIf="f['lineItemCodeControl'].hasError('maxlength')">
+                        Line Item Code cannot exceed 25 characters
+                    </mat-error>
+                </mat-form-field>
+        
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Line Item Description</mat-label>
+                    <input type="text" placeholder="Line Item Description" aria-label="Number" matInput
+                        formControlName="lineItemDescriptionControl" [matAutocomplete]="auto1">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="getLineItem($event)">
+                        <mat-option *ngFor="let option of filteredlineItemDescriptionControl | async"
+                            [value]="option?.lineItemName">
+                            {{option?.lineItemName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error
+                        *ngIf="f['lineItemDescriptionControl'].hasError('required')">Line Item Description is required</mat-error>
+                    <mat-error
+                        *ngIf="f['lineItemDescriptionControl'].hasError('invalidOption')">Invalid Option</mat-error>
+                </mat-form-field>
+        
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Line Item Category</mat-label>
+                    <input type="text" placeholder="Line Item Category" matInput
+                        formControlName="lineItemCategoryControl">
+                    <mat-error
+                        *ngIf="f['lineItemCategoryControl'].touched && f['lineItemCategoryControl'].hasError('required') && !f['lineItemCategoryControl'].hasError('maxlength')">
+                        Line Item Category is required
+                    </mat-error>
+                    <mat-error *ngIf="f['lineItemCategoryControl'].hasError('maxlength')">
+                        Line Item Category cannot exceed 25 characters
+                    </mat-error>
+                </mat-form-field>
+        
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Service Country</mat-label>
+                    <input type="text" placeholder="Service Country" aria-label="Number" matInput
+                        formControlName="serviceInControl" [matAutocomplete]="auto2">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredserviceInControl | async"
+                            [value]="option?.countryName">
+                            {{option?.countryName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f['serviceInControl'].hasError('required')">Service Country is required</mat-error>
+                    <mat-error
+                        *ngIf="f['serviceInControl'].hasError('invalidOption')">Invalid Option</mat-error>
+                </mat-form-field>
+                <div class="col-md-4">
+                    <mat-form-field class="statusmargin" appearance="fill">
+                        <mat-label  class="labelcolor" >Service By</mat-label>
+                        <mat-select  [(ngModel)]="isVendorSelected" [ngModelOptions]="{standalone: true}" (selectionChange)="toggleVendorField($event)" [disabled]="isView">
+                            <mat-option [value]="false">Aamro</mat-option>
+                            <mat-option [value]="true">Vendor</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+        
+                <div class="col-12 col-md-4">
+                    <div class="d-flex align-items-center">
+                        <!-- <mat-checkbox [(ngModel)]="isVendorSelected"
+                            [ngModelOptions]="{standalone: true}" (change)="toggleVendorField($event)"></mat-checkbox> -->
+                        <mat-form-field class="w-100">
+                            <mat-label class="labelcolor">Vendor</mat-label>
+                            <input type="text" placeholder="Vendor" aria-label="Number" matInput
+                                formControlName="vendorControl" [matAutocomplete]="auto3" [disabled]="!isVendorSelected">
+                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                            <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="getSelectedVendorId($event)">
+                                <mat-option *ngFor="let option of filteredvendorControl | async"
+                                    [value]="option?.vendorName">
+                                    {{option?.vendorName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="f['vendorControl'].hasError('required')">Vendor is required</mat-error>
+                            <mat-error
+                                *ngIf="f['vendorControl'].hasError('invalidOption')">Invalid Option</mat-error>
+                        </mat-form-field>
+                        <i class="fas fa-filter" *ngIf="isVendorSelected" type="button" (click)="vendorFilter()"></i>
+                    </div>
+                </div>
+        
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Region</mat-label>
+                    <input type="text" placeholder="Region" aria-label="Number" matInput formControlName="regionControl"
+                        [matAutocomplete]="auto4">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto4="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredRegion | async"
+                            [value]="option?.regionName">
+                            {{option?.regionName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f['regionControl'].hasError('required')">Region is required</mat-error>
+                    <mat-error *ngIf="f['regionControl'].hasError('invalidOption')">Invalid Option</mat-error>
+                </mat-form-field>
+        
+                <mat-form-field class="col-12 col-md-4" *ngIf="show">
+                    <mat-label class="labelcolor">Source</mat-label>
+                    <input type="text" placeholder="Source" aria-label="Number" matInput formControlName="sourceControl"
+                        [matAutocomplete]="auto5">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto5="matAutocomplete" (optionSelected)="sourceFromSelectedOption($event)">
+                        <mat-option *ngFor="let option of filteredsource | async"
+                            [value]="option?.sourceFrom">
+                            {{option?.sourceFrom}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f['sourceControl'].hasError('invalidOption')">Invalid Option</mat-error>
+                </mat-form-field>
+        
+                <mat-form-field class="col-12 col-md-4" *ngIf="show">
+                    <mat-label class="labelcolor">Reference Number</mat-label>
+                    <input type="text" placeholder="Reference Number" aria-label="Number" matInput formControlName="referenceControl"
+                        [matAutocomplete]="auto6">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto6="matAutocomplete" (optionSelected)="getRefernceId($event)">
+                        <mat-option *ngFor="let option of filteredRefNumber | async"
+                            [value]="option?.refNumber">
+                            {{option?.refNumber}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f['referenceControl'].hasError('invalidOption')">Invalid Option</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+        
+
+    </div>
+</div>
+<div mat-dialog-actions style="float: right;" class="d-flex gap-2">
+    <button (click)="Close()" class="btn btn-secondary canceltbtn" type="submit">
+        Cancel
+    </button> &nbsp;&nbsp;
+    <button *ngIf="this.data?.list == undefined || this.data?.list == null" class="btn btn-primary returntolistbtn"
+        type="submit" (click)="save()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+    <button [disabled]="this.data?.view" *ngIf="this.data?.list" class="btn btn-primary returntolistbtn" type="submit"
+        (click)="save()">
+        <i class="fa fa-list me-2"></i>Update List
+    </button>
+
+</div>
+

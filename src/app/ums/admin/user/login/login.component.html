@@ -1,0 +1,112 @@
+<!-- <div class="login-bg">
+  <div class="card-container">
+    <mat-card class="home-card">
+      <mat-card-content class="home-card-content">
+        <img mat-card-image src="./assets/images/left.png" alt="Logo" />
+        <div class="overlay">
+          <p class="welcome-text">Welcome</p>
+        </div>
+        <div class="form-container">
+          <img src="./assets/images/logo.png" alt="Login" />
+          <br />
+          <form [formGroup]="LoginForm">
+            <mat-form-field appearance="fill">
+              <mat-icon matPrefix color="primary">person</mat-icon>
+
+              <input matInput type="text" placeholder="UserId" autocomplete="off" formControlName="employeeCode"
+                autofocus />
+              <mat-error *ngIf="
+                  LoginForm.controls['employeeCode'].dirty &&
+                  LoginForm.hasError('required', 'employeeCode')
+                " class="text-danger">UserId is required*</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-icon class="rotated-icon" matPrefix color="primary">key</mat-icon>
+              <input matInput [type]="hide ? 'password' : 'text'" placeholder="password" autocomplete="off"
+                formControlName="employeePassword" />
+              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide">
+                <mat-icon class="rotated-icon" color="primary" style="height: 1rem;
+                line-height: 17px;">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              </button>
+              <mat-error *ngIf="
+                  LoginForm.controls['employeePassword'].dirty &&
+                  LoginForm.hasError('required', 'employeePassword')
+                " class="text-danger">Password is required*</mat-error>
+            </mat-form-field>
+            <div class="text-danger" *ngIf="resError">{{ resError }}</div>
+            <div class="login-button-container">
+              <button class="btn btn-primary savebtn mt-3" type="submit" (click)="SubmitLogin()" matTooltip="Login"
+                matTooltipPosition="above">
+                Login
+              </button>
+            </div>
+            <a id="forgot" (click)="Forgotpassword()" class="forgot-password-link">Forgot password?</a>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>  -->
+
+
+
+<div class="login-bg d-flex justify-content-center p-3">
+  <div class="mx-3 p-5 container">
+    <mat-card>
+      <div class="row">
+        <div class="col-md-6 d-none d-md-block">
+          <div class="position-relative " style="height: 550px;">
+            <img src="./assets/images/left.png" class="w-100 h-100" alt="Logo" />
+            <div class="position-absolute top-50 start-50 translate-middle">
+              <h1 class="welcome-text">Welcome</h1>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 mt-3 mb-3">
+            <img class="mb-3 mt-3" style="margin: 0 auto;display: flex;" src="./assets/images/logo.png" alt="Login" />
+            <form [formGroup]="LoginForm" class="form-containers p-4">
+              <mat-form-field appearance="fill" class="w-100 mb-3">
+                <mat-icon matPrefix color="primary">person</mat-icon>
+
+                <input matInput type="text" placeholder="UserId" autocomplete="off" formControlName="employeeCode"
+                  autofocus />
+                <mat-error *ngIf="
+                    LoginForm.controls['employeeCode'].dirty &&
+                    LoginForm.hasError('required', 'employeeCode')
+                  " class="text-danger">UserId is required*</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="w-100 mb-3">
+                <mat-icon class="rotated-icon" matPrefix color="primary">key</mat-icon>
+                <input matInput [type]="hide ? 'password' : 'text'" placeholder="password" autocomplete="off"
+                  formControlName="employeePassword" />
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide">
+                  <mat-icon class="rotated-icon" color="primary" style="height: 1rem;
+                  line-height: 17px;">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="
+                    LoginForm.controls['employeePassword'].dirty &&
+                    LoginForm.hasError('required', 'employeePassword')
+                  " class="text-danger">Password is required*</mat-error>
+              </mat-form-field>
+              <div class="text-danger" *ngIf="resError">{{ resError }}</div>
+              <div class="">
+                <button class="btn btn-primary mt-3" [disabled]="submitdisable" type="submit" (click)="SubmitLogin()" matTooltip="Login"
+                  matTooltipPosition="above">
+                  Login
+                </button>
+              </div>
+              <a id="forgot" (click)="Forgotpassword()" class="forgot-password-link">Forgot password?</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+

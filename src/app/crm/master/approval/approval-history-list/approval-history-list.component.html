@@ -1,0 +1,96 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <div class="header-container">
+      <h3 class="box-title">
+        <img src="./assets/images/billing-storage.png" alt="Approval Dashboard" />
+        <span>Approval Dashboard</span>
+      </h3>
+      <hr />
+    </div>
+
+    <section class="custom-table-wrapper">
+      <kendo-grid [kendoGridBinding]="approvalDashboard" [filterable]="true" [resizable]="true" [height]="600"
+        [pageSize]="20" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+        <kendo-grid-column [style]="{
+                'text-align': 'left',
+                padding: '5px',
+                
+              }" [headerStyle]="{
+                justifyContent: 'center',
+                
+              }" field="screen" title="Screen Name" media="(min-width: 450px)" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.screen }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{
+          'text-align': 'left',
+          padding: '5px',
+          
+        }" [headerStyle]="{
+          justifyContent: 'center',
+          
+        }" field="code" title="Reference Number" media="(min-width: 450px)" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.code }}
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{
+            'text-align': 'left',
+            padding: '5px',
+            
+          }" [headerStyle]="{
+            justifyContent: 'center',
+            
+          }" field="employeeName" title="Requested By" media="(min-width: 450px)" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.employeeName }}
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+              justifyContent: 'center',
+              
+            }" field="requestedDate" format="{0:dd/MMM/yyyy}" filter="date" title="Requested Date"
+          media="(min-width: 450px)" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.requestedDate | date:'dd/MMM/yyyy' }}
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+            justifyContent: 'center',
+            
+          }" field="levelNumber" title="Level" media="(min-width: 450px)" [width]="60">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{"Level"}} {{ dataItem.levelNumber }}
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                justifyContent: 'center',
+              }" title="Action" media="(min-width: 450px)" [width]="75" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <a type="button" *ngIf="pagePrivilege.includes('view')" (click)="onview(dataItem)"><i
+                class="fa-solid fa-eye fa-lg"></i></a>&nbsp;
+            <a type="button" *ngIf="pagePrivilege.includes('edit')" (click)="onEdit(dataItem)"><i
+                class="fas fa-square-pen"></i></a>&nbsp;
+            <a type="button" *ngIf="pagePrivilege.includes('edit')" (click)="onHistory(dataItem)"><i
+                class="fa-solid fa-clock-rotate-left fa-lg"></i></a>&nbsp;
+            <a type="button" *ngIf="pagePrivilege.includes('delete')" (click)="onApproval(dataItem)"><i
+                class="fa-solid fa-circle-check fa-lg"></i></a>&nbsp;
+          </ng-template>
+        </kendo-grid-column>
+        <ng-template kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+      </kendo-grid>
+    </section>
+  </div>
+</div>

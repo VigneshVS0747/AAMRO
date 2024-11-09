@@ -1,0 +1,32 @@
+<div class="mt-3 mb-3 px-3 mx-2">
+    <div class="d-flex align-items-center justify-content-between">
+        <h3 class="mt-2 mb-2">Potential Customer</h3>
+        <mat-icon mat-dialog-close type="button" style="color: red;">close</mat-icon>
+    </div>
+    <kendo-grid [data]="PCustomerGridData" [skip]="PCskip" [filterable]="true" [resizable]="true" [height]="560"
+        [pageSize]="PCpageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [filterable]="true"
+        (dataStateChange)="onPCStateChange($event)" (pageChange)="PCpageChange($event)">
+
+        <kendo-grid-column field="potentialCustomerCode" title="PC Id" [width]="110">
+        </kendo-grid-column>
+        <kendo-grid-column field="customerName" title="Name" [width]="120">
+        </kendo-grid-column>
+        <kendo-grid-column field="countryName" title="Country" [width]="140">
+        </kendo-grid-column>
+        <kendo-grid-column field="salesOwnerName" title="Sales Owner" [width]="140">
+        </kendo-grid-column>
+        <kendo-grid-column field="salesExecutiveName" title="Sales Executive" [width]="140">
+        </kendo-grid-column>
+        <kendo-grid-column field="pcStatus" title="Status" [width]="140">
+        </kendo-grid-column>
+        <ng-template kendoPagerTemplate>
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+            <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+            <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+            <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+            <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+    </kendo-grid>
+
+</div>

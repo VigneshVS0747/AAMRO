@@ -1,0 +1,125 @@
+<div class="px-2 mb-1 mt-1">
+    <form [formGroup]="myFormGroup">
+        <div class="row d-flex flex-wrap justify-content-between">
+            <div class="col-12 col-md-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="labelcolor">Stage</mat-label>
+                    <input type="text" placeholder="Stage" aria-label="Job Order Stage" matInput
+                        formControlName="jobOrderStageControl" [matAutocomplete]="auto1">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="onStageChangeEvent($event)">
+                        <mat-option *ngFor="let option of filteredJobOrderStageControl | async" [value]="option?.jobStage">
+                            {{ option?.jobStage }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="myFormGroup.get('jobOrderStageControl')?.hasError('required')">Job Order Stage is required</mat-error>
+                    <mat-error *ngIf="myFormGroup.get('jobOrderStageControl')?.hasError('invalidOption')">Invalid Option</mat-error>
+                </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-md-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="labelcolor">Date</mat-label>
+                    <input matInput formControlName="dateControl" placeholder="DD/MM/YYYY" [matDatepicker]="picker1">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error *ngIf="myFormGroup.get('dateControl')?.touched && myFormGroup.get('dateControl')?.hasError('required')">Date is required</mat-error>
+                </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-md-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="labelcolor">Status</mat-label>
+                    <input type="text" placeholder="Status" aria-label="Job Order Status" matInput
+                        formControlName="jobOrderStatusControl" [matAutocomplete]="auto2">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="onchangeEvent($event)">
+                        <mat-option *ngFor="let option of filteredJobOrderStatusControl | async" [value]="option?.jobStageStatus">
+                            {{ option?.jobStageStatus }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="myFormGroup.get('jobOrderStatusControl')?.hasError('required')">Job Order Status is required</mat-error>
+                    <mat-error *ngIf="myFormGroup.get('jobOrderStatusControl')?.hasError('invalidOption')">Invalid Option</mat-error>
+                </mat-form-field>
+            </div>
+    
+            <div class="col-12 col-md-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="labelcolor">Remarks</mat-label>
+                    <textarea formControlName="remarksControl" matInput rows="1" placeholder="Remarks"></textarea>
+                    <mat-error *ngIf="myFormGroup.get('remarksControl')?.hasError('maxlength')">
+                        Remarks cannot exceed 500 characters
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+    
+    
+    
+    <div>
+        <kendo-grid [kendoGridBinding]="JOAirStatusList" [filterable]="true" [resizable]="true" [height]="400"
+            [pageSize]="pageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [skip]="skip"
+            (pageChange)="pageChange($event)">
+    
+            <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}" [headerStyle]="{justifyContent: 'center',}"
+                field="date" title="Date" filter="date" [width]="150">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    <span>
+                        {{dataItem.date | date:'mediumDate'}}
+                    </span>
+                </ng-template>
+            </kendo-grid-column>
+    
+            <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}" [headerStyle]="{justifyContent: 'center',}"
+                field="jobStage" title="Job Order Stage" filter="text" [width]="150">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    <span>
+                        {{dataItem.jobStage}}
+                    </span>
+                </ng-template>
+            </kendo-grid-column>
+    
+            <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}" [headerStyle]="{justifyContent: 'center',}"
+                field="jobStageStatus" title="Job Order Status" filter="text" [width]="150">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    <span>
+                        {{dataItem.jobStageStatus}}
+                    </span>
+                </ng-template>
+            </kendo-grid-column>
+    
+            <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}" [headerStyle]="{justifyContent: 'center',}"
+                field="remarks" title="Remarks" filter="text" [width]="150">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    <span>
+                        {{dataItem.remarks}}
+                    </span>
+                </ng-template>
+            </kendo-grid-column>
+    
+    
+        </kendo-grid>
+    </div>
+    
+    <!-- <div>
+        <div mat-dialog-actions style="float: right;">
+            <button mat-raised-button color="primary" (click)="save()">Update</button>
+            <button mat-raised-button color="warn" (click)="close()">Close</button>
+        </div>
+    </div> -->
+    <div mat-dialog-actions style="float: right;" class="d-flex gap-2">
+        <button (click)="close()" class="btn btn-secondary canceltbtn" type="submit">
+            Close
+        </button> &nbsp;&nbsp;
+        <button *ngIf="this.data?.list == undefined || this.data?.list == null" class="btn btn-primary returntolistbtn"
+            type="submit" (click)="save()">
+            <i class="fa fa-list me-2"></i>Add to List
+        </button>
+        <button [disabled]="this.data?.view" *ngIf="this.data?.list" class="btn btn-primary returntolistbtn" type="submit"
+            (click)="save()">
+            <i class="fa fa-list me-2"></i>Update List
+        </button>
+    
+    </div>
+</div>

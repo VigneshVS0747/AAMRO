@@ -1,0 +1,121 @@
+<mat-dialog-content class="mat-typography">
+
+  <div class="table-list-display">
+    <div class="component-creation">
+      <div class="header-container">
+        <h3 class="box-title">
+          <img src="./assets/images/billing-storage.png" alt="Employee" />
+          <span>Document Details</span>
+        </h3>
+
+        <!-- <button
+              class="btn btn-primary returntolistbtn"
+              type="submit"
+              routerLink="/crm/master/lineitemmaster"
+            >
+              <i class="fa fa-list me-2"></i> Return to List
+            </button> -->
+      </div>
+
+      <hr class="mt-0 mb-4" />
+
+      <mat-card>
+        <mat-card-title class="title">
+          <!-- {{titile}} -->
+        </mat-card-title>
+        <br />
+
+        <mat-card-content>
+          <form [formGroup]="VendorDoc">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label  [ngClass]="{'labelcolor': isFieldEnabled(), 'labelcolorGray': !isFieldEnabled()}" >Document Name</mat-label>
+                  <input matInput formControlName="documentId" [matAutocomplete]="documentId" />
+                  <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                  <mat-autocomplete #documentId="matAutocomplete" (optionSelected)="optionSelecteddocumentId($event)">
+                    <mat-option *ngFor="let vdoc of filtereddocumentId | async" [value]="vdoc.documentName">
+                      {{vdoc.documentName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="
+                            VendorDoc.controls['documentId'].dirty &&
+                            VendorDoc.hasError('required', 'documentId')
+                      " class="text-danger">Document name is required*</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-4">
+                <mat-label class="labelcolorGray">Mandatory</mat-label>
+                <mat-checkbox formControlName="mandatory"></mat-checkbox>
+              </div>
+              <div class="col-md-4">
+                <mat-label class="labelcolor">IsCollected</mat-label>
+                <mat-checkbox formControlName="isCollected"></mat-checkbox>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field appearance="fill">
+                  <mat-label class="labelcolor">Collected Date</mat-label>
+                  <input matInput [matDatepicker]="collectedDatePicker" formControlName="collectedDate" [matDatepickerFilter]="dateFilter">
+                  <mat-datepicker-toggle matSuffix [for]="collectedDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #collectedDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <input type="file" formControlName="documentName" (change)="selectFile($event)" [multiple]="true"
+                  class="form-control" width="50%" />
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <textarea matInput type="text" formControlName="remarks" maxlength="500"
+                    placeholder="Remarks"></textarea>
+
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <!-- <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+        <button
+          class="btn btn-primary savebtn me-1"
+          type="submit"
+          (click)="Savedata()"
+          *ngIf="Showsave"
+        >
+          <i class="fa fa-save me-2"></i>Save
+        </button>
+    
+        <button
+        class="btn btn-primary savebtn me-1"
+        type="submit"
+        (click)="Update()"
+        *ngIf="ShowUpdate"
+      >
+        <i class="fa fa-save me-2"></i>Update
+      </button>
+    
+        <button
+          type="submit"
+          class="btn btn-danger resetbtn"
+          (click)="reset()"
+          *ngIf="ShowReset"
+        >
+          <i class="fa fa-times-circle me-2"></i>Reset
+        </button> 
+      </div> -->
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" class="btn btn-secondary canceltbtn" (click)="Close()">
+    Cancel
+  </button>&nbsp;&nbsp;
+
+  <button class="btn btn-primary returntolistbtn" *ngIf="!viewMode" type="submit" (click)="AddtoList()">
+
+    <i class="fa fa-list me-2"></i>Add to List
+  </button>
+
+</mat-dialog-actions>

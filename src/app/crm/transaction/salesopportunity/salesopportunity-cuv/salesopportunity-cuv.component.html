@@ -1,0 +1,208 @@
+<div class="table-list-display">
+    <div class="component-creation">
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Sales Opportunity" />
+                <span>Sales Opportunity</span>
+            </h3>
+            <button class="btn btn-primary returntolistbtn" type="button" (click)="returnToList()">
+                <i class="fa fa-list me-2"></i> Return to List
+            </button>
+        </div>
+    </div>
+    <hr class="mt-3 mb-4" />
+    <mat-card>
+        <mat-card-title class="title">
+            {{ title }}
+        </mat-card-title>
+        <br />
+        <mat-card-content>
+            <div class="table-list-display">
+                <div class="component-creation">
+                    <div class="header-container">
+                        <form [formGroup]="salesOppourtinityForm" #form="ngForm" class="mt-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolorGray">Customer Name</mat-label>
+                                        <input matInput type="text" readonly maxlength="100"
+                                            formControlName="customerName" required placeholder="Customer Name"
+                                            autocomplete="off" #customerNameInput>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Commodity</mat-label>
+                                        <mat-select formControlName="commodity" [readonly]="disablefields"
+                                            [multiple]="true" (selectionChange)="onselectCommodity($event)">
+                                            <mat-option
+                                                *ngFor="let commodityTypeList of filteredCommodityListOptions$ | async"
+                                                [value]="commodityTypeList.commodityId" [disabled]="disablefields">
+                                                {{ commodityTypeList.commodityName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Service Sectors</mat-label>
+                                        <mat-select formControlName="serviceType" [readonly]="disablefields"
+                                            [multiple]="true" (selectionChange)="onselectService()">
+                                            <mat-option
+                                                *ngFor="let serviceTypeList of filteredServiceTypeListOptions$ | async"
+                                                [value]="serviceTypeList.serviceSectorId" [disabled]="disablefields">
+                                                {{ serviceTypeList.serviceSector }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Shipment Jobs Per Month
+                                        </mat-label>
+                                        <input matInput (input)="value($event)"  [readonly]="disablefields"
+                                            formControlName="jobsPerMonth" placeholder="jobs Per Month" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Origin</mat-label>
+                                        <mat-select formControlName="country" [readonly]="disablefields"
+                                            [multiple]="true" (selectionChange)="onselectCountries($event)">
+                                            <mat-option
+                                                *ngFor="let countryTypeList of filteredCountryTypeListOptions$ | async"
+                                                [value]="countryTypeList.countryId" [disabled]="disablefields">
+                                                {{ countryTypeList.countryName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Destination</mat-label>
+                                        <mat-select formControlName="destination" [readonly]="disablefields"
+                                            [multiple]="true" (selectionChange)="onselectDestinations($event)">
+                                            <mat-option
+                                                *ngFor="let countryTypeList of filteredCountryTypeListOptions$ | async"
+                                                [value]="countryTypeList.countryId" [disabled]="disablefields">
+                                                {{ countryTypeList.countryName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Mode of Transport</mat-label>
+                                        <mat-select formControlName="transport" [readonly]="disablefields"
+                                            [multiple]="true" (selectionChange)="onselectTransport($event)">
+                                            <mat-option
+                                                *ngFor="let modeOfTransportList of filteredModeOfTransportListOptions$ | async"
+                                                [value]="modeOfTransportList.modeofTransportId" [disabled]="disablefields">
+                                                {{ modeOfTransportList.modeofTransport }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Sea Freight</mat-label>
+                                        <input matInput type="text" [readonly]="disablefields" maxlength="200"
+                                            formControlName="seaFreight" placeholder="Sea Fright" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Air Freight</mat-label>
+                                        <input matInput type="text" [readonly]="disablefields" maxlength="200"
+                                            formControlName="airFreight" placeholder="Air Fright" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Inco Terms</mat-label>
+                                        <mat-select formControlName="incoTerm" [readonly]="disablefields"
+                                            [multiple]="true" (selectionChange)="onselectIncoTerms($event)">
+                                            <mat-option
+                                                *ngFor="let incoTermsList of filteredIncoTermsListOptions$ | async"
+                                                [value]="incoTermsList.incoTermId" [disabled]="disablefields">
+                                                {{ incoTermsList.incoTermCode }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Custom Clearance</mat-label>
+                                        <input matInput type="text" [readonly]="disablefields" maxlength="200"
+                                            formControlName="customClearance" placeholder="Custom Clearance"
+                                            autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Transportation</mat-label>
+                                        <input matInput type="text" [readonly]="disablefields" maxlength="200"
+                                            formControlName="transportation" placeholder="Transportation"
+                                            autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">IOR/EOR</mat-label>
+                                        <input matInput type="text" [readonly]="disablefields" maxlength="200"
+                                            formControlName="ioreor" placeholder="IOR/EOR" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Warehousing</mat-label>
+                                        <input matInput type="text" [readonly]="disablefields" maxlength="200"
+                                            formControlName="warehousing" placeholder="Warehousing" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Customer Remarks</mat-label>
+                                        <textarea matInput cols="8" rows="2" placeholder="" maxlength="500"
+                                            [readonly]="disablefields" formControlName="customerRemarks"></textarea>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <mat-label class="labelcolor">Tags</mat-label>
+                                        <textarea matInput cols="8" rows="2" placeholder="" maxlength="100"
+                                            formControlName="tags" [readonly]="disablefields"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+
+    <button class="btn btn-primary savebtn me-1" type="submit" [hidden]="disablefields" *ngIf="!viewMode"
+        (click)="onSaveGeneral()">
+        <i class="fa fa-save me-2"></i> Save
+    </button>
+    <button type="button" *ngIf="!viewMode" class="btn btn-danger resetbtn" (click)="resetGeneral()">
+        <i class="fa fa-times-circle"></i> Reset</button>
+</div>

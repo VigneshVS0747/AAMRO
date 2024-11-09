@@ -1,0 +1,97 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <h3 class="box-title">
+      <img src="./assets/images/billing-storage.png" alt="City Details">
+      <span>Mode Of Transport</span>
+    </h3>
+    <div class="text-end">
+      <button class="btn btn-primary Addbtn" 
+      *ngIf="pagePrivilege.includes('create')" type="button" (click)="Add()"><i
+          class="fa fa-plus-circle me-2"></i>Add</button>
+    </div>
+    <hr class="mt-0 mb-4">
+    <section class="custom-table-wrapper">
+
+      <kendo-grid [kendoGridBinding]="modeofTransport" [filterable]="true" [resizable]="true" [height]="500"
+        [pageSize]="10" [sortable]="true" [pageable]="true" [selectable]="{enabled: true}">
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+          [headerStyle]="{'justifyContent': 'center'}" field="modeofTransportCode" title="Code*" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="dataItem.Isedit">
+              <input type="text" class="form-control" maxlength="3" [(ngModel)]="dataItem.modeofTransportCode">
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              {{dataItem.modeofTransportCode}}
+            </div>
+            <div class="text-danger" *ngIf="ValidateField(dataItem.modeofTransportCode)">
+              <span>Mode of Transport code is required*</span>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+          [headerStyle]="{'justifyContent': 'center'}" field="modeofTransportName" title="Name*" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="dataItem.Isedit">
+              <input type="text" class="form-control" maxlength="40" [(ngModel)]="dataItem.modeofTransportName">
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              {{dataItem.modeofTransportName}}
+            </div>
+            <div class="text-danger" *ngIf="ValidateField(dataItem.modeofTransportName)">
+              <span>Mode of Transport name is required*</span>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+
+
+        <kendo-grid-column [style]="{'text-align': 'center'}" [headerStyle]="{'justifyContent': 'center'}"
+          field="livestatus" filter="boolean" title="Active" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.Isedit">
+              <mat-checkbox class="example-margin" [(ngModel)]="dataItem.livestatus"
+                (change)="handleChange($event, dataItem)"></mat-checkbox>
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              <mat-checkbox class="example-margin" [disabled]="true" [(ngModel)]="dataItem.livestatus"></mat-checkbox>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align': 'center'}" [headerStyle]="{'justifyContent': 'center'}"
+          title="Action" [width]="80" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="!dataItem.Isedit">
+              <a type="submit" (click)="Edit(dataItem)" 
+              *ngIf="pagePrivilege.includes('edit')"><i class="fas fa-square-pen"></i></a>&nbsp;
+              <a type="submit" 
+              *ngIf="pagePrivilege.includes('delete')" (click)="Delete(dataItem.modeofTransportId)"><i class="fas fa-trash"></i></a>
+            </div>
+            <div *ngIf="dataItem.Isedit">
+              <a type="submit" #submitButton tabindex="0" 
+              *ngIf="pagePrivilege.includes('create')" (keydown.enter)="hndlKeyPress($event , dataItem)"
+                (change)="hndlChange($event)" (click)="showAddRow ? Save(dataItem) : Update(dataItem)">
+                <ng-container *ngIf="showAddRow; else editIcon">
+                  <i class="fas fa-sd-card"></i>
+                </ng-container>
+                <ng-template #editIcon>
+                  <i class="fas fa-sd-card"></i>
+                </ng-template>
+              </a>&nbsp;
+              <a type="submit" #cancelButton tabindex="0" (keydown.enter)="handleKeyPress($event , dataItem)"
+                (click)="oncancel(dataItem)"><i class="fas fa-xmark"></i></a>
+            </div>
+
+          </ng-template>
+        </kendo-grid-column>
+
+        <ng-template kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+      </kendo-grid>
+    </section>
+  </div>
+</div>

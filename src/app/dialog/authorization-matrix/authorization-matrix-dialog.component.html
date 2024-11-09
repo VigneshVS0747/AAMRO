@@ -1,0 +1,26 @@
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label class="labelcolor"> Authorization Name</mat-label>
+    <mat-select
+      [disabled]="isReadOnly"
+      name="selectedAuthorization"
+      [(ngModel)]="selectedAuthorizationId"
+    >
+      <mat-option [value]="null" disabled>Select Authorization</mat-option>
+      <mat-option *ngFor="let am of ams" [value]="am.authorizationMatrixID">
+        {{ am.authorizationMatrixName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button
+    mat-button
+    *ngIf="!isReadOnly"
+    (click)="dialogRef.close(selectedAuthorizationId)"
+    [disabled]="!selectedAuthorizationId"
+  >
+    OK
+  </button>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+</mat-dialog-actions>

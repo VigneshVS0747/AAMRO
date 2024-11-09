@@ -1,0 +1,186 @@
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Job Order Expense Booking Details" />
+                    <span>Vendor Line Item</span>
+                </h3>
+            </div>
+        </div>
+        <hr class="mt-0 mb-4" />
+        <mat-card>
+            <mat-card-title class="title">
+                <!-- {{titile}} -->
+            </mat-card-title>
+            <br />
+            <mat-card-content>
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="QLIVendorValueDetail">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Aamro Line Item Category</mat-label>
+                                            <input matInput formControlName="aamroLineItemCatId"
+                                                [matAutocomplete]="aamroLineItemCatId" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="
+                                            QLIVendorValueDetail.controls['aamroLineItemCatId'].touched &&
+                                            QLIVendorValueDetail.hasError('required', 'aamroLineItemCatId')
+                        " class="text-danger">Aamro Line Item Category required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #aamroLineItemCatId="matAutocomplete"
+                                            [displayWith]="displayAamroLineItemCatListLabelFn"
+                                            (optionSelected)="aamroLineItemCatSelectedOption($event)">
+                                            <mat-option
+                                                *ngFor="let aamroLineItemCat of filteredAamroLineItemCatOptions$ | async"
+                                                [value]="aamroLineItemCat" [disabled]="aamroLineItemCat.isNotFound">
+                                                {{ aamroLineItemCat.lineItemCategoryName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Vendor LineItem</mat-label>
+                                            <input matInput type="text" formControlName="vendorLineItem"
+                                                placeholder="Vendor LineItem" />
+                                                <mat-error *ngIf="
+                                                QLIVendorValueDetail.controls['vendorLineItem'].touched &&
+                                                QLIVendorValueDetail.hasError('required', 'vendorLineItem')
+                            " class="text-danger">Vendor LineItem Category required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                   
+                                       
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Calculation Parameter</mat-label>
+                                            <input matInput formControlName="calculationParameterId"
+                                                [matAutocomplete]="autocalculationParameterId" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="
+                                            QLIVendorValueDetail.controls['calculationParameterId'].touched &&
+                                            QLIVendorValueDetail.hasError('required', 'calculationParameterId')
+                        " class="text-danger">Calculation Parameter required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocalculationParameterId="matAutocomplete"
+                                            [displayWith]="displayculationParLabelFn"
+                                            (optionSelected)="CalculationParSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let CalculationParlist of filteredCalculationParOptions$ | async"
+                                                [value]="CalculationParlist" [disabled]="CalculationParlist.isNotFound">
+                                                {{ CalculationParlist.calculationParameter}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Calculation Type</mat-label>
+                                            <input matInput formControlName="calculationTypeId"
+                                                [matAutocomplete]="autocalculationTypeId" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="
+                                            QLIVendorValueDetail.controls['calculationTypeId'].touched &&
+                                            QLIVendorValueDetail.hasError('required', 'calculationTypeId')
+                        " class="text-danger">Calculation Type required*</mat-error>
+                                            </mat-form-field>
+                                        <mat-autocomplete #autocalculationTypeId="matAutocomplete"
+                                            [displayWith]="displayculationTypeLabelFn"
+                                            (optionSelected)="CalculationTypeSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let CalculationTyplist of filteredCalculationTypeOptions$ | async"
+                                                [value]="CalculationTyplist" [disabled]="CalculationTyplist.isNotFound">
+                                                {{ CalculationTyplist.calculationType}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">ValueIn Vendor Currency</mat-label>
+                                            <input matInput type="text" formControlName="valueInVendorCurrency"
+                                                placeholder="ValueIn Vendor Currency" />
+                                                <mat-error *ngIf="
+                                                QLIVendorValueDetail.controls['valueInVendorCurrency'].touched &&
+                                                QLIVendorValueDetail.hasError('required', 'valueInVendorCurrency')
+                            " class="text-danger">ValueIn Vendor Currency required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Minimum Value In Vendor Currency</mat-label>
+                                            <input matInput type="text" formControlName="minValueInVendorCurrency"
+                                                placeholder="MinValueIn Vendor Currency" />
+                                                <mat-error *ngIf="
+                                                QLIVendorValueDetail.controls['minValueInVendorCurrency'].touched &&
+                                                QLIVendorValueDetail.hasError('required', 'minValueInVendorCurrency')
+                            " class="text-danger">Minimum ValueIn Vendor Currency required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <!-- <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Exchange Rate</mat-label>
+                                            <input matInput type="text" formControlName="exchangeRate"
+                                                placeholder="Exchange Rate" />
+                                                <mat-error *ngIf="
+                                                QLIVendorValueDetail.controls['exchangeRate'].touched &&
+                                                QLIVendorValueDetail.hasError('required', 'exchangeRate')
+                            " class="text-danger">Exchange Rate required*</mat-error>
+                                        </mat-form-field>
+                                    </div> -->
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Tax Name</mat-label>
+                                            <input matInput formControlName="taxId" 
+                                                [matAutocomplete]="taxId">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="
+                                            QLIVendorValueDetail.controls['taxId'].touched &&
+                                            QLIVendorValueDetail.hasError('required', 'taxId')
+                        " class="text-danger">Tax Name required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #taxId="matAutocomplete" [displayWith]="displayTaxCodeLabelFn"
+                                            (optionSelected)="TaxCodeSelectedoption($event)">
+                                            <mat-option *ngFor="let taxcodelist of filteredTaxCodeOptions$ | async"
+                                                [value]="taxcodelist" [disabled]="taxcodelist.isNotFound">
+                                                {{ taxcodelist.taxCodeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Tax Percentage</mat-label>
+                                            <input matInput type="text" formControlName="taxPercentage"
+                                                placeholder="Tax Percentage" />
+                                                <mat-error *ngIf="
+                                            QLIVendorValueDetail.controls['taxPercentage'].touched &&
+                                            QLIVendorValueDetail.hasError('required', 'taxPercentage')
+                        " class="text-danger">Tax Percentage is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Remarks</mat-label>
+                                            <textarea matInput type="text" formControlName="remarks"
+                                                placeholder="Remarks"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                    
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</mat-dialog-actions>
+<mat-dialog-actions align="end">
+<button class="btn btn-secondary me-1 px-2 py-1" type="submit" (click)="close()" >
+    Cancel
+ </button> &nbsp;&nbsp;
+  <button class="btn btn-primary savebtn me-1" type="submit"  [hidden]="disablefields" (click)="AddToList()"  >
+    <i class="fas fa-list-ul"></i> Add to List
+  </button>
+</mat-dialog-actions>

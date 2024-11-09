@@ -1,0 +1,415 @@
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Job Order Expense Booking Details" />
+                    <span>Job Order Expense Booking Details</span>
+                </h3>
+            </div>
+        </div>
+        <hr class="mt-0 mb-4" />
+        <mat-card>
+            <mat-card-title class="title">
+                <!-- {{titile}} -->
+            </mat-card-title>
+            <br />
+            <mat-card-content>
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="jocbdForm" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Line Item Description</mat-label>
+                                            <input matInput formControlName="joLineitemId"
+                                                [matAutocomplete]="autolineItemId" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-autocomplete #autolineItemId="matAutocomplete"
+                                                [displayWith]="displayLineItemListLabelFn"
+                                                (optionSelected)="lineItemSelectedOption($event)">
+                                                <mat-option
+                                                    *ngFor="let lineItemList of filteredLineItemOptions$ | async"
+                                                    [value]="lineItemList" [disabled]="lineItemList.isNotFound">
+                                                    {{ lineItemList.lineItemName }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="
+                                        jocbdForm.controls['joLineitemId'].touched &&
+                                        jocbdForm.hasError('required', 'joLineitemId')" class="text-danger">Line Item
+                                                Description is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">Line Item Code</mat-label>
+                                            <input matInput type="text"  formControlName="lineItemCode"
+                                                placeholder="Line Item Code" autocomplete="off"  readonly>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">Line Item Category</mat-label>
+                                            <input matInput type="text"
+                                                formControlName="lineItemCategoryName" placeholder="Line Item Category"
+                                                autocomplete="off" readonly >
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Service Country</mat-label>
+                                            <input matInput formControlName="serviceInId"
+                                                [matAutocomplete]="autoCountry" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-autocomplete #autoCountry="matAutocomplete"
+                                                [displayWith]="displayCountryLabelFn"
+                                                (optionSelected)="CountrySelectedoption($event)">
+                                                <mat-option
+                                                    *ngFor="let CountryDatalist of filteredCountryOptions$ | async"
+                                                    [value]="CountryDatalist" [disabled]="CountryDatalist.isNotFound">
+                                                    {{ CountryDatalist.countryName }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="
+                                            jocbdForm.controls['serviceInId'].touched &&
+                                        jocbdForm.hasError('required', 'serviceInId')" class="text-danger">Service Country
+                                                is required*</mat-error>
+                                        </mat-form-field> 
+                                    </div>
+                                    <!-- <div class="col-md-2">
+                                        <mat-checkbox class="statusmargin" formControlName="isVendor"
+                                            (change)="onVendorCheckboxChange($event)">Is Vendor</mat-checkbox>
+                                    </div> -->
+                                    <div class="col-md-4">
+                                        <mat-form-field class="statusmargin" appearance="fill">
+                                            <mat-label  class="labelcolor" >Service By</mat-label>
+                                            <mat-select formControlName="isVendor" (selectionChange)="onVendorCheckboxChange($event)">
+                                                <mat-option [value]="false">Aamro</mat-option>
+                                                <mat-option [value]="true">Vendor</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="enablevendor">
+                                        <mat-form-field>
+                                          <mat-label class="labelcolor">Vendor</mat-label>
+                                          <input matInput formControlName="vendorId" (keydown)="vendorEmpty($event)"
+                                              [matAutocomplete]="autovendor">
+                                          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                          <mat-autocomplete #autovendor="matAutocomplete"
+                                              [displayWith]="displayvendorListLabelFn"
+                                              (optionSelected)="vendorListSelectedoption($event)">
+                                              <mat-option
+                                                  *ngFor="let vendorList of filteredvendorListOptions$ | async"
+                                                  [value]="vendorList" [disabled]="vendorList.isNotFound">
+                                                  {{ vendorList.vendorName }}
+                                              </mat-option>
+                                          </mat-autocomplete>
+                                          <!-- <mat-error *ngIf="
+                                          jocbdForm.controls['vendorId'].touched &&
+                                      jocbdForm.hasError('required', 'vendorId')" class="text-danger">Vendor
+                                              is required*</mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-2 mt-4" *ngIf="enablevendor">
+                                        <i class="fa-solid fa-magnifying-glass fa-2xl" (click)="FilterDialog()"></i>
+                                    </div>
+                                    
+                                    <div class="col-md-4" *ngIf="enablevendor">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Source</mat-label>
+                                            <input matInput formControlName="sourceFromId" (keydown)="sourceEmpty($event)"
+                                                [matAutocomplete]="autoSource" >
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-autocomplete #autoSource="matAutocomplete"
+                                                [displayWith]="displaysourceLabelFn"
+                                                (optionSelected)="sourceSelectedoption($event)">
+                                                <mat-option *ngFor="let sourceList of filteredSourceOptions$ | async"
+                                                    [value]="sourceList" [disabled]="sourceList.isNotFound">
+                                                    {{ sourceList.sourceFrom }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="
+                                            jocbdForm.controls['sourceFromId'].touched &&
+                                        jocbdForm.hasError('required', 'sourceFromId')" class="text-danger">Source From
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="enablevendorRef">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Reference Number</mat-label>
+                                            <input matInput  formControlName="refNumberId"
+                                                [matAutocomplete]="refNumberId" />
+                                                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-autocomplete #refNumberId="matAutocomplete" [displayWith]="displayRefNumberListLabelFn"
+                                                (optionSelected)="refNumberSelectedOption($event)">
+                                                <mat-option
+                                                    *ngFor="let PQandCdrp of filteredRefNumberOptions$ | async"
+                                                    [value]="PQandCdrp">
+                                                    {{PQandCdrp.refNumber}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error *ngIf="
+                                            jocbdForm.controls['refNumberId'].touched &&
+                                        jocbdForm.hasError('required', 'refNumberId')" class="text-danger">Reference Number
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-2" *ngIf="enablevendor">
+                                        <mat-checkbox class="statusmargin" formControlName="isAmendPrice"
+                                            (change)="onAmendCheckboxChange($event)">Change Value</mat-checkbox>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                      <mat-form-field>
+                                        <mat-label class="labelcolor">Company Name</mat-label>
+                                        <input matInput formControlName="groupCompanyId" [matAutocomplete]="autogroupCompany"
+                                            required>
+                                        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        <mat-error *ngIf="
+                                        jocbdForm.controls['groupCompanyId'].touched &&
+                                        jocbdForm.hasError('required', 'groupCompanyId')" class="text-danger">Company Name is
+                                            required*</mat-error>
+                                    </mat-form-field>
+                                    <mat-autocomplete #autogroupCompany="matAutocomplete"
+                                        [displayWith]="displaygroupCompanyListLabelFn"
+                                        (optionSelected)="groupCompanyListSelectedoption($event)">
+                                        <mat-option *ngFor="let groupCompanyList of filteredgroupCompanyListOptions$ | async"
+                                            [value]="groupCompanyList" [disabled]="groupCompanyList.isNotFound">
+                                            {{ groupCompanyList.companyName}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Region</mat-label>
+                                            <input matInput formControlName="regionId" [matAutocomplete]="autoRegion"
+                                                required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="
+                                            jocbdForm.controls['regionId'].touched &&
+                                            jocbdForm.hasError('required', 'regionId')" class="text-danger">Region is
+                                                required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoRegion="matAutocomplete"
+                                            [displayWith]="displayRegionLabelFn"
+                                            (optionSelected)="RegionSelectedoption($event)">
+                                            <mat-option *ngFor="let regionList of filteredRegionOptions$ | async"
+                                                [value]="regionList" [disabled]="regionList.isNotFound">
+                                                {{ regionList.regionName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                   
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Vendor/Aamro Currency</mat-label>
+                                            <input matInput formControlName="currencyId" [readonly]="currencyReadonly"
+                                                [matAutocomplete]="autocurrency" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                <mat-error *ngIf="
+                                                jocbdForm.controls['currencyId'].touched &&
+                                                jocbdForm.hasError('required', 'currencyId')"
+                                                    class="text-danger">Vendor/Aamro Currency is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocurrency="matAutocomplete"
+                                            [displayWith]="displayCurrencyListLabelFn"
+                                            (optionSelected)="CurrencyListSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let currencyList of filteredCurrencyListOptions$ | async"
+                                                [value]="currencyList" [disabled]="currencyList.isNotFound">
+                                                {{ currencyList.currencyName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Calculation Parameter</mat-label>
+                                            <input matInput formControlName="calculationParameterId"
+                                                [matAutocomplete]="autocalculationParameterId" required [readonly]="isAmendPriceReadonly">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="
+                                            jocbdForm.controls['calculationParameterId'].touched &&
+                                            jocbdForm.hasError('required', 'calculationParameterId')"
+                                                class="text-danger">Calculation Parameter is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocalculationParameterId="matAutocomplete"
+                                            [displayWith]="displayculationParLabelFn"
+                                            (optionSelected)="CalculationParSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let CalculationParlist of filteredCalculationParOptions$ | async"
+                                                [value]="CalculationParlist" [disabled]="CalculationParlist.isNotFound">
+                                                {{ CalculationParlist.calculationParameter}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label [ngClass]="{'labelcolorGray': calculationTypeReadonly, 'labelcolor': !calculationTypeReadonly}">
+                                                Calculation Type
+                                            </mat-label>
+                                            <input matInput formControlName="calculationTypeId" [readonly]="calculationTypeReadonly"
+                                                [matAutocomplete]="autocalculationTypeId" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="
+                                                jocbdForm.controls['calculationTypeId'].touched &&
+                                                jocbdForm.hasError('required', 'calculationTypeId')" class="text-danger">
+                                                Calculation Type is required*
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocalculationTypeId="matAutocomplete"
+                                            [displayWith]="displayculationTypeLabelFn"
+                                            (optionSelected)="CalculationTypeSelectedoption($event)">
+                                            <mat-option *ngFor="let CalculationTyplist of filteredCalculationTypeOptions$ | async"
+                                                [value]="CalculationTyplist" [disabled]="CalculationTyplist.isNotFound">
+                                                {{ CalculationTyplist.calculationType }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Rate</mat-label>
+                                            <input matInput  formControlName="rate" (input)="rate($event)" [readonly]="isAmendPriceReadonly"
+                                                placeholder="Rate" autocomplete="off" required>
+                                                 <mat-error *ngIf="
+                                            jocbdForm.controls['rate'].touched &&
+                                        jocbdForm.hasError('required', 'rate')" class="text-danger">Rate
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Quantity</mat-label>
+                                            <input matInput (input)="quantityEvent($event)" formControlName="quantity"
+                                                placeholder="Quantity" autocomplete="off" required>
+                                                <mat-error *ngIf="
+                                            jocbdForm.controls['quantity'].touched &&
+                                        jocbdForm.hasError('required', 'quantity')" class="text-danger">Quantity
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">Value</mat-label>
+                                            <input matInput  formControlName="value"
+                                                placeholder="Value" autocomplete="off" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                   
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                          <mat-label [ngClass]="minvaluereadonly ? 'labelcolorGray' : 'labelcolor'">Minimum Value</mat-label>
+                                          <input matInput formControlName="minValue" (input)="minvalueEvent($event)"
+                                                 [readonly]="minvaluereadonly" 
+                                                 placeholder="Minimum Value" autocomplete="off">
+                                        </mat-form-field>
+                                      </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Tax Name</mat-label>
+                                            <input matInput formControlName="taxId" (keydown)="emptytaxper($event)"
+                                                [matAutocomplete]="taxId" required [readonly]="isAmendPriceReadonly">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="
+                                            jocbdForm.controls['taxId'].touched &&
+                                        jocbdForm.hasError('required', 'taxId')" class="text-danger">Tax Name
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #taxId="matAutocomplete" [displayWith]="displayTaxCodeLabelFn"
+                                            (optionSelected)="TaxCodeSelectedoption($event)">
+                                            <mat-option *ngFor="let taxcodelist of filteredTaxCodeOptions$ | async"
+                                                [value]="taxcodelist" [disabled]="taxcodelist.isNotFound">
+                                                {{ taxcodelist.taxCodeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">Tax Percentage</mat-label>
+                                            <input matInput type="text" formControlName="taxPer"
+                                                placeholder="Tax percentage" autocomplete="off" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">Tax Value</mat-label>
+                                            <input matInput formControlName="taxValue" (input)="taxValue($event)" placeholder="Tax Value"
+                                                autocomplete="off" readonly>
+                                                <mat-error *ngIf="
+                                            jocbdForm.controls['taxValue'].touched &&
+                                        jocbdForm.hasError('required', 'taxValue')" class="text-danger">Tax Value
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">Total In Vendor/Aamro Currency</mat-label>
+                                            <input matInput formControlName="totalInVendorCurrency" 
+                                                placeholder="Total In Vendor/Aamro Currency" autocomplete="off" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">Exchange Rate</mat-label>
+                                            <input matInput formControlName="exchangeRate" (input)="rateValue($event)" placeholder="Exchange Rate"
+                                                autocomplete="off" required readonly>
+                                                <mat-error *ngIf="
+                                                jocbdForm.controls['exchangeRate'].touched &&
+                                                jocbdForm.hasError('required', 'exchangeRate')"
+                                                    class="text-danger">Exchange Rate is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">Total In Company Currency</mat-label>
+                                            <input matInput formControlName="totalInCompanyCurrency"
+                                                placeholder="Total In Company Currency" autocomplete="off" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                     <div class="col-md-4">
+                                        <mat-checkbox class="statusmargin" formControlName="partiallyBooked"
+                                            (change)="onpartiallyBookedChange($event)">Partially Booked</mat-checkbox>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Remarks</mat-label>
+                                            <textarea matInput cols="8" rows="2" maxlength="500" placeholder="Remarks"
+                                                formControlName="remarks"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolorGray">A/P Invoice Ref No</mat-label>
+                                            <input matInput type="text"  formControlName="apInvoiceRefNo"
+                                                placeholder="A/P Invoice Ref No" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</mat-dialog-actions>
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+        Close
+    </button> &nbsp;&nbsp;
+    <button class="btn btn-primary returntolistbtn" *ngIf="!viewMode" type="submit" (click)="AddtoList()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+</mat-dialog-actions>
+
+<ng-template let-data #ImagePreview>
+    <div class="d-flex justify-content-between">
+      <h2 mat-dialog-title> Preview  </h2>
+        <mat-icon class="m-2" mat-dialog-close style="color: red;cursor: pointer;">Close</mat-icon>
+    </div>
+    <img src="{{data}}" alt="" style="max-width: 700px;">
+  </ng-template>

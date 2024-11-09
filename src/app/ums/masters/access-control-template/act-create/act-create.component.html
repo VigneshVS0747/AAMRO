@@ -1,0 +1,397 @@
+<div class="table-list-display">
+  <div class="component-creation">
+    <div class="header-container">
+      <h3 class="box-title">
+        <img
+          src="./assets/images/billing-storage.png"
+          alt="Access Control Template"
+        />
+        <span>Access Control Template</span>
+      </h3>
+      <button
+        class="btn btn-primary returntolistbtn"
+        type="button"
+        (click)="returnToList()"
+      >
+        <i class="fa fa-list me-2"></i> Return to List
+      </button>
+    </div>
+    <hr class="mt-0 mb-4" />
+    <mat-card>
+      <mat-card-title class="title">
+        {{ title }}
+      </mat-card-title>
+      <br />
+
+      <mat-card-content>
+        <form (submit)="onSaveAct(actForm)" #actForm="ngForm">
+          <div class="row">
+            <div class="col-md-3">
+              <mat-form-field>
+                <mat-label class="labelcolor">Access Control Name</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  required
+                  maxlength="40"
+                  placeholder="Access Control Name"
+                  [ngModel]="editedAct?.accessControlName"
+                  name="actName"
+                  [readonly]="disablefields"
+                  #actName="ngModel"
+                  autocomplete="off"
+                />
+                <mat-error *ngIf="actName.invalid"
+                  >Access Control Name is required</mat-error
+                >
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-3">
+              <mat-form-field>
+                <mat-label class="labelcolor">Access Control Code</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  required
+                  maxlength="15"
+                  [readonly]="disablefields"
+                  placeholder="Access Control Code"
+                  [ngModel]="editedAct?.accessControlCode"
+                  name="actCode"
+                  #actCode="ngModel"
+                  autocomplete="off"
+                />
+                <mat-error *ngIf="actCode.invalid"
+                  >Access Control Code is required</mat-error
+                >
+              </mat-form-field>
+            </div>
+
+            <!-- <div class="col-md-2">
+          <mat-form-field>
+            <mat-label class="labelcolor"> Module</mat-label>
+            
+            <mat-select name="selectedModule" [(ngModel)]="selectedModule" required (selectionChange)="updateModule()">
+              <mat-option [value]="null" disabled>Select Module</mat-option>
+              <mat-option *ngFor="let module of modules" [value]="module.menuId" >
+                {{ module.menuName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedModule">Module is required</mat-error> 
+          </mat-form-field>
+          
+          </div>
+  
+          <div class="col-md-2">
+  
+            <mat-form-field >
+              <mat-label class="labelcolor">Menu Header</mat-label>
+              <mat-select [formControl]="selectedMenuHeaders" multiple [disabled]="!isCreatedFlag">
+                <mat-option  *ngFor="let mh of menuHeaders" [value]="mh?.menuName">{{mh?.menuName}}</mat-option>
+              </mat-select>
+             
+            </mat-form-field>
+  
+              </div> -->
+
+            <div class="col-md-3">
+              <mat-checkbox
+                class="statusmargin"
+                name="actStatus"
+                [disabled]="disablefields"
+                [ngModel]="livestatus"
+                (change)="valueChange($event)"
+               
+              >
+                Active</mat-checkbox
+              >
+            </div>
+          </div>
+        </form>
+        <div class="move-button">
+          <button
+            type="submit"
+            (click)="show()"
+            class="btn btn-primary Addentry"
+            data-toggle="modal"
+            data-target="#exampleModal2"
+          >
+            <i class="fas fa-circle-plus"></i>&nbsp;Add
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div class="fixed-bottom m-4 d-flex justify-content-end">
+      
+      <button *ngIf="isCreatedFlag" class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit" (click)="onSaveAct(actForm)">
+        <i class="fa fa-save me-2"></i> Save
+      </button>
+      <button *ngIf="!isCreatedFlag" class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit" (click)="onSaveAct(actForm)">
+        <i class="fa fa-save me-2"></i> Update
+      </button>
+
+      <button type="button" class="btn btn-danger resetbtn" [hidden]="disablefields" (click)="resetButtonClick(actForm)">
+        <i class="fa fa-times-circle"></i> Reset
+      </button>
+    </div>
+    <div
+      class="modal fade"
+      *ngIf="showpopup"
+      id="exampleModal2"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal1-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+             Select Menus
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form class="px-md-2">
+              <div class="d-flex justify-content-around align-items-center">
+                <div>
+                  <mat-form-field>
+                    <mat-label class="labelcolor"> Module</mat-label>
+
+                    <mat-select
+                      name="selectedModule"
+                      [(ngModel)]="selectedModule"
+                      required
+                      (selectionChange)="updateModule()"
+                    >
+                      <mat-option [value]="null" disabled
+                        >Select Module</mat-option
+                      >
+                      <mat-option
+                        *ngFor="let module of modules"
+                        [value]="module.menuId"
+                      >
+                        {{ module.menuName }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="!selectedModule"
+                      >Module is required</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div>
+                  <mat-form-field>
+                    <mat-label class="labelcolor">Menu Header</mat-label>
+                    <mat-select
+                      [formControl]="selectedMenuHeaders"
+                      multiple
+                      (selectionChange)="onchangeheader()"
+                    >
+                      <mat-option
+                        *ngFor="let mh of menuHeaders"
+                        [value]="mh?.menuId"
+                        >{{ mh?.menuName }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <mat-form-field >
+                    <mat-label class="labelcolor">Sub menus</mat-label>
+                    <mat-select
+                      name="selectedItems"
+                      [(ngModel)]="selectedItems"
+                      (selectionChange)="onSelectionChange($event)"
+                      multiple
+                      >&nbsp;
+                      <mat-checkbox (change)="selectAllOptions($event)"
+                        >Select All</mat-checkbox
+                      >
+                      <mat-option
+                        *ngFor="let mh of submenu"
+                        [value]="mh?.menuId"
+                        >{{ mh?.menuName }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    (click)="displayMenus()"
+                    data-dismiss="modal"
+                    [disabled]="showbutton"
+                    class="btn btn-primary Addtolist"
+                  >
+                    <i class="fas fa-circle-plus"></i>&nbsp;Add To List
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-container">
+          <div class="mat-elevation-z8 data-wrapper">
+            <table
+              *ngIf="showtable"
+              class="table table-sm align-middle mb-0 bg-white table-bordered table-hover table-fixed"
+            >
+              <thead class="bg-light">
+                <tr>
+                  <th class="center-header">S.no</th>
+                  <th class="center-header">Menu Name</th>
+                  <th class="center-header">View</th>
+                  <th class="center-header">Add</th>
+                  <th class="center-header">Edit</th>
+                  <th class="center-header">Delete</th>
+                  <th class="center-header">Print</th>
+                  <th class="center-header">Export</th>
+                  <th class="center-header">Cancel</th>
+                  <!-- <th class="center-header">Approve</th> -->
+                  <th class="center-header">After Approve Edit</th>
+                  <th class="center-header">Approval History</th>
+                  <th class="center-header">Audit Log</th>
+                  <th class="center-header">Select All</th>
+                  <th class="center-header"  [hidden]="disablefields">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of populatestoredmenu; let i = index">
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+                  <td>
+                    {{ row.menuName }}
+                  </td>
+                 
+                  <td>
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'eview',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.eview"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <td>
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'eadd',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.eadd"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <td>
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'eedit',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.eedit"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <td>
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'edelete',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.edelete"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <td class="center-align">
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'eprint',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.eprint"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <td class="center-align">
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'eexport',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.eexport"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <td class="center-align">
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'ecancel',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.ecancel"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <!-- <td class="center-align">
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'eapprove',$event)"
+                      disabled
+                      [checked]="row.eapprove"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td> -->
+                  <td class="center-align">
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'eafterApprove',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.eafterApprove"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <td class="center-align">
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'eappHis',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.eappHis"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <td class="center-align" >
+                    <mat-checkbox
+                      (change)="onCheckboxChange(row, 'eauditLog',$event)"
+                      [disabled]="disablefields"
+                      [checked]="row.eauditLog"
+                      class="centered-cell"
+                    ></mat-checkbox>
+                  </td>
+                  <td>
+                    <mat-checkbox
+                    (change)="selectAllCheckBoxes(row, 'selectall', $event)"
+                    [disabled]="disablefields"
+                    [checked]="row.selectall"
+                    class="centered-cell"
+                ></mat-checkbox>
+                </td>
+                  <td class="center-align" [hidden]="disablefields">
+                    <a type="submit" (click)="deleteItem(row,row.accessMenusId)"
+                      ><i class="fas fa-trash"></i></a
+                    >&nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <mat-form-field>
+    <mat-label>Options</mat-label>
+    <mat-select [(ngModel)]="selectedOptions" multiple>
+      <mat-option *ngIf="!selectAllOption" [value]="'selectAll'">
+        <mat-checkbox (change)="selectAllOptions($event)">Select All</mat-checkbox>
+      </mat-option>
+      <mat-option *ngFor="let option of options" [value]="option.value">
+        {{ option.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field> -->

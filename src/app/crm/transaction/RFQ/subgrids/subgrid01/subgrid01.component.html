@@ -1,0 +1,46 @@
+<kendo-grid [data]="view | async" [loading]="isLoading" [pageSize]="5" [skip]="skip" [pageable]="true" scrollable="none"
+    (pageChange)="pageChange($event)" [navigable]="true" kendoGridFocusable>
+    <kendo-grid-column
+        [style]="{ 'text-align': 'left', padding: '5px' }"
+        [headerStyle]="{ justifyContent: 'center' }"
+        field="lineItemCategoryName"
+        title="LineItem CategoryName"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+         {{dataItem.lineItemCategoryName}}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+      [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }"
+      field="vendorLineItemDesc"
+      title="Vendor LineItemDesc"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+       {{dataItem.vendorLineItemDesc}}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+    [style]="{ 'text-align': 'left', padding: '5px' }"
+    [headerStyle]="{ justifyContent: 'center' }"
+    field="taxCodeName"
+    title="Tax CodeName"
+  >
+    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+     {{dataItem.taxCodeName}}
+    </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-column
+  [style]="{ 'text-align': 'left', padding: '5px' }"
+  [headerStyle]="{ justifyContent: 'center' }"
+  field="calculationParameter"
+  title="Calculation Parameter"
+>
+  <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+   {{dataItem.calculationParameter}}
+  </ng-template>
+</kendo-grid-column>
+    <div *kendoGridDetailTemplate="let dataItem">
+        <app-subgrid02 [pqMapping]="dataItem?.pqMapping"></app-subgrid02>
+    </div>
+</kendo-grid>

@@ -1,0 +1,84 @@
+<div class="mt-2 mb-2 mx-3">
+    <div>
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Vendor Contract - FFS" />
+                <span>Proforma Invoice</span>
+            </h3>
+            <div class="text-end">
+                <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" (click)="add()">
+                    <i class="fa fa-plus-circle me-2"></i>New
+                </button>
+            </div>
+            <mat-divider></mat-divider>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div class="mt-2">
+            <kendo-grid [kendoGridBinding]="PerformoInvoiceList" [filterable]="true" [resizable]="true" [height]="500"
+                [pageSize]="pageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [skip]="skip"
+                (pageChange)="pageChange($event)">
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center'}" field="proInvoiceNumber" title="Proforma Invoice Number"
+                    [width]="155">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="proInvoiceDate" title="Invoice Date"
+                    filter="date" format="{0:dd/MMM/yyyy}" [width]="140">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{dataItem.proInvoiceDate | date: 'dd/MMM/yyyy'}}
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="customerName" title="Customer" filter="text"
+                    [width]="130">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="sapInvoiceNo" title="SAP Invoice Number" filter="text"
+                    [width]="100">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="currencyName" title="Billing Currency" filter="text"
+                    [width]="110">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                    [headerStyle]="{justifyContent: 'center',}" field="piStatus" title="Status" filter="text"
+                    [width]="110">
+                </kendo-grid-column>
+
+                <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{justifyContent: 'center'}"
+                    title="Action" [width]="100" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <a type="submit" *ngIf="pagePrivilege.includes('edit')" (click)="Edit(dataItem)">
+                                <i class="fas fa-square-pen"></i>
+                            </a>&nbsp;
+                            <a type="submit" *ngIf="pagePrivilege.includes('delete')"
+                                (click)="Delete(dataItem,dataItem.proformaInvoiceId)">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            <a type="submit" *ngIf="pagePrivilege.includes('view')" (click)="view(dataItem)">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+
+                <ng-template kendoPagerTemplate>
+                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                    <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+          
+                    <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+                    <kendo-pager-info></kendo-pager-info>
+                  </ng-template>
+            </kendo-grid>
+        </div>
+    </div>
+</div>
+

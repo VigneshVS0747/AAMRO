@@ -1,0 +1,31 @@
+
+::ng-deep.k-grid-header .k-table-th.k-grid-header-sticky,
+.k-grid-header .k-filter-row .k-grid-header-sticky,
+.k-grid .k-grid-content-sticky,
+.k-grid .k-grid-row-sticky,
+.k-grid .k-grid-footer-sticky {
+    z-index: 0 !important;
+}
+
+::ng-deep .k-grid .k-grid-content-sticky {
+    z-index: 0 !important;
+}
+
+::ng-deep.k-grid-header .k-filter-row .k-grid-header-sticky{
+    z-index: 0 !important;
+}
+::ng-deep kendo-grid.k-grid .k-grid-content-sticky {
+    border-top-color: rgba(0, 0, 0, 0.08);
+    border-left-color: rgba(0, 0, 0, 0.08) !important;
+    border-right-color: rgba(0, 0, 0, 0.08) !important;
+    background-color: #ffffff;
+}
+
+::ng-deep .k-grid-header td.k-grid-header-sticky,
+.k-grid-header .k-table-td.k-grid-header-sticky {
+    border-right-color: rgba(0, 0, 0, 0.08) !important;
+    border-left-color: rgba(0, 0, 0, 0.08) !important;
+}
+.Page-Short{
+    padding-left: 500px;
+}

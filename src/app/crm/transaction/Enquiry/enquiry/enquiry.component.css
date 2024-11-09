@@ -1,0 +1,79 @@
+
+.fas {
+    font-weight: 900;
+    font-size: 14px !important;
+    margin: 3px;
+    margin-bottom: 7px;
+} 
+
+
+
+.labelcolorGray{
+    color: #676a6d;
+    }
+
+.addbutton{
+ padding-top: 50px;
+}
+    /* Tab view design 001 */
+
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: rgb(255 255 255) !important ;
+  display: inline-flex;
+  align-items: center;
+}
+::ng-deep .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab {
+  flex-grow: 1;
+  border-radius: 50px 0 50px 0!important;
+  background: #6f7f8a;
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #f7f8ff !important;
+}
+::ng-deep .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab.mdc-tab--active {
+  flex-grow: 1;
+  border-radius: 50px 0 50px 0 !important;
+  background: #004ebd;
+  border-bottom-width:2px !important;
+  border-width: transparent !important;
+
+}
+::ng-deep .mat-mdc-focus-indicator {
+  position: static !important;
+}
+.mat-tab-label.mat-tab-label-active .mat-ripple-element::after {
+  background-color: transparent !important;
+}
+
+/* ::ng-deep .mat-mdc-tab-body.mat-mdc-tab-body-active {
+  z-index: 0 !important;
+} */
+/* Tab view design 002 */
+::ng-deep.k-grid-header .k-table-th.k-grid-header-sticky,
+.k-grid-header .k-filter-row .k-grid-header-sticky,
+.k-grid .k-grid-content-sticky,
+.k-grid .k-grid-row-sticky,
+.k-grid .k-grid-footer-sticky {
+    z-index: 0 !important;
+}
+
+::ng-deep .k-grid .k-grid-content-sticky {
+    z-index: 0 !important;
+}
+
+::ng-deep.k-grid-header .k-filter-row .k-grid-header-sticky{
+    z-index: 0 !important;
+}
+::ng-deep kendo-grid.k-grid .k-grid-content-sticky {
+    border-top-color: rgba(0, 0, 0, 0.08);
+    border-left-color: rgba(0, 0, 0, 0.08) !important;
+    border-right-color: rgba(0, 0, 0, 0.08) !important;
+    background-color: #ffffff;
+}
+
+::ng-deep .k-grid-header td.k-grid-header-sticky,
+.k-grid-header .k-table-td.k-grid-header-sticky {
+    border-right-color: rgba(0, 0, 0, 0.08) !important;
+    border-left-color: rgba(0, 0, 0, 0.08) !important;
+}

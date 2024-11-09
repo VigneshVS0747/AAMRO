@@ -1,0 +1,30 @@
+
+::ng-deep .cdk-overlay-container {
+    z-index: 9999;
+  }
+  .notificqtion-setting-popup{
+    max-width: 700px !important;
+    width: max-content;
+  }
+
+  .modal2-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 140%;
+    color: var(--bs-modal-color);
+    pointer-events: auto;
+    background-color: var(--bs-modal-bg);
+    background-clip: padding-box;
+    border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+    border-radius: var(--bs-modal-border-radius);
+    outline: 0;
+  }
+
+  .active {
+    color:rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
+  }
+  
+  .custom-color{
+    color: #007dbd;;
+  }

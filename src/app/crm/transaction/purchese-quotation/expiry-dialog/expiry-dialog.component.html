@@ -1,0 +1,105 @@
+<div class="table-list-display">
+    <div class="component-list">
+        <h3 class="box-title">
+            <img src="./assets/images/billing-storage.png" alt="Expiry List" />
+            <span>Expiry List</span>
+        </h3>
+        <div class="text-end"></div>
+        <hr class="mt-0 mb-4" />
+        <section class="custom-table-wrapper">
+            <kendo-grid [kendoGridBinding]="purchaseQuotation"  filterable="menu" [resizable]="true" [height]="560" [pageSize]="10"
+                [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+                <kendo-grid-column [style]="{
+                    'text-align': 'left',
+                    padding: '5px',
+                    
+                  }" [headerStyle]="{
+                    justifyContent: 'center',
+                    
+                  }" field="pqNumber" title="PQ Numbre" media="(min-width: 450px)" [width]="130">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                  {{ dataItem.pqNumber }}
+                </ng-template>
+              </kendo-grid-column>
+      
+              <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                  justifyContent: 'center',
+                  
+                }" field="pqDate" format="{0:dd/MMM/yyyy}" filter="date" title="Date" media="(min-width: 450px)"
+                [width]="80">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                  {{ dataItem.pqDate | date:'dd/MMM/yyyy' }}
+                </ng-template>
+              </kendo-grid-column>
+      
+              <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                justifyContent: 'center',
+                
+              }" field="pqAgainst" title="PQ Against" media="(min-width: 450px)" [width]="100">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                  {{ dataItem.pqAgainst }}
+                </ng-template>
+              </kendo-grid-column>
+      
+              <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                  justifyContent: 'center',
+                }" field="refNumber" title="Ref Number" media="(min-width: 450px)" [width]="90">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                  {{ dataItem.refNumber }}
+                </ng-template>
+              </kendo-grid-column>
+      
+              <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                justifyContent: 'center',
+              }" field="vendorName" title="Vendor" media="(min-width: 450px)" [width]="100">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                  {{ dataItem.vendorName }}
+                </ng-template>
+              </kendo-grid-column>
+      
+              <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                  justifyContent: 'center',
+                }" field="pqStatus" title="Status" media="(min-width: 450px)" [width]="80">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                  {{ dataItem.pqStatus }}
+                </ng-template>
+              </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" field="expiryDate"
+                  title="ExpiryDate"
+                  format="MM/dd/yyyy"
+                  filter="date"
+                    [headerStyle]="{ justifyContent: 'center' }"  [width]="90">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        {{ dataItem.validDate | date: 'MM/dd/yyyy' }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                    [headerStyle]="{ justifyContent: 'center' }" field="lineItemName" title="Select" [width]="90">
+                    <ng-template kendoGridHeaderTemplate>
+                        <mat-checkbox (change)="toggleSelectAll($event)" ></mat-checkbox>
+                    </ng-template>
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                        <mat-checkbox [(ngModel)]="dataItem.selected" (change)="toggleSelect($event)">
+                        </mat-checkbox>
+                    </ng-template>
+                </kendo-grid-column>
+                <ng-template kendoPagerTemplate>
+                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                    <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+          
+                    <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+                    <kendo-pager-info></kendo-pager-info>
+                  </ng-template>
+            </kendo-grid>
+        </section>
+        <div class="text-end my-2">
+            <button class="btn btn-secondary" type="submit" (click)="Closemodal()">
+                Close
+             </button> &nbsp;
+            <button class="btn btn-primary" [disabled]="!isChecked" type="submit" (click)="Close()">
+              Close Expiry
+           </button> &nbsp;
+          </div>
+    </div>
+</div>

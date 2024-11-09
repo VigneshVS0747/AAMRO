@@ -1,0 +1,120 @@
+<div class="table-list-display">
+    <div class="component-list">
+        <h3 class="box-title">
+            <img src="./assets/images/billing-storage.png" alt="Customer Ranking Details">
+            <span>Customer Ranking</span>
+        </h3>
+        <div class="text-end">
+            <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" type="button" (click)="Add()"><i
+                    class="fa fa-plus-circle me-2"></i>Add</button>
+        </div>
+        <hr class="mt-0 mb-4">
+        <section class="custom-table-wrapper">
+            <kendo-grid [kendoGridBinding]="customerRanking" [filterable]="true" [resizable]="true" [height]="500"
+                [pageSize]="10" [sortable]="true" [pageable]="true" [selectable]="{enabled: true}"(pageChange)="pageChange($event)"
+                [skip]="skip">
+                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                    [headerStyle]="{'justifyContent': 'center'}" field="rankName" title="Rank Name *" [width]="100"> 
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="dataItem.Isedit">
+                            <input type="text" class="form-control" maxlength="50" [(ngModel)]="dataItem.rankName">
+                        </div>
+                        <div *ngIf="!dataItem.Isedit">
+                            {{dataItem.rankName}}
+                        </div>
+                        <div class="text-danger" *ngIf="ValidateField(dataItem.rankName)">
+                            <span>Rank name is required*</span>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                    [headerStyle]="{'justifyContent': 'center'}" field="rankCode" title="Rank Code *" [width]="100">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="dataItem.Isedit">
+                            <input type="text" class="form-control" maxlength="10" [(ngModel)]="dataItem.rankCode">
+                        </div>
+                        <div *ngIf="!dataItem.Isedit">
+                            {{dataItem.rankCode}}
+                        </div>
+                        <div class="text-danger" *ngIf="ValidateField(dataItem.rankCode)">
+                            <span>Rank code is required*</span>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+                
+                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                    [headerStyle]="{'justifyContent': 'center'}" field="fromValue" title="From Value *" [width]="100">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="dataItem.Isedit">
+                            <input  (input)="fromValue($event,dataItem)" class="form-control"  [(ngModel)]="dataItem.fromValue">
+                        </div>
+                        <div *ngIf="!dataItem.Isedit">
+                            {{dataItem.fromValue}}
+                        </div>
+                        <div class="text-danger" *ngIf="ValidateNumberField(dataItem.fromValue)">
+                            <span>From value is required*</span>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                    [headerStyle]="{'justifyContent': 'center'}" field="toValue" title="To Value" [width]="100">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="dataItem.Isedit">
+                            <input  (input)="toValue($event,dataItem)" class="form-control"  [(ngModel)]="dataItem.toValue">
+                        </div>
+                        <div *ngIf="!dataItem.Isedit">
+                            {{dataItem.toValue}}
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{'text-align': 'center'}" [headerStyle]="{'justifyContent': 'center'}"
+                    field="liveStatus" filter="boolean" title="Active" [width]="90">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <div *ngIf="dataItem.Isedit">
+                            <mat-checkbox class="example-margin" [(ngModel)]="dataItem.liveStatus"
+                                (change)="handleChange($event, dataItem)"></mat-checkbox>
+                        </div>
+                        <div *ngIf="!dataItem.Isedit">
+                            <mat-checkbox class="example-margin" [disabled]="true"
+                                [(ngModel)]="dataItem.liveStatus"></mat-checkbox>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [style]="{'text-align': 'center'}" [headerStyle]="{'justifyContent': 'center'}"
+                    title="Action" [width]="80" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                        <div *ngIf="!dataItem.Isedit">
+                            <a type="submit" *ngIf="pagePrivilege.includes('edit')" (click)="Edit(dataItem)"><i class="fas fa-square-pen"></i></a>&nbsp;
+                            <a type="submit" *ngIf="pagePrivilege.includes('delete')" (click)="Delete(dataItem.customerRankingId)"><i
+                                    class="fas fa-trash"></i></a>
+                        </div>
+                        <div *ngIf="dataItem.Isedit">
+                            <a type="submit" #submitButton tabindex="0"
+                                (keydown.enter)="hndlKeyPress($event , dataItem)" (change)="hndlChange($event)"
+                                (click)="showAddRow ? Save(dataItem) : Update(dataItem)">
+                                <ng-container *ngIf="showAddRow; else editIcon">
+                                    <i class="fas fa-sd-card"></i>
+                                </ng-container>
+                                <ng-template #editIcon>
+                                    <i class="fas fa-sd-card"></i>
+                                </ng-template>
+                            </a>&nbsp;
+                            <a type="submit" #cancelButton tabindex="0"
+                                (keydown.enter)="handleKeyPress($event , dataItem)" (click)="oncancel(dataItem)"><i
+                                    class="fas fa-xmark"></i></a>
+                        </div>
+                    </ng-template>
+                </kendo-grid-column>
+                <ng-template kendoPagerTemplate>
+                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                    <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+          
+                    <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+                    <kendo-pager-info></kendo-pager-info>
+                  </ng-template>
+                </kendo-grid>
+              </section>
+
+    </div>
+</div>

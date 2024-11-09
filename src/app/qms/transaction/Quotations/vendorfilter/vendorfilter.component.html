@@ -1,0 +1,194 @@
+<div class="table-list-display">
+    <div class="component-creation">
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Job Type" />
+                <span>Vendor Filter</span>
+            </h3>
+            <hr class="mt-0 mb-4" />
+
+<mat-card>
+    <mat-card-title class="title">
+        <!-- {{titile}} -->
+    </mat-card-title>
+    <br />
+
+    <mat-card-content>
+        <form [formGroup]="vendorFilter">
+            <div class="row">       
+              <div class="row">
+                <div class="col-md-2">
+                 
+                </div>
+                <div class="col-md-3">
+                  <mat-checkbox  formControlName="vendorId"   (change)="onVendorCheckboxChange($event)"             
+                >
+                  vendor</mat-checkbox
+                >
+              </div>
+              <div class="col-md-3">
+                  <mat-checkbox formControlName="potentialvendorId"
+                >
+                  Potential Vendor</mat-checkbox
+                >
+              </div>  
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                
+                </div>
+                <div class="col-md-3">
+                  <mat-checkbox formControlName="pq" 
+                >
+                  PQ</mat-checkbox
+                >
+              </div> 
+
+              <div class="col-md-3" *ngIf="enable">
+                  <mat-checkbox formControlName="c" 
+                >
+                  C</mat-checkbox
+                >
+              </div> 
+              </div>  
+              <div class="row">
+                <div class="col-md-2">
+                 
+                </div>
+                <div class="col-md-2" >
+                  <mat-checkbox formControlName="mapped" 
+                >
+                  Mapped vendors</mat-checkbox
+                >
+              </div> 
+              </div> 
+
+              <div class="row">
+                <div class="col-md-2">
+               
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                      <mat-label class="labelcolor">Country</mat-label>
+                      <input matInput  formControlName="countryId"
+                          [matAutocomplete]="originCountry" />
+                          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                      <mat-autocomplete #originCountry="matAutocomplete"
+                          (optionSelected)="optionSelectedOriginCountry($event)">
+                          <mat-option
+                              *ngFor="let country of filteredOriginCountries | async"
+                              [value]="country.countryName">
+                              {{ country.countryName }}
+                          </mat-option>
+                      </mat-autocomplete>
+                      <!-- <mat-error *ngIf="
+      Enquiry.controls['originCountryId'].dirty &&
+      Enquiry.hasError('required', 'originCountryId')
+  " class="text-danger">Origin Country is required*</mat-error> -->
+                  </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field>
+                    <mat-label class="labelcolor">Line Item Category</mat-label>
+                    <mat-select formControlName="serviceTypeId"  [multiple]="true">
+                        <mat-option *ngFor="let service of LineItemcat"
+                            [value]="service.lineItemCategoryId">
+                            {{ service.lineItemCategoryName }}
+                        </mat-option>
+                    </mat-select>
+                    
+                </mat-form-field>
+            </div>
+          
+              <div class="col-md-2">
+                  <button class="btn btn-primary savebtn me-1" type="submit" (click)="VendorFilter()" >
+                    <i class="fab fa-searchengin"></i>&nbsp;Find
+                    </button>
+              </div>
+              </div> 
+               
+             
+            </div>
+
+        </form>
+    </mat-card-content>
+</mat-card>
+<section class="custom-table-wrapper">
+    <kendo-grid
+      [kendoGridBinding]="filteredvendors"
+      [filterable]="true"
+      [resizable]="true"
+      [height]="500"
+      [pageSize]="20"
+      [sortable]="true"
+      [pageable]="true"
+      [selectable]="{ enabled: true }"
+    >
+      <kendo-grid-column
+        [style]="{ 'text-align': 'left', padding: '5px' }"
+        [headerStyle]="{ justifyContent: 'center' }"
+        field="vendorName"
+        title="Vendor Name"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+         {{dataItem.vendorName}}
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column
+      [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }"
+      field="vendorType"
+      title="Vendor Type"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+       {{dataItem.vendorType}}
+      </ng-template>
+    </kendo-grid-column>
+
+      <kendo-grid-column
+      [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }"
+      field="sourceFrom"
+      title="Source"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+       {{dataItem.sourceFrom}}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+    [style]="{ 'text-align': 'left', padding: '5px' }"
+    [headerStyle]="{ justifyContent: 'center' }"
+    field="refNumber"
+    title="RefNumber"
+  >
+    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+     {{dataItem.refNumber}}
+    </ng-template>
+  </kendo-grid-column>
+
+      <kendo-grid-column
+      [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }"
+      field="lineItemName"
+      title="Select"
+    >
+    <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+        <mat-checkbox
+          [checked]="isChecked(dataItem)"
+          (change)="toggleCheckbox(dataItem)"
+        ></mat-checkbox>
+      </ng-template>
+    </kendo-grid-column>
+    </kendo-grid>
+  </section>
+        </div>
+    </div>
+</div>
+<div class="m-4 mb-5 d-flex align-items-center justify-content-end" style="bottom: 115px">
+    <button class="btn btn-secondary me-1 px-2 py-1" type="submit"  (click)="Close()">
+      Cancel
+   </button> &nbsp;&nbsp;
+    <button class="btn btn-primary savebtn me-1" type="submit" (click)="AddToList()"  >
+      <i class="fas fa-list-ul"></i> Add to List
+    </button>

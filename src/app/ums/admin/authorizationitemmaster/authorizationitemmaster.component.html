@@ -1,0 +1,149 @@
+<div class="table-list-display">
+  <div class="component-creation">
+    <div class="header-container">
+      <h3 class="box-title">
+        <img src="./assets/images/billing-storage.png" alt="Employee" />
+        <span>Authorization Item</span>
+      </h3>
+
+      <button class="btn btn-primary returntolistbtn" type="submit" routerLink="/ums/master/authitem">
+        <i class="fa fa-list me-2"></i> Return to List
+      </button>
+    </div>
+
+    <hr class="mt-0 mb-4" />
+
+    <mat-card>
+      <mat-card-title class="title">
+        {{ titile }}
+      </mat-card-title>
+      <br />
+
+      <mat-card-content>
+        <form [formGroup]="Authorizationitem">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Authorization Item</mat-label>
+                <input matInput type="text" formControlName="authorizationItemName" placeholder="Authorization Item"
+                  [readonly]="disablefields" autocomplete="off" />
+                <mat-error *ngIf="
+                    Authorizationitem.controls['authorizationItemName'].dirty &&
+                    Authorizationitem.hasError(
+                      'required',
+                      'authorizationItemName'
+                    )
+                  " class="text-danger">Authorization Item is required*</mat-error>
+              </mat-form-field>
+
+            </div>
+            <input matInput type="text" formControlName="authorizationItemId" autocomplete="off" hidden />
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Branch</mat-label>
+                <input matInput formControlName="warehouseId" [matAutocomplete]="autoWarehouse"
+                  [readonly]="disablefields" />
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-autocomplete #autoWarehouse="matAutocomplete" (optionSelected)="optionSelectedwarehouse($event)">
+                  <mat-option *ngFor="let cust of filteredWarehouse | async" [value]="cust.branchName">
+                    {{ cust.branchName }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="
+                    Authorizationitem.controls['warehouseId'].dirty &&
+                    Authorizationitem.hasError('required', 'warehouseId')
+                  " class="text-danger">Warehouse is required*</mat-error>
+                <mat-error
+                  *ngIf="Authorizationitem.controls['warehouseId'].hasError('invalidOption')"
+                  class="text-danger">
+                  Invalid Branch*
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Customer</mat-label>
+                <input matInput formControlName="customerId" [matAutocomplete]="auto" [readonly]="disablefields" />
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="optionSelectedcustomer($event)">
+                  <mat-option *ngFor="let cust of filteredCustomers | async" [value]="cust.customerName">
+                    {{ cust.customerName }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="
+                    Authorizationitem.controls['customerId'].dirty &&
+                    Authorizationitem.hasError('required', 'customerId')
+                  " class="text-danger">Customer is required*</mat-error>
+                <mat-error
+                  *ngIf="Authorizationitem.controls['customerId'].hasError('invalidOption')"
+                  class="text-danger">
+                  Invalid Customer*
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Brand</mat-label>
+                <input matInput formControlName="brandId" [matAutocomplete]="autoBrand" [readonly]="disablefields" />
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-autocomplete #autoBrand="matAutocomplete" (optionSelected)="optionSelectedBrand($event)">
+                  <mat-option *ngFor="let cust of filteredBrand | async" [value]="cust.brandName">
+                    {{ cust.brandName }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="
+                    Authorizationitem.controls['brandId'].dirty &&
+                    Authorizationitem.hasError('required', 'brandId')
+                  " class="text-danger">Brand is required*</mat-error>
+                <mat-error
+                  *ngIf="Authorizationitem.controls['brandId'].hasError('invalidOption')"
+                  class="text-danger">
+                  Invalid Brand*
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">JobType</mat-label>
+                <input matInput formControlName="jobTypeId" [matAutocomplete]="autoJob" [readonly]="disablefields" />
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                <mat-autocomplete #autoJob="matAutocomplete" (optionSelected)="optionSelectedJobType($event)">
+                  <mat-option *ngFor="let cust of filteredJobType | async" [value]="cust.jobTypeName">
+                    {{ cust.jobTypeName }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="
+                    Authorizationitem.controls['jobTypeId'].dirty &&
+                    Authorizationitem.hasError('required', 'jobTypeId')
+                  " class="text-danger">JobType is required*</mat-error>
+                <mat-error
+                  *ngIf="Authorizationitem.controls['jobTypeId'].hasError('invalidOption')"
+                  class="text-danger">
+                  Invalid JobType*
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-checkbox class="example-margin" formControlName="livestatus"
+                [disabled]="disablefields">Active</mat-checkbox>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+  <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="Showsave" (click)="Savedata()">
+    <i class="fa fa-save me-2"></i>Save
+  </button>
+  <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="ShowUpdate" (click)="Updatedata()">
+    <i class="fa fa-save me-2"></i>Update
+  </button>
+  <button type="submit" class="btn btn-danger resetbtn" (click)="reset()" *ngIf="ShowReset">
+    <i class="fa fa-times-circle me-2"></i>Reset
+  </button>
+</div>

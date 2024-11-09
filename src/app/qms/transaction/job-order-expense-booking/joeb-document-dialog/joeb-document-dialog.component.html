@@ -1,0 +1,155 @@
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Document" />
+                    <span>Document</span>
+                </h3>
+            </div>
+        </div>
+        <hr class="mt-0 mb-4" />
+        <mat-card>
+            <mat-card-title class="title">
+                <!-- {{titile}} -->
+            </mat-card-title>
+            <br />
+            <mat-card-content>
+                <div class="table-list-display">
+                    <div class="component-list">
+                        <div class="text-end">
+                            <button class="btn btn-primary Addbtn" type="button" *ngIf="!viewMode"
+                                (click)="AddDocument()"><i class="fa fa-plus-circle me-2"></i>Add</button>
+                        </div>
+                        <hr class="mt-0 mb-4" />
+                        <section class="custom-table-wrapper">
+                            <kendo-grid [kendoGridBinding]="jocbDocuments" [filterable]="true"
+                                [resizable]="true" [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                [selectable]="{enabled: true}"(pageChange)="pageChange($event)"
+                                [skip]="skip">                        
+                                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px',overflow: 'visible' }"
+                                    [headerStyle]="{ justifyContent: 'center' }" field="documentTypeName"
+                                    title="Document Type*" [width]="105">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <div class="ng-autocomplete">
+                                                <ng-autocomplete [data]="documents" [searchKeyword]="keywordDoc"
+                                                    placeholder="Select Document" (selected)="selectDocevent($event)"
+                                                    [itemTemplate]="itemTemplate"
+                                                    (input)="onInputChange($event, dataItem)"
+                                                    [(ngModel)]="dataItem.documentTypeName"
+                                                    [notFoundTemplate]="notFoundTemplate">
+                                                </ng-autocomplete>
+                                                <ng-template #itemTemplate let-item>
+                                                    <a [innerHTML]="item.documentName"></a>
+                                                </ng-template>
+                                                <ng-template #notFoundTemplate let-notFound>
+                                                    <div [innerHTML]="notFound"></div>
+                                                </ng-template>
+                                                <div class="text-danger"
+                                                    *ngIf="ValidateFieldDoc(dataItem.documentTypeName)">
+                                                    <span>Document is required*</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            {{ dataItem.documentTypeName }}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" field="documentName" title="File *" [width]="120">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <input type="file" class="form-control" (change)="File($event)"
+                                                [(ngModel)]="documentName" readonly>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            {{dataItem.documentName}}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" field="remarks" title="Remarks" [width]="140">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <textarea type="text" class="form-control" maxlength="500"
+                                                [(ngModel)]="remarks"></textarea>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            {{dataItem.remarks}}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'center'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" title="Action" [width]="70" [sticky]="true">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            <!-- <a type="button" *ngIf="!viewMode" (click)="EditDoc(dataItem)"><i
+                                                class="fas fa-square-pen"></i></a>&nbsp; -->
+                                            <a type="button" (click)="show(dataItem.documentName)"><i
+                                                    class="fas fa-eye"></i></a>&nbsp;
+                                            <a type="submit" *ngIf="!viewMode" (click)="Deletedoc(dataItem,rowIndex)"><i
+                                                    class="fas fa-trash"></i></a>&nbsp;
+
+                                        </div>
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <a type="submit" *ngIf="!viewMode" #submitButton tabindex="0"
+                                                (keydown.enter)="hndlKeyPressDoc($event , dataItem)"
+                                                (change)="hndlChangeDoc($event)"
+                                                (click)="showAddRowDoc ? SaveDoc(dataItem) : UpdateDoc(dataItem)">
+                                                <ng-container *ngIf="showAddRowDoc; else editIcon">
+                                                    <i class="fas fa-sd-card"></i>
+                                                </ng-container>
+                                                <ng-template #editIcon>
+                                                    <i class="fas fa-sd-card"></i>
+                                                </ng-template>
+                                            </a>&nbsp;
+                                            <a type="submit" *ngIf="!viewMode" #cancelButton tabindex="0"
+                                                (keydown.enter)="handleKeyPressDoc($event , dataItem)"
+                                                (click)="oncancelDoc(dataItem)"><i class="fas fa-xmark"></i></a>
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'center'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" title="ACT" [width]="50" [sticky]="true">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            <a type="button" (click)="Downloads(dataItem.documentName)">
+                                                <i class="fas fa-cloud-arrow-down"></i></a>&nbsp;
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <ng-template kendoPagerTemplate>
+                                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                                    <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+                          
+                                    <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+                                    <kendo-pager-info></kendo-pager-info>
+                                  </ng-template>
+                                </kendo-grid>
+                              </section>
+                          
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</mat-dialog-actions>
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+        Close
+    </button> &nbsp;&nbsp;
+    <button class="btn btn-primary returntolistbtn" *ngIf="!viewMode" type="submit" (click)="AddtodocumentList()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+</mat-dialog-actions>
+
+<ng-template let-data #ImagePreview>
+    <div class="d-flex justify-content-between">
+      <h2 mat-dialog-title> Preview  </h2>
+        <mat-icon class="m-2" mat-dialog-close style="color: red;cursor: pointer;">Close</mat-icon>
+    </div>
+    <img src="{{data}}" alt="" style="max-width: 700px;">
+  </ng-template>

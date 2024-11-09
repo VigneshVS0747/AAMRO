@@ -1,0 +1,160 @@
+<div class="table-list-display">
+  <div class="component-creation">
+    <div class="header-container">
+      <h3 class="box-title">
+        <img src="./assets/images/billing-storage.png" alt="Employee" />
+        <span>Line Item</span>
+      </h3>
+
+      <button class="btn btn-primary returntolistbtn" type="submit" routerLink="/crm/master/lineitemmaster">
+        <i class="fa fa-list me-2"></i> Return to List
+      </button>
+    </div>
+
+    <hr class="mt-0 mb-4" />
+
+    <mat-card>
+      <mat-card-title class="title">
+        {{titile}}
+      </mat-card-title>
+      <br />
+
+      <mat-card-content>
+        <form [formGroup]="LineItem">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Line Item Code</mat-label>
+                <input matInput type="text" maxlength="10" formControlName="lineItemCode" placeholder="Line Item Code"
+                  autocomplete="off" [readonly]="disablefields" />
+                <mat-error *ngIf="
+                    LineItem.controls['lineItemCode'].dirty &&
+                    LineItem.hasError(
+                        'required',
+                        'lineItemCode'
+                      )
+                    " class="text-danger">Line Item Code is required*</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Line Item Name</mat-label>
+                <input matInput maxlength="100" type="text" formControlName="lineItemName" placeholder="Line Item Name"
+                  autocomplete="off" [readonly]="disablefields" />
+                <mat-error *ngIf="
+                    LineItem.controls['lineItemName'].dirty &&
+                    LineItem.hasError(
+                        'required',
+                        'lineItemName'
+                      )
+                    " class="text-danger">Line Item Name is required*</mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Category</mat-label>
+                <input matInput formControlName="lineItemCategoryId" [matAutocomplete]="autolineItemcat"
+                  [readonly]="disablefields" />
+                <mat-autocomplete #autolineItemcat="matAutocomplete" (optionSelected)="optionSelectedCategory($event)">
+                  <mat-option *ngFor="let cat of filteredLineItem | async" [value]="cat.lineItemCategoryName">
+                    {{ cat.lineItemCategoryName }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="
+                    LineItem.controls['lineItemCategoryId'].dirty &&
+                    LineItem.hasError('required', 'lineItemCategoryId')
+                    " class="text-danger">Category is required*</mat-error>
+              </mat-form-field>
+            </div> -->
+
+            <div class="col-md-4">
+              <mat-form-field>
+                  <mat-label class="labelcolor">Line Item Category</mat-label>
+                  <input matInput formControlName="lineItemCategoryId" [readonly]="disablefields"
+                      [matAutocomplete]="autoline">
+                  <mat-error *ngIf="!LineItem.controls['lineItemCategoryId'].value">Line item category is required*</mat-error>
+              </mat-form-field>
+              <mat-autocomplete #autoline="matAutocomplete"
+                  [displayWith]="displayInvoCtgLabelFn"
+                  (optionSelected)="InvoCtgSelectedoption($event)">
+                  <mat-option
+                      *ngFor="let LineItemCategory of filteredInvoCtgOptions$ | async"
+                      [value]="LineItemCategory" [disabled]="LineItemCategory.isNotFound">
+                      {{ LineItemCategory.lineItemCategoryName }}
+                  </mat-option>
+
+              </mat-autocomplete>
+          </div>
+            <!-- <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Invoicing Flag</mat-label>
+                <input matInput formControlName="invoicingFlagId" [matAutocomplete]="autoInvFlg"
+                  [readonly]="disablefields" />
+                <mat-autocomplete #autoInvFlg="matAutocomplete" (optionSelected)="optionSelectedINvoicingFlag($event)">
+                  <mat-option *ngFor="let InvFlg of filteredInvoicingFlag | async" [value]="InvFlg.invoicingFlag" [disabled]="InvFlg.isNotFound">
+                    {{ InvFlg.invoicingFlag }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="
+                    LineItem.controls['invoicingFlagId'].dirty &&
+                    LineItem.hasError('required', 'invoicingFlagId')
+                    " class="text-danger">Invoicing Flag is required*</mat-error>
+              </mat-form-field>
+            </div> -->
+
+            <div class="col-md-4">
+              <mat-form-field>
+                  <mat-label class="labelcolor">Invoicing Flag</mat-label>
+                  <input matInput formControlName="invoicingFlagId" [readonly]="disablefields"
+                      [matAutocomplete]="autojob">
+                  <mat-error *ngIf="!LineItem.controls['invoicingFlagId'].value">Invoicing Flag is required*</mat-error>
+              </mat-form-field>
+
+              <mat-autocomplete #autojob="matAutocomplete"
+                  [displayWith]="displayInvoLabelFn"
+                  (optionSelected)="InvoSelectedoption($event)">
+
+                  <mat-option
+                      *ngFor="let InvoicingFlags of filteredInvoOptions$ | async"
+                      [value]="InvoicingFlags" [disabled]="InvoicingFlags.isNotFound">
+                      {{ InvoicingFlags.invoicingFlag }}
+                  </mat-option>
+
+              </mat-autocomplete>
+          </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">SAP Reference Code</mat-label>
+                <input matInput type="text" maxlength="20" formControlName="sapReferenceCode"
+                  placeholder="SAP Reference Code" autocomplete="off" [readonly]="disablefields" />
+                <mat-error *ngIf="
+                    LineItem.controls['sapReferenceCode'].dirty &&
+                    LineItem.hasError(
+                        'required',
+                        'sapReferenceCode'
+                      )
+                    " class="text-danger">SAP Reference Code is required*</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-checkbox class="example-margin" formControlName="livestatus"
+                [disabled]="disablefields">Active</mat-checkbox>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+  <button class="btn btn-primary savebtn me-1" type="submit" (click)="Savedata()" *ngIf="Showsave">
+    <i class="fa fa-save me-2"></i>Save
+  </button>
+  <button class="btn btn-primary savebtn me-1" type="submit" (click)="Update()" *ngIf="ShowUpdate">
+    <i class="fa fa-save me-2"></i>Update
+  </button>
+  <button type="submit" class="btn btn-danger resetbtn" (click)="reset()" *ngIf="ShowReset">
+    <i class="fa fa-times-circle me-2"></i>Reset
+  </button>
+</div>

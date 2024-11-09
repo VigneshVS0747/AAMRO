@@ -1,0 +1,168 @@
+<div class="px-3">
+    <div class="mb-3 mt-2">
+        <div class="header-container d-flex justify-content-between align-items-center flex-wrap">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt="Vendor Contract - FFS" />
+                <span>Line Item</span>
+            </h3>
+        </div>
+        <mat-divider></mat-divider>
+    </div>
+
+    <div>
+        <form [formGroup]="PILineItemForm">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Job Number</mat-label>
+                        <input formControlName="JobNumberConrol" matInput placeholder="Job Number">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Job Date</mat-label>
+                        <input matInput formControlName="JobDate" [matDatepicker]="picker1">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Line Item Code</mat-label>
+                        <input formControlName="LineItemCode" matInput placeholder="Line Item Code">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Line Item Description</mat-label>
+                        <input formControlName="LineItemDesc" matInput placeholder="Line Item Code">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Line Item Category</mat-label>
+                        <input formControlName="LineItemCate" matInput placeholder="Line Item Code">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Alias Name</mat-label>
+                        <input formControlName="AliasName" matInput placeholder="Alias Name">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Region</mat-label>
+                        <input formControlName="Region" matInput placeholder="Region">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Calculation Parameter</mat-label>
+                        <input formControlName="calculationParameter" matInput placeholder="Calculation Parameter">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Calculation Type</mat-label>
+                        <input formControlName="calculationType" matInput placeholder="Calculation Type">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Unit Price in Customer Currency</mat-label>
+                        <input formControlName="UnitCustomerCurrency" matInput placeholder="Unit Price in Customer Currency">
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">SAP Invoice Unit Price</mat-label>
+                        <input formControlName="sapInvoiceUnitPrice" matInput placeholder="SAP Invoice Unit Price">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Quantity</mat-label>
+                        <input formControlName="quantity" matInput placeholder="Quantity">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Tax %</mat-label>
+                        <input formControlName="tax" matInput placeholder="Tax">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Tax Value</mat-label>
+                        <input formControlName="taxValue" matInput placeholder="Tax Value">
+                    </mat-form-field>
+                </div>
+
+                <!-- <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Tax Value</mat-label>
+                        <input formControlName="taxValue" matInput placeholder="Tax Value">
+                    </mat-form-field>
+                </div> -->
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Net Payable in Customer Currency</mat-label>
+                        <input formControlName="NetPayableinCustomerCurrency" matInput placeholder="Net Payable in Customer Currency">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Net Payable in Company Currency</mat-label>
+                        <input formControlName="NetPayableinCompanyCurrency" matInput placeholder="Net Payable in Company Currency">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Invoice Amount (in Cus Curr)</mat-label>
+                        <input formControlName="invoiceAmount" min="0" (input)="onInputChange()" matInput
+                            placeholder="Invoice Amount (in Cus Curr)" type="number" step="any">
+                        <mat-error *ngIf="PILineItemForm.get('invoiceAmount')?.hasError('negativeAmount')">
+                            Invoice Amount cannot be negative
+                        </mat-error>
+                        <mat-error *ngIf="PILineItemForm.get('invoiceAmount')?.hasError('amountExceeded')">
+                            Invoice Amount cannot be greater than Net Payable
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label class="labelcolor">Remarks</mat-label>
+                        <input formControlName="Remarks" matInput placeholder="Remarks">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="mb-1 d-flex justify-content-end gap-2">
+            <button mat-dialog-close (click)="close()" class="btn btn-secondary canceltbtn" type="submit">
+                Cancel
+            </button>
+            <button class="btn btn-primary savebtn me-1" type="submit" [disabled]="this.data?.view" (click)="Add()"><i
+                    class="fas fa fa-list me-2"></i> Add to List
+            </button>
+        </div>
+    </div>
+</div>

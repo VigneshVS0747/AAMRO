@@ -1,0 +1,116 @@
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Contact" />
+                    <span>Contact</span>
+                </h3>
+            </div>
+        </div>
+        <hr class="mt-0 mb-4" />
+        <mat-card>
+            <mat-card-title class="title">
+                <!-- {{titile}} -->
+            </mat-card-title>
+            <br />
+            <mat-card-content>
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="ContactForm" #form="ngForm" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Contact Person</mat-label>
+                                            <input matInput type="text" formControlName="contactPerson" required maxlength="100"
+                                                placeholder="Contact Person" autocomplete="off">
+                                            <mat-error *ngIf="!ContactForm.controls['contactPerson'].value">Contact
+                                                Person
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Contact Person Phone</mat-label>
+                                            <input matInput type="text" formControlName="contactPersonPhone" maxlength="15"(keypress)="restrictInput($event)"
+                                                placeholder="Contact Person Phone" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Contact Person Email</mat-label>
+                                            <input matInput type="text" formControlName="contactPersonEmail" maxlength="100"
+                                                placeholder="Contact Person Email" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Contact Type 
+                                            </mat-label>
+                                            <input matInput formControlName="contactTypeId"
+                                                [matAutocomplete]="autocontactType" required>
+                                                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                                <mat-error *ngIf="!ContactForm.controls['contactPerson'].value">Contact
+                                                    type
+                                                    is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocontactType="matAutocomplete"
+                                            [displayWith]="displaycontactLabelFn"
+                                            (optionSelected)="contactSelectedoption($event)">
+                                            <mat-option *ngFor="let ContactList of filteredContactOptions$ | async"
+                                                [value]="ContactList" [disabled]="ContactList.isNotFound">
+                                                {{ ContactList.contactTypeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Department 
+                                            </mat-label>
+                                            <input matInput formControlName="departmentId"
+                                                [matAutocomplete]="autodepartment" >
+                                                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autodepartment="matAutocomplete"
+                                            [displayWith]="displayDepartmentLabelFn"
+                                            (optionSelected)="DepartmentSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let departmentList of filteredDepartmentOptions$ | async"
+                                                [value]="departmentList" [disabled]="departmentList.isNotFound">
+                                                {{ departmentList.departmentName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Designation</mat-label>
+                                            <input matInput type="text" formControlName="designation" maxlength="50"
+                                                placeholder="Designation" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-checkbox class="statusmargin" formControlName="primaryContact">Primary
+                                            Contact</mat-checkbox>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-checkbox class="statusmargin"
+                                            formControlName="liveStatus">Active</mat-checkbox>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</mat-dialog-actions>
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+        Cancel
+    </button> &nbsp;&nbsp;
+    <button class="btn btn-primary returntolistbtn" *ngIf="!viewMode" type="submit" (click)="AddtoContactList()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+</mat-dialog-actions>

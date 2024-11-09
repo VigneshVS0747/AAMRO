@@ -1,0 +1,177 @@
+<div class="mb-3 px-3 py-2">
+  <h3 *ngIf="this.data?.list == undefined || this.data?.list == null" class="mb-2 box-title">
+    <img src="./assets/images/billing-storage.png" alt="Line Item" />
+    <span>Add</span>
+  </h3>
+  <h3 *ngIf="this.data?.list && !this.data?.view" class="mb-2 box-title">
+    <img src="./assets/images/billing-storage.png" alt="Line Item" />
+    <span>Update</span>
+  </h3>
+  <h3 *ngIf="this.data?.view" class="mb-2 box-title">
+    <img src="./assets/images/billing-storage.png" alt="Line Item" />
+    <span>View</span>
+  </h3>
+  <mat-divider></mat-divider>
+</div>
+<div mat-dialog-content>
+  <div>
+    <form [formGroup]="AddListForm">
+      <div class="row mt-2">
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label class="labelcolor">Aamro Line Item Category</mat-label>
+          <input type="text" placeholder="Pick one" aria-label="Number" matInput formControlName="LineItemCategory"
+            [matAutocomplete]="auto1" >
+          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+          <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="getLine($event)">
+            <mat-option *ngFor="let option of filteredLineItemCategory | async" [value]="option?.lineItemCategoryName">
+              {{option?.lineItemCategoryName}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="f.LineItemCategory.touched && f.LineItemCategory.hasError('required') && !f.LineItemCategory.hasError('invalidOption')">Line Item Category is
+            required</mat-error>
+          <mat-error *ngIf="f.LineItemCategory.hasError('invalidOption')">Invalid
+            Option</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label class="labelcolor">Line Item</mat-label>
+          <input type="text" placeholder="Pick one" aria-label="Number" matInput formControlName="LineItem"
+            [matAutocomplete]="auto2" (blur)="validateLineItem()">
+          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+          <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="getLineItemChangeEvent($event)">
+            <mat-option *ngFor="let option of filteredLineItem | async" [value]="option?.lineItemName">
+              {{option?.lineItemName}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="f.LineItem.touched && f.LineItem.hasError('required') && !f.LineItem.hasError('invalidOption')">Line Item is required</mat-error>
+          <!-- <mat-error *ngIf="f.LineItem.hasError('invalidOption')">Invalid
+            Option</mat-error> -->
+        </mat-form-field>
+
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label class="labelcolor">Alias Name</mat-label>
+          <input type="text" placeholder="Name" matInput formControlName="aliasName">
+          <mat-error *ngIf="f.aliasName.touched && f.aliasName.invalid && !f.aliasName.hasError('maxlength')">Alias Name is required</mat-error>
+          <mat-error *ngIf="f.aliasName.hasError('maxlength')">
+            Cannot exceed 200 characters
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row mt-2">
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label class="labelcolor">Calculation Parameter</mat-label>
+          <input type="text" placeholder="Pick one" aria-label="Number" matInput formControlName="calculationParameter"
+            [matAutocomplete]="auto3"  >
+          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+          <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="calculationParameterEvent($event)">
+            <mat-option *ngFor="let option of filteredCalculationParameter | async"
+              [value]="option?.calculationParameter">
+              {{option?.calculationParameter}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="f.calculationParameter.touched && f.calculationParameter.hasError('required')">Calculation Parameter is
+            required</mat-error>
+          <mat-error *ngIf="f.calculationParameter.touched && f.calculationParameter.hasError('invalidOption')">Invalid
+            Option</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label [ngClass]="{'labelcolorGray': calculationTypeReadonly, 'labelcolor': !calculationTypeReadonly}">Calculation Type</mat-label>
+          <input type="text" placeholder="Pick one" aria-label="Number" matInput formControlName="calculationType"
+            [matAutocomplete]="auto4" [readonly]="calculationTypeReadonly">
+          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+          <mat-autocomplete #auto4="matAutocomplete" (optionSelected)="getLineItemId($event)">
+            <mat-option *ngFor="let option of filteredCalculationType | async" [value]="option?.calculationType">
+              {{option?.calculationType}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="f.calculationType.touched && f.calculationType.hasError('required')">Calculation Type is
+            required</mat-error>
+          <mat-error *ngIf="f.calculationType.touched && f.calculationType.hasError('invalidOption')">Invalid
+            Option</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label class="labelcolor">Unit Value</mat-label>
+          <input  placeholder="Value" matInput formControlName="value" step="any" (input)="value($event)">
+          <mat-error *ngIf="f.value.touched && f.value.invalid">Value is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row mt-2">
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label class="labelcolor">Tax Name</mat-label>
+          <input type="text" placeholder="Pick one" aria-label="Number" matInput formControlName="taxName"
+            [matAutocomplete]="auto5">
+          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+          <mat-autocomplete #auto5="matAutocomplete" (optionSelected)="getTaxPercentage($event)">
+            <mat-option *ngFor="let option of filteredTaxName | async" [value]="option?.taxCodeName">
+              {{option?.taxCodeName}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="f.taxName.touched && f.taxName.hasError('required')">Tax Name is required</mat-error>
+          <mat-error *ngIf="f.taxName.hasError('invalidOption')">Invalid
+            Option</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label class="labelcolor">Tax Percentage</mat-label>
+          <input type="number" step="any" placeholder="Tax Percentage" matInput formControlName="taxPercentage" >
+          <mat-error *ngIf="f.taxPercentage.touched && f.taxPercentage.invalid">Tax Percentage is required</mat-error>
+          <!-- <mat-error *ngIf="f.taxPercentage.touched && f.taxPercentage.hasError('decimal')">
+            Tax Percentage must be a positive number with up to 14 digits before the decimal point and 2 digits after
+          </mat-error> -->
+        </mat-form-field>
+
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label class="labelcolor">Minimum Value</mat-label>
+          <input  placeholder="Minimum Value" matInput formControlName="minimumValue" step="any" (input)="minvalue($event)">
+          <!-- <mat-error *ngIf="f.minimumValue.touched && f.minimumValue.hasError('required')">
+            Minimum Value is required
+          </mat-error>
+          <mat-error *ngIf="f.minimumValue.touched && f.minimumValue.hasError('decimal')">
+            Invalid format: Up to 14 digits before and 2 digits after the decimal
+          </mat-error> -->
+        </mat-form-field>
+      </div>
+
+      <div class="row mt-2">
+        <mat-form-field class="col-12 col-md-4">
+          <mat-label class="labelcolor">Remarks</mat-label>
+          <textarea type="text" placeholder="Remarks" cols="8" rows="1" matInput formControlName="remarks"></textarea>
+          <mat-error *ngIf="f.remarks.touched && f.remarks.hasError('maxlength')">
+            Remarks cannot exceed 500 characters
+          </mat-error>
+        </mat-form-field>
+
+        <div class="col-12 col-md-4">
+          <mat-checkbox formControlName="active" color="primary">Active</mat-checkbox>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+<div mat-dialog-actions style="float: right;" class="d-flex gap-2">
+  <!-- <button mat-dialog-close type="button" class="btn btn-danger resetbtn"><i class="fa fa-times-circle"></i>
+    Close</button>
+  <button *ngIf="this.data?.list == undefined || this.data?.list == null" class="btn btn-primary savebtn me-1"
+    type="submit" (click)="save()"><i class="fa fa-save me-2"></i> Save
+  </button>
+  <button [disabled]="this.data.view" *ngIf="this.data?.list" class="btn btn-primary savebtn me-1" type="submit"
+    (click)="save()"><i class="fa fa-save me-2"></i> Update
+  </button> -->
+  <button (click)="Close()" class="btn btn-secondary canceltbtn" type="submit">
+    Cancel
+  </button> &nbsp;&nbsp;
+  <button *ngIf="this.data?.list == undefined || this.data?.list == null"
+    class="btn btn-primary returntolistbtn" type="submit" (click)="save()">
+    <i class="fa fa-list me-2"></i>Add to List
+  </button>
+  <button [disabled]="this.data?.view" *ngIf="this.data?.list"
+    class="btn btn-primary returntolistbtn" type="submit" (click)="save()">
+    <i class="fa fa-list me-2"></i>Update List
+  </button>
+
+</div>

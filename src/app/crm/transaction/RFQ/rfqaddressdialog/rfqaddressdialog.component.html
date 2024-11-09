@@ -1,0 +1,109 @@
+
+<div class="table-list-display">
+    <div class="component-creation">
+      <div class="header-container">
+        <!-- <h3 class="box-title">
+          <img src="./assets/images/billing-storage.png" alt="Employee" />
+          <span>Follow Up</span>
+        </h3> -->
+      </div>
+      <hr class="mt-0 mb-4" />
+      <mat-card>
+        <mat-card-title class="title">
+          <!-- {{titile}} -->
+        </mat-card-title>
+        <br />
+      
+    
+<section class="custom-table-wrapper">
+    <kendo-grid
+      [kendoGridBinding]="vendorAddresslist"
+      [filterable]="true"
+      [resizable]="true"
+      [height]="500"
+      [pageSize]="20"
+      [sortable]="true"
+      [pageable]="true"
+      [selectable]="{ enabled: true }"
+    >
+      <kendo-grid-column
+        [style]="{ 'text-align': 'left', padding: '5px' }"
+        [headerStyle]="{ justifyContent: 'center' }"
+        field="contactPerson"
+        title="Type"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+         {{dataItem.addressName}}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+      [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }"
+      field="contactPerson"
+      title="Country"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+       {{dataItem.countryName}}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+    [style]="{ 'text-align': 'left', padding: '5px' }"
+    [headerStyle]="{ justifyContent: 'center' }"
+    field="contactPerson"
+    title="City"
+  >
+    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+     {{dataItem.cityName}}
+    </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-column
+      [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }"
+      field="primaryAddress"
+      filter="boolean"
+      title="primaryAddress"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+       <mat-checkbox
+                class="example-margin"
+                [disabled]="true"
+                [(ngModel)]="dataItem.primaryAddress"
+              ></mat-checkbox>
+      </ng-template>
+    </kendo-grid-column>
+  
+
+      <kendo-grid-column
+      [style]="{ 'text-align': 'left', padding: '5px' }"
+      [headerStyle]="{ justifyContent: 'center' }"
+      field="lineItemName"
+      title="Select" [hidden]="hideselect"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+        <div *ngIf="dataItem.active==1">
+            <mat-checkbox
+              class="example-margin"
+              [(ngModel)]="dataItem.active"
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="dataItem.active!=1">
+            <mat-checkbox
+            class="example-margin"
+            (change)="toggleCheckbox(rowIndex)"
+          ></mat-checkbox>
+          </div>
+      </ng-template>
+    </kendo-grid-column>
+    </kendo-grid>
+  </section>
+      </mat-card>
+    </div>
+  </div>
+  <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+    <button class="btn btn-secondary" type="submit" (click)="Close()">
+        Cancel
+     </button> &nbsp;&nbsp;
+    <button class="btn btn-primary savebtn me-1" type="submit" (click)="Addtolist()">
+      <i class="fa fa-save me-2"></i> Add to List
+    </button>
+   

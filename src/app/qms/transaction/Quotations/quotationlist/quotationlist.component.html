@@ -1,0 +1,105 @@
+<div class="table-list-display">
+    <div class="component-list">
+      <div class="d-flex justify-content-between flex-wrap">
+        <h3 class="box-title">
+          <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+          <span>Quotation List</span>
+        </h3>
+       
+          <!-- <button class="btn btn-primary mb-1 mt-1 px-1 py-1"  type="submit" (click)="OpenValidity()">
+            <i class="far fa-clock me-2"></i>Expiry
+          </button>
+          <button class="btn btn-primary Addbtn"  type="button" (click)="Add()">
+            <i class="fa fa-plus-circle me-2"></i>Add
+          </button> -->
+
+
+          <div class="text-end d-flex align-items-center flex-wrap gap-1">
+            <button class="btn btn-primary mb-1 mt-1 px-1 py-1"  type="submit" (click)="OpenValidity()">
+              <i class="far fa-clock me-2"></i>Expiry
+            </button>
+            <button class="btn btn-primary mb-1 mt-1 px-1 py-1" type="button" (click)="Add()">
+              <i class="fa fa-plus-circle me-1"></i>Add
+            </button>
+          </div>
+      </div>
+      
+      <hr class="mt-0 mb-4" />
+  
+      <section class="custom-table-wrapper">
+        <kendo-grid [kendoGridBinding]="QuotationList" [filterable]="true" [resizable]="true" [height]="560" [pageSize]="10"
+          [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="quotationFullNumber" title="Quotation Number" [width]="85">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.quotationFullNumber }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }" [width]="100"
+            [headerStyle]="{ justifyContent: 'center' }" field="customerName" title="Customer Name">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.customerName }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="qcrStatus" title="Customer Response" [width]="90">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.qcrStatus }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="salesExecutiveName" title="Sales Owner" [width]="90">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ optionSelectedCustomername(dataItem.salesOwnerId) }}
+          </ng-template>
+        </kendo-grid-column> 
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="salesExecutiveName" title="Sales Executive Name" [width]="90">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.salesExecutiveName }}
+            </ng-template>
+          </kendo-grid-column> 
+          <kendo-grid-column  [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="qStatus" title="Quote Status" [width]="100">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              {{ dataItem.qStatus }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column  [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }"
+            title="Action" [width]="80" [sticky]="true">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              <a type="submit"   routerLink="/qms/transaction/Quote/view/{{
+                            dataItem.quotationId
+                          }}" ><i class="fas fa-eye"></i></a>&nbsp;
+              <a type="submit"  (click)="Edit(dataItem)"><i class="fas fa-square-pen"></i></a>&nbsp;
+               
+                            <a type="submit" (click)="Delete(dataItem)" 
+                            ><i class="fas fa-trash"></i></a>&nbsp;
+                  
+            
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column  [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                      justifyContent: 'center',
+                    }" title="ACT"
+                    [width]="80" [sticky]="true">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              <a type="button" matTooltip="Revision" matTooltipPosition="above" (click)="Revision(dataItem)" 
+              ><i class="fa-solid fa-r"></i>
+            </a>&nbsp;     
+            <a type="button" matTooltip="History" matTooltipPosition="above"  (click)="QuotationHistory(dataItem.quotationNumber)"><i class="fas fa-clock-rotate-left"></i>
+          </a>&nbsp;     
+            </ng-template>
+          </kendo-grid-column>
+          <ng-template kendoPagerTemplate>
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+            <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+            <kendo-pager-next-buttons></kendo-pager-next-buttons>
+  
+            <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+            <kendo-pager-info></kendo-pager-info>
+          </ng-template>
+        </kendo-grid>
+      </section>
+    </div>
+  </div>

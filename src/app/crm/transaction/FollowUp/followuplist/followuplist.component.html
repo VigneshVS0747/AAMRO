@@ -1,0 +1,90 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <h3 class="box-title">
+      <img src="./assets/images/billing-storage.png" alt="Branch Details" />
+      <span>Follow Up List</span>
+    </h3>
+    <div class="text-end">
+      <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" type="button" routerLink="/crm/transaction/followup/create">
+        <i class="fa fa-plus-circle me-2"></i>Add
+      </button>
+    </div>
+
+    <hr class="mt-0 mb-4" />
+
+    <section class="custom-table-wrapper">
+      <kendo-grid [kendoGridBinding]="Followup" [filterable]="true" [resizable]="true" [height]="600" [pageSize]="10"
+        [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }">
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" 
+          [headerStyle]="{ justifyContent: 'center' }" field="followUpDate" title="Date&Time" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.followUpDate | date: 'dd/MMM/yyyy HH:mm:ss' }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" 
+          [headerStyle]="{ justifyContent: 'center' }" field="lineItemName" title="Base Doc Name" [width]="105">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.followUpBaseDocname }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" 
+          [headerStyle]="{ justifyContent: 'center' }" field="baseDocname" title="Base Doc Id" [width]="105">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.baseDocname }}
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" 
+          [headerStyle]="{ justifyContent: 'center' }" field="followUpperson" title="Follow Up person" [width]="110">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.followUpperson }}
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" 
+          [headerStyle]="{ justifyContent: 'center' }" field="modeofFollowUp" title="Follow Up Mode" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.modeofFollowUp }}
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" 
+          [headerStyle]="{ justifyContent: 'center' }" field="followUpStatus" title="Status" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            {{ dataItem.followUpStatus }}
+          </ng-template>
+        </kendo-grid-column>
+
+
+
+
+
+
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }" 
+          title="Action" [width]="80" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <a type="submit" *ngIf="pagePrivilege.includes('view')" routerLink="/crm/transaction/followup/view/{{
+              dataItem.followUpId
+            }}"><i class="fas fa-eye"></i></a>&nbsp;
+            <!-- <a type="submit" routerLink="/ums/authmat/{{dataItem.authorizationMatrixID}}"><i class="fas fa-eye"></i></a>&nbsp; -->
+            <a type="submit" *ngIf="pagePrivilege.includes('edit')" routerLink="/crm/transaction/followup/edit/{{
+                dataItem.followUpId
+              }}"><i class="fas fa-square-pen"></i></a>&nbsp;
+            <a type="submit" *ngIf="pagePrivilege.includes('delete')" (click)="
+              Delete(dataItem)
+              "><i class="fas fa-trash"></i></a>&nbsp;
+
+          </ng-template>
+        </kendo-grid-column>
+        <ng-template kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+      </kendo-grid>
+    </section>
+  </div>
+</div>

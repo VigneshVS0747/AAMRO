@@ -1,0 +1,1030 @@
+<div class="table-list-display">
+    <div class="component-creation">
+        <div class="header-container">
+            <h3 class="box-title">
+                <img src="./assets/images/billing-storage.png" alt=" Customer" />
+                <span> Customer</span>
+            </h3>
+            <button class="btn btn-primary returntolistbtn" type="button" (click)="returnToList()">
+                <i class="fa fa-list me-2"></i> Return to List
+            </button>
+        </div>
+    </div>
+    <hr class="mt-3 mb-4" />
+    <mat-card>
+        <mat-card-title class="title">
+            Customer
+        </mat-card-title>
+        <br />
+        <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedIndex" #matgroup>
+            <mat-tab class="my-2">
+                <ng-template mat-tab-label>
+                    <i class="fas fa-house"></i>
+                    General
+                </ng-template>
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="customerForm" #form="ngForm" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">Customer Id</mat-label>
+                                            <input matInput type="text" maxlength="20" formControlName="customerCode"
+                                                placeholder="Customer Id" autocomplete="off" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Customer Name</mat-label>
+                                            <input matInput type="text" [readonly]="disablefields" maxlength="100"
+                                                formControlName="customerName" (blur)="setName()" required
+                                                placeholder="Customer Name" autocomplete="off">
+                                            <mat-error *ngIf="!customerForm.controls['customerName'].value">Customer
+                                                name
+                                                is
+                                                required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Alias Name</mat-label>
+                                            <input matInput type="text" [readonly]="disablefields" maxlength="100"
+                                                formControlName="aliasName" required placeholder="Alish Name"
+                                                autocomplete="off">
+                                            <mat-error *ngIf="!customerForm.controls['aliasName'].value">Alish name is
+                                                required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Customer Phone</mat-label>
+                                            <input matInput type="text" [readonly]="disablefields" maxlength="15"
+                                                (keypress)="restrictInput($event)" formControlName="customerPhone"
+                                                placeholder="Customer Phone" autocomplete="off" required>
+                                            <mat-error *ngIf="!customerForm.controls['customerPhone'].value">Customer
+                                                phone
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Company Website</mat-label>
+                                            <input matInput type="text" [readonly]="disablefields" maxlength="100"
+                                                formControlName="companyWebsite" placeholder="Company Website"
+                                                autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Customer Email</mat-label>
+                                            <input matInput type="text" [readonly]="disablefields" maxlength="100"
+                                                formControlName="customerEmail" placeholder="Customer Email"
+                                                autocomplete="off" required>
+                                            <mat-error *ngIf="!customerForm.controls['customerEmail'].value">Customer
+                                                email
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Customer Type </mat-label>
+                                            <input matInput formControlName="customerTypeId" [readonly]="disablefields"
+                                                [matAutocomplete]="autoCVtype" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!customerForm.controls['customerTypeId'].value">Customer
+                                                type
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoCVtype="matAutocomplete"
+                                            [displayWith]="displayCVtypeListLabelFn"
+                                            (optionSelected)="CVtypeListSelectedoption($event)">
+                                            <mat-option *ngFor="let CVtypeList of filteredcustypeOptions$ | async"
+                                                [value]="CVtypeList" [disabled]="CVtypeList.isNotFound">
+                                                {{ CVtypeList.cvType}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Customer Currency </mat-label>
+                                            <input matInput formControlName="customerCurrencyId"
+                                                [readonly]="disablefields" [matAutocomplete]="autocurrency" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error
+                                                *ngIf="!customerForm.controls['customerCurrencyId'].value">Customer
+                                                currency
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocurrency="matAutocomplete"
+                                            [displayWith]="displayCurrencyListLabelFn"
+                                            (optionSelected)="CurrencyListSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let currencyList of filteredCurrencyListOptions$ | async"
+                                                [value]="currencyList" [disabled]="currencyList.isNotFound">
+                                                {{ currencyList.currencyName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Billing Currency </mat-label>
+                                            <input matInput formControlName="billingCurrencyId"
+                                                [readonly]="disablefields" [matAutocomplete]="autobillingcurrency"
+                                                required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!customerForm.controls['billingCurrencyId'].value">Billing
+                                                currency
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autobillingcurrency="matAutocomplete"
+                                            [displayWith]="displayBillCurrencyListLabelFn"
+                                            (optionSelected)="billCurrencyListSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let billingCurrencyList of filteredbillingCurrencyListOptions$ | async"
+                                                [value]="billingCurrencyList"
+                                                [disabled]="billingCurrencyList.isNotFound">
+                                                {{ billingCurrencyList.billingCurrency}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Industry </mat-label>
+                                            <input matInput formControlName="industryId"
+                                                [matAutocomplete]="autoindustryType" [readonly]="disablefields">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoindustryType="matAutocomplete"
+                                            [displayWith]="displayindustryListLabelFn"
+                                            (optionSelected)="industryListSelectedoption($event)">
+
+                                            <mat-option *ngFor="let industryList of filteredindustryOptions$ | async"
+                                                [value]="industryList" [disabled]="industryList.isNotFound">
+                                                {{ industryList.industryName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Service Type</mat-label>
+                                            <mat-select formControlName="lineItemCategoryId" [multiple]="true"
+                                                [readonly]="disablefields" (selectionChange)="onSelectLineIC()">
+                                                <mat-option *ngFor="let lineItem of LineItemCategoryList"
+                                                    [value]="lineItem.lineItemCategoryId">
+                                                    {{ lineItem.lineItemCategoryName }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <!-- <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Service of Interest </mat-label>
+                                            <input matInput formControlName="serviceInterest"
+                                                (keydown)="ServiceEmpty($event)" [matAutocomplete]="autoSIntrestlevel"
+                                                [readonly]="disablefields">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoSIntrestlevel="matAutocomplete"
+                                            [displayWith]="displayServiceInterestListLabelFn"
+                                            (optionSelected)="ServiceInterestListSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let serviceTypeInterestList of filteredServiceInterestListOptions$ | async"
+                                                [value]="serviceTypeInterestList"
+                                                [disabled]="serviceTypeInterestList.isNotFound">
+                                                {{ serviceTypeInterestList.serviceTypeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div> -->
+
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Service Sector</mat-label>
+                                            <mat-select formControlName="serviceType" [readonly]="disablefields"
+                                                [multiple]="true" (selectionChange)="onselectService()">
+                                                <mat-option
+                                                    *ngFor="let serviceTypeList of filteredServiceTypeListOptions$ | async"
+                                                    [value]="serviceTypeList.serviceSectorId">
+                                                    {{ serviceTypeList.serviceSector }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="!customerForm.controls['serviceType'].value">Service type
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Sales Owner </mat-label>
+                                            <input matInput formControlName="salesOwnerId"
+                                                [matAutocomplete]="autosalesOwner" [readonly]="disablefields" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!customerForm.controls['salesOwnerId'].value">Sales owner
+                                                is
+                                                required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autosalesOwner="matAutocomplete"
+                                            [displayWith]="displaysalesOwnerListLabelFn"
+                                            (optionSelected)="salesOwnerListSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let salesOwnerList of filteredsalesOwnerOptions$ | async"
+                                                [value]="salesOwnerList" [disabled]="salesOwnerList.isNotFound">
+                                                {{ salesOwnerList.employeeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Sales Executive </mat-label>
+                                            <input matInput formControlName="salesExecutiveId"
+                                                [readonly]="disablefields" [matAutocomplete]="autosalesExecutive">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autosalesExecutive="matAutocomplete"
+                                            [displayWith]="displaysalesExecutiveListLabelFn"
+                                            (optionSelected)="salesExecutiveListSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let salesExecutiveList of filteredsalesExecutiveOptions$ | async"
+                                                [value]="salesExecutiveList" [disabled]="salesExecutiveList.isNotFound">
+                                                {{ salesExecutiveList.employeeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Job Notification Stage </mat-label>
+                                            <input matInput formControlName="jobNotificationStageId"
+                                                [matAutocomplete]="autojob" [readonly]="disablefields" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error
+                                                *ngIf="!customerForm.controls['jobNotificationStageId'].value">Job
+                                                notification stage
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autojob="matAutocomplete"
+                                            [displayWith]="displayReportStageListLabelFn"
+                                            (optionSelected)="ReportStageListSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let ReportingStageList of filteredReportingStageOptions$ | async"
+                                                [value]="ReportingStageList" [disabled]="ReportingStageList.isNotFound">
+                                                {{ ReportingStageList.reportingStage}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Status </mat-label>
+                                            <input matInput formControlName="cStatusId" [matAutocomplete]="autoStatus"
+                                                [readonly]="disablefields" required (keydown)="statusEmpty($event)">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!customerForm.controls['cStatusId'].value">Status is
+                                                required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoStatus="matAutocomplete"
+                                            [displayWith]="displayStausListLabelFn"
+                                            (optionSelected)="StatusListSelectedoption($event)">
+                                            <mat-option *ngFor="let statusList of filteredStatusOptions$ | async"
+                                                [value]="statusList" [disabled]="statusList.isNotFound" [disabled]="isOptionDisabled(statusList)">
+                                                {{ statusList.cStatus}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">Approval Status </mat-label>
+                                            <input matInput formControlName="approvalStatusId"
+                                                [matAutocomplete]="autoApprovalStatus" readonly>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoApprovalStatus="matAutocomplete"
+                                            [displayWith]="displayApprovalStatusLabelFn"
+                                            (optionSelected)="selectApprovalStatus($event)">
+                                            <mat-option
+                                                *ngFor="let approvalStatusList of filteredApprovalStatusOptions$ | async"
+                                                [value]="approvalStatusList" [disabled]="approvalStatusList.isNotFound">
+                                                {{ approvalStatusList.approvalStatus}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="closedField">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Closed Reason </mat-label>
+                                            <input matInput formControlName="reasonId" (keydown)="reasonEmpty($event)"
+                                                [matAutocomplete]="autoreason" [readonly]="disablefields">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!customerForm.controls['reasonId'].value">Closed Reason is
+                                                required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoreason="matAutocomplete"
+                                            [displayWith]="displayreasonListLabelFn"
+                                            (optionSelected)="reasonSelectedoption($event)">
+                                            <mat-option *ngFor="let reasonList of filteredreasonOptions$ | async"
+                                                [value]="reasonList" [disabled]="reasonList.isNotFound">
+                                                {{ reasonList.reasonName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="closedField">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Closed Remarks</mat-label>
+                                            <textarea matInput cols="8" rows="2" placeholder="Closed Remarks"
+                                                maxlength="500" [readonly]="disablefields"
+                                                formControlName="closedRemarks"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Information Source </mat-label>
+                                            <input matInput formControlName="informationSourceId"
+                                                (keydown)="SourceEmpty($event)" [matAutocomplete]="autoInfo"
+                                                [readonly]="disablefields">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoInfo="matAutocomplete"
+                                            [displayWith]="displayinfosourceListLabelFn"
+                                            (optionSelected)="infosourceSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let infosourceList of filteredinfosourceOptions$ | async"
+                                                [value]="infosourceList" [disabled]="infosourceList.isNotFound">
+                                                {{ infosourceList.informationSourceName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="reference">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Reference Details</mat-label>
+                                            <input matInput type="text" [readonly]="disablefields" maxlength="100"
+                                                formControlName="referenceDetails" placeholder="Reference Details"
+                                                autocomplete="off">
+                                            <mat-error
+                                                *ngIf="!customerForm.controls['referenceDetails'].value">Reference
+                                                details is
+                                                required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Communication Preference </mat-label>
+                                            <input matInput formControlName="modeofFollowUpId"
+                                                [matAutocomplete]="autoCommunication" [readonly]="disablefields">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autoCommunication="matAutocomplete"
+                                            [displayWith]="displaycommunicationListLabelFn"
+                                            (optionSelected)="communicationListSelectedoption($event)">
+
+                                            <mat-option
+                                                *ngFor="let CommunicationList of filteredcommunicationOptions$ | async"
+                                                [value]="CommunicationList" [disabled]="CommunicationList.isNotFound">
+                                                {{ CommunicationList.modeofFollowUp}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Remarks</mat-label>
+                                            <textarea matInput cols="8" rows="2" placeholder="Remarks" maxlength="500"
+                                                [readonly]="disablefields" formControlName="customerRemarks"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Tags</mat-label>
+                                            <textarea matInput cols="8" rows="2" placeholder="Tags" maxlength="100"
+                                                formControlName="tags" [readonly]="disablefields"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <!--  Customer Contacts -->
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fa-solid fa-address-book "></i>&nbsp;
+                    Contacts
+                </ng-template>
+                <div class="table-list-display">
+                    <div class="component-list">
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <div class="text-end">
+                                <button class="btn btn-primary Addbtn" type="button" *ngIf="!viewMode"
+                                    (click)="openDialog()">
+                                    <i class="fa fa-plus-circle me-2"></i>Add
+                                </button>
+                            </div>
+                            <hr class="mt-0 mb-4" />
+                            <section class="custom-table-wrapper">
+                                <kendo-grid [kendoGridBinding]="customerContact" [filterable]="true" [resizable]="true"
+                                    [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                    [selectable]="{ enabled: true }">
+                                    <kendo-grid-column [style]="{
+                                      'text-align': 'left',
+                                      padding: '5px',
+                                      
+                                    }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" field="contactPerson" title="Contact Person" [width]="105">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.contactPerson }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" field="contactTypeName" title="Contact Type" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.contactTypeName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="departmentName" title="Department" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.departmentName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="designation" title="Designation" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.designation }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="contactPersonPhone" title="Phone" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.contactPersonPhone }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                justifyContent: 'center',
+                                
+                              }" field="contactPersonEmail" title="Email" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.contactPersonEmail }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" field="primaryContact" filter="boolean" title="Primary Contact" [width]="90">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            <mat-checkbox class="example-margin" [disabled]="true"
+                                                [(ngModel)]="dataItem.primaryContact"></mat-checkbox>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="liveStatus" filter="boolean" title="Active" [width]="85">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            <mat-checkbox class="example-margin" [disabled]="true"
+                                                [(ngModel)]="dataItem.liveStatus"></mat-checkbox>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" title="Action" [width]="80" [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <a type="button" (click)="onviewContact(dataItem)"><i
+                                                    class="fas fa-eye"></i></a>&nbsp;
+                                            <a type="button" *ngIf="!viewMode" (click)="onEditContact(dataItem)"><i
+                                                    class="fas fa-square-pen"></i></a>&nbsp;
+                                            <a type="button" *ngIf="!viewMode" (click)="onDeleteContact(dataItem)"><i
+                                                    class="fas fa-trash"></i></a>&nbsp;
+
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-row-index></kendo-grid-row-index>
+                                    <ng-template kendoPagerTemplate>
+                                        <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                                        <kendo-pager-numeric-buttons
+                                            [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                                        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+                                        <kendo-pager-page-sizes class="Page-Short"
+                                            [pageSizes]="sizes"></kendo-pager-page-sizes>
+                                        <kendo-pager-info></kendo-pager-info>
+                                    </ng-template>
+                                </kendo-grid>
+                            </section>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <!--  Customer Address -->
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fa-solid fa-map-location-dot"></i> &nbsp;
+                    Address
+                </ng-template>
+                <div class="table-list-display">
+                    <div class="component-list">
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <div class="text-end">
+                                <button class="btn btn-primary Addbtn" type="button" *ngIf="!viewMode"
+                                    (click)="AddressDialog()">
+                                    <i class="fa fa-plus-circle me-2"></i>Add
+                                </button>
+                            </div>
+                            <hr class="mt-0 mb-4" />
+                            <section class="custom-table-wrapper">
+                                <kendo-grid [kendoGridBinding]="customerAddress" [filterable]="true" [resizable]="true"
+                                    [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                    [selectable]="{ enabled: true }">
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" field="addresstypeName" title="Address Type" [width]="100">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.addresstypeName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{
+                                      'text-align': 'left',
+                                      padding: '5px',
+                                      
+                                    }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" field="addressName" title="Name" [width]="100">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.addressName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="countryName" title="Country" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.countryName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="cityName" title="City" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.cityName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" field="primaryAddress" filter="boolean" title="Primary Address" [width]="115">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            <mat-checkbox class="example-margin" [disabled]="true"
+                                                [(ngModel)]="dataItem.primaryAddress"></mat-checkbox>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="liveStatus" filter="boolean" title="Active" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            <mat-checkbox class="example-margin" [disabled]="true"
+                                                [(ngModel)]="dataItem.liveStatus"></mat-checkbox>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" title="Action" [width]="80" [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <a type="button" (click)="onviewAddress(dataItem)"><i
+                                                    class="fas fa-eye"></i></a>&nbsp;
+                                            <a type="button" *ngIf="!viewMode" (click)="onEditAddress(dataItem)"><i
+                                                    class="fas fa-square-pen"></i></a>&nbsp;
+                                            <a type="button" *ngIf="!viewMode" (click)="onDeleteAddress(dataItem)"><i
+                                                    class="fas fa-trash"></i></a>&nbsp;
+
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-row-index></kendo-grid-row-index>
+                                    <ng-template kendoPagerTemplate>
+                                        <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                                        <kendo-pager-numeric-buttons
+                                            [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                                        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+                                        <kendo-pager-page-sizes class="Page-Short"
+                                            [pageSizes]="sizes"></kendo-pager-page-sizes>
+                                        <kendo-pager-info></kendo-pager-info>
+                                    </ng-template>
+                                </kendo-grid>
+                            </section>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <!--  Customer Account details -->
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fa-solid fa-building-columns"></i> &nbsp;
+                    Account Details
+                </ng-template>
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="customerForm" #form="ngForm" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Credit Limit</mat-label>
+                                            <input matInput [readonly]="disablefields" formControlName="creditLimit"
+                                                placeholder="Credit Limit" (input)="creditLimit($event)"
+                                                autocomplete="off">
+                                            <mat-error *ngIf="!customerForm.controls['creditLimit'].value">Credit limit
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Credit Days</mat-label>
+                                            <input matInput [readonly]="disablefields" (input)="creditDays($event)"
+                                                formControlName="creditDays" placeholder="Credit Days"
+                                                autocomplete="off">
+                                            <mat-error *ngIf="!customerForm.controls['creditDays'].value">Credit days
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Trade License Number</mat-label>
+                                            <input matInput [readonly]="disablefields" maxlength="20"
+                                                formControlName="tradeLicenseNumber" placeholder="License Number"
+                                                autocomplete="off">
+                                            <mat-error *ngIf="!customerForm.controls['tradeLicenseNumber'].value">Trade
+                                                license number
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label class="labelcolor">Trade License Expiry Date</mat-label>
+                                            <input matInput [matDatepicker]="expiryDatePicker"
+                                                formControlName="tradeLicenseExpiryDate"
+                                                [matDatepickerFilter]="dateFilter">
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="expiryDatePicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #expiryDatePicker></mat-datepicker>
+                                            <mat-error
+                                                *ngIf="!customerForm.controls['tradeLicenseExpiryDate'].value">Trade
+                                                license expiry date
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">TRN</mat-label>
+                                            <input matInput type="text" [readonly]="disablefields" maxlength="20"
+                                                formControlName="trn" placeholder="TRN" autocomplete="off">
+                                            <mat-error *ngIf="!customerForm.controls['trn'].value">TRN
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Customer Ranking </mat-label>
+                                            <input matInput formControlName="customerRankingId"
+                                                [readonly]="disablefields" [matAutocomplete]="autocustomerRanking"
+                                                (keydown)="handleChangeC($event)">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error
+                                                *ngIf="!customerForm.controls['customerRankingId'].value">Customer
+                                                ranking
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocustomerRanking="matAutocomplete"
+                                            [displayWith]="displaycustomerRankingListLabelFn"
+                                            (optionSelected)="customerRankingListSelectedoption($event)">
+
+                                            <mat-option
+                                                *ngFor="let customerRankingList of filteredcustomerRankingOptions$ | async"
+                                                [value]="customerRankingList"
+                                                [disabled]="customerRankingList.isNotFound">
+                                                {{ customerRankingList.rankName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Customer Revenue </mat-label>
+                                            <input matInput formControlName="customerRevenue" [readonly]="disablefields"
+                                                [matAutocomplete]="autocustomerRanking1"
+                                                (keydown)="handleChangeR($event)">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocustomerRanking1="matAutocomplete"
+                                            [displayWith]="displaycustomerRankingListLabelFn1"
+                                            (optionSelected)="customerRankingListSelectedoption1($event)">
+
+                                            <mat-option
+                                                *ngFor="let customerRankingList of filteredcustomerRankingOptions1$ | async"
+                                                [value]="customerRankingList"
+                                                [disabled]="customerRankingList.isNotFound">
+                                                {{ customerRankingList.fromValue}} - {{ customerRankingList.toValue}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolorGray">SAP Reference Code</mat-label>
+                                            <input matInput type="text" readonly maxlength="20"
+                                                formControlName="sapRefCode" placeholder="SAP Ref. Code"
+                                                autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <!--  Customer Document details -->
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fa-solid fa-file-lines"></i>&nbsp;
+                    Documents
+                </ng-template>
+                <div class="table-list-display">
+                    <div class="component-list">
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <div class="text-end">
+                                <button class="btn btn-primary Addbtn" type="button" *ngIf="!viewMode"
+                                    (click)="openDialogDocument()">
+                                    <i class="fa fa-plus-circle me-2"></i>Add
+                                </button>
+                            </div>
+                            <hr class="mt-0 mb-4" />
+                            <section class="custom-table-wrapper">
+                                <kendo-grid [kendoGridBinding]="documentChecklist" [filterable]="true"
+                                    [resizable]="true" [height]="500" [pageSize]="20" [sortable]="true"
+                                    [pageable]="true" [selectable]="{ enabled: true }">
+                                    <kendo-grid-column [style]="{
+                                      'text-align': 'left',
+                                      padding: '5px',
+                                      
+                                    }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" field="documentTypeName" title="Document Name" [width]="105">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.documentTypeName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" field="mandatory" filter="boolean" title="Mandatory" [width]="90">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            <mat-checkbox class="example-margin" [disabled]="true"
+                                                [(ngModel)]="dataItem.mandatory"></mat-checkbox>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" field="isCollected" filter="boolean" title="Is Collected" [width]="90">
+                                        <ng-template kendoGridCellTemplate let-dataItem>
+                                            <mat-checkbox class="example-margin" [disabled]="true"
+                                                [(ngModel)]="dataItem.isCollected"></mat-checkbox>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="collectedDate" format="{0:dd/MMM/yyyy}" filter="date"
+                                        title="Collected Date" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.collectedDate | date: 'dd/MMM/yyyy' }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                    justifyContent: 'center',
+                                    
+                                  }" field="documentName" title="File" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.documentName }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }" [headerStyle]="{
+                                        justifyContent: 'center',
+                                        
+                                      }" field="remarks" title="Remarks" [width]="95">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            {{ dataItem.remarks }}
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{
+                                      justifyContent: 'center',
+                                      
+                                    }" title="Action" [width]="80" [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <a type="button" (click)="show(dataItem.documentName)"><i
+                                                    class="fas fa-eye"></i></a>&nbsp;
+                                            <!-- <a type="button" (click)="onviewDocument(dataItem)"><i
+                                                        class="fas fa-eye"></i></a>&nbsp; -->
+                                            <a type="button" *ngIf="!viewMode" (click)="onEditDocument(dataItem)"><i
+                                                    class="fas fa-square-pen"></i></a>&nbsp; 
+                                            <a type="button" *ngIf="!viewMode" (click)="onDeleteDocument(dataItem)"><i
+                                                    class="fas fa-trash"></i></a>&nbsp;
+
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-column [style]="{'text-align': 'center'}"
+                                        [headerStyle]="{'justifyContent': 'center'}" title="ACT" [width]="50"
+                                        [sticky]="true">
+                                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                            <div>
+                                                <a type="button" (click)="Downloads(dataItem.documentName)">
+                                                    <i class="fas fa-cloud-arrow-down"></i></a>&nbsp;
+                                            </div>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                    <kendo-grid-row-index></kendo-grid-row-index>
+                                    <ng-template kendoPagerTemplate>
+                                        <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                                        <kendo-pager-numeric-buttons
+                                            [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                                        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+                                        <kendo-pager-page-sizes class="Page-Short"
+                                            [pageSizes]="sizes"></kendo-pager-page-sizes>
+                                        <kendo-pager-info></kendo-pager-info>
+                                    </ng-template>
+                                </kendo-grid>
+                            </section>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+
+
+
+
+
+            <!--  Customer Attachments -->
+            <!-- <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fas fa-paperclip"></i>
+                    Attachments
+                </ng-template>
+                <div class="table-list-display">
+                    <div class="component-list">
+                        <div class="text-end">
+                            <button class="btn btn-primary Addbtn" type="button" *ngIf="!viewMode"
+                                (click)="AddDocument()"><i class="fa fa-plus-circle me-2"></i>Add</button>
+                        </div>
+                        <hr class="mt-0 mb-4" />
+                        <section class="custom-table-wrapper">
+                            <kendo-grid [kendoGridBinding]="customerDocument" [filterable]="true" [resizable]="true"
+                                [height]="500" [pageSize]="20" [sortable]="true" [pageable]="true"
+                                [selectable]="{enabled: true}">
+                                <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+                                    [headerStyle]="{ justifyContent: 'center' }" field="documentTypeName"
+                                    title="Document Type*" [width]="100">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <div class="ng-autocomplete">
+                                                <ng-autocomplete [data]="documents" [searchKeyword]="keywordDoc"
+                                                    placeholder="Select Document" (selected)="selectDocevent($event)"
+                                                    [itemTemplate]="itemTemplate"
+                                                    [(ngModel)]="dataItem.documentTypeName"
+                                                    [notFoundTemplate]="notFoundTemplate">
+                                                </ng-autocomplete>
+                                                <ng-template #itemTemplate let-item>
+                                                    <a [innerHTML]="item.documentName"></a>
+                                                </ng-template>
+                                                <ng-template #notFoundTemplate let-notFound>
+                                                    <div [innerHTML]="notFound"></div>
+                                                </ng-template>
+                                                <div class="text-danger"
+                                                    *ngIf="ValidateFieldDoc(dataItem.documentTypeName)">
+                                                    <span>Document is required*</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            {{ dataItem.documentTypeName }}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" field="documentName" title="File *"
+                                    [width]="100">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <input type="file" class="form-control" (change)="File($event)"
+                                                [(ngModel)]="documentName" readonly>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            {{dataItem.documentName}}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'left','padding': '5px'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" field="remarks" title="Remarks"
+                                    [width]="150">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <textarea type="text" class="form-control" maxlength="500"
+                                                [(ngModel)]="remarks"></textarea>
+                                        </div>
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            {{dataItem.remarks}}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'center'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" title="Action" [width]="80"
+                                    [sticky]="true">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                          
+                                            <a type="button" (click)="onviewDoc(dataItem)"><i
+                                                    class="fas fa-eye"></i></a>&nbsp;
+                                            <a type="submit" *ngIf="!viewMode" (click)="Deletedoc(dataItem)"><i
+                                                    class="fas fa-trash"></i></a>&nbsp;
+
+                                        </div>
+                                        <div *ngIf="dataItem.IseditDoc">
+                                            <a type="submit" *ngIf="!viewMode" #submitButton tabindex="0"
+                                                (keydown.enter)="hndlKeyPressDoc($event , dataItem)"
+                                                (change)="hndlChangeDoc($event)"
+                                                (click)="showAddRowDoc ? SaveDoc(dataItem) : UpdateDoc(dataItem)">
+                                                <ng-container *ngIf="showAddRowDoc; else editIcon">
+                                                    <i class="fas fa-sd-card"></i>
+                                                </ng-container>
+                                                <ng-template #editIcon>
+                                                    <i class="fas fa-sd-card"></i>
+                                                </ng-template>
+                                            </a>&nbsp;
+                                            <a type="submit" *ngIf="!viewMode" #cancelButton tabindex="0"
+                                                (keydown.enter)="handleKeyPressDoc($event , dataItem)"
+                                                (click)="oncancelDoc(dataItem)"><i class="fas fa-xmark"></i></a>
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column [style]="{'text-align': 'center'}"
+                                    [headerStyle]="{'justifyContent': 'center'}" title="ACT" [width]="50"
+                                    [sticky]="true">
+                                    <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                        <div *ngIf="!dataItem.IseditDoc">
+                                            <a type="button" (click)="download(dataItem)">
+                                                <i class="fas fa-cloud-arrow-down"></i></a>&nbsp;
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-row-index></kendo-grid-row-index>
+                            </kendo-grid>
+                        </section>
+                    </div>
+                </div>
+            </mat-tab> -->
+        </mat-tab-group>
+    </mat-card>
+</div>
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px;">
+    <button class="btn btn-warning draftbtn me-1" type="submit" [hidden]="hidebutton" *ngIf="!viewMode"
+        (click)="onSaveGeneral('Draft')"><i class="fa fa-clock"></i> Draft</button>
+
+    <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="!viewMode && !gereralEdit" (click)="onSaveGeneral('Save')"><i
+            class="fa fa-save me-2"></i> Save</button>
+    <button class="btn btn-primary savebtn me-1" type="submit" *ngIf="!viewMode && gereralEdit" (click)="onSaveGeneral('Save')"><i
+            class="fa fa-save me-2"></i> Update</button>
+
+    <button type="button" class="btn btn-danger resetbtn" *ngIf="!viewMode" (click)="resetGeneral()"><i
+            class="fa fa-times-circle"></i> Reset</button>
+    <button class="btn btn-primary savebtn me-1" type="submit" [hidden]="hideApprovebutton" (click)="onApprovel()">
+        Approve/Reject</button>
+</div>
+
+<ng-template let-data #ImagePreview>
+    <div class="d-flex justify-content-between">
+      <h2 mat-dialog-title> Preview  </h2>
+        <mat-icon class="m-2" mat-dialog-close style="color: red;cursor: pointer;">close</mat-icon>
+    </div>
+    <img src="{{data}}" alt="" style="max-width: 700px;">
+  </ng-template>

@@ -1,0 +1,116 @@
+<div class="mt-2 mb-2 mx-3">
+    <div>
+        <div>
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Purchase Quotation" />
+                    <span>Customer Contract - FFS</span>
+                </h3>
+                <div class="text-end">
+                    <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" (click)="add()">
+                        <i class="fa fa-plus-circle me-2"></i>New
+                    </button>
+                    <!-- <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" (click)="add()">
+                        New
+                    </button> -->
+                </div>
+                <mat-divider></mat-divider>
+            </div>
+
+            <div class="mt-2">
+                <kendo-grid [kendoGridBinding]="CustomerContractList" [filterable]="true" [resizable]="true"
+                    [height]="500" [pageSize]="pageSize" [sortable]="true" [pageable]="true"
+                    [selectable]="{ enabled: true }" [skip]="skip" (pageChange)="pageChange($event)">
+                    <kendo-grid-column [style]="{
+                    'text-align': 'left',
+                    padding: '5px',
+                  }" [headerStyle]="{
+                    justifyContent: 'center',
+                    
+                  }" field="contractNumber" title="Contract Number" [width]="110">
+                    </kendo-grid-column>
+
+                    <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                        [headerStyle]="{justifyContent: 'center',}" field="contractDate" title="Date" filter="date"
+                        format="{0:dd/MMM/yyyy}" [width]="100">
+                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                            {{dataItem.contractDate | date: 'dd/MMM/yyyy'}}
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                        [headerStyle]="{justifyContent: 'center',}" field="customerName" title="Customer" filter="text"
+                        [width]="100">
+                    </kendo-grid-column>
+
+                    <kendo-grid-column [style]="{'text-align': 'left', 'padding': '5px'}"
+                        [headerStyle]="{'justifyContent': 'center'}" field="validFrom" title="Valid From" filter="date"
+                        format="{0:dd/MMM/yyyy}" [width]="100">
+                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                                {{ dataItem.validFrom | date: 'dd/MMM/yyyy' }}
+                        </ng-template>
+                    </kendo-grid-column>
+
+
+                    <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                        [headerStyle]="{justifyContent: 'center',}" field="validTo" title="Valid To" filter="date"
+                        format="{0:dd/MMM/yyyy}" [width]="100">
+                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                            {{dataItem.validTo | date: 'dd/MMM/yyyy'}}
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                        [headerStyle]="{justifyContent: 'center',}" field="countryName" title="Country" filter="text"
+                        [width]="100">
+                    </kendo-grid-column>
+
+                    <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                        [headerStyle]="{justifyContent: 'center',}" field="currencyName" title="Currency" filter="text"
+                        [width]="100">
+                    </kendo-grid-column>
+
+                    <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}"
+                        [headerStyle]="{justifyContent: 'center',}" field="contractStatus" title="Status" filter="text"
+                        [width]="100">
+                    </kendo-grid-column>
+
+
+                    <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center',}" title="Action" [width]="100" [sticky]="true">
+                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                <a type="submit" matTooltip="Edit" *ngIf="pagePrivilege.includes('edit')" (click)="Edit(dataItem)">
+                                    <i class="fas fa-square-pen"></i>
+                                </a>&nbsp;
+                                <a type="submit" matTooltip="Delete" *ngIf="pagePrivilege.includes('delete')"
+                                    (click)="Delete(dataItem,dataItem.customerContractFFSId)">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                <a type="submit" matTooltip="View" *ngIf="pagePrivilege.includes('view')" (click)="view(dataItem)">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </kendo-grid-column>
+                    <kendo-grid-column [style]="{'text-align': 'left',padding: '5px',}" [headerStyle]="{justifyContent: 'center',}"
+                        title="Act" [width]="40">
+                        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                <a type="submit" matTooltip="Copy From Existing Contract" (click)="copyFrom(dataItem.customerContractFFSId)">
+                                    <i class="fa-solid fa-copy fas"></i>
+                                </a>&nbsp;
+                            </div>
+                        </ng-template>
+                    </kendo-grid-column>
+                    <ng-template kendoPagerTemplate>
+                        <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                        <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+                        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+              
+                        <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+                        <kendo-pager-info></kendo-pager-info>
+                      </ng-template>
+                </kendo-grid>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,240 @@
+
+<mat-dialog-content class="mat-typography">
+  
+<div class="table-list-display">
+    <div class="component-creation">
+      <div class="header-container">
+        <h3 class="box-title">
+          <img src="./assets/images/billing-storage.png" alt="Employee" />
+          <span>Brand Details</span>
+        </h3>
+  
+        <!-- <button
+          class="btn btn-primary returntolistbtn"
+          type="submit"
+          routerLink="/crm/master/lineitemmaster"
+        >
+          <i class="fa fa-list me-2"></i> Return to List
+        </button> -->
+      </div>
+  
+      <hr class="mt-0 mb-4" />
+  
+      <mat-card>
+        <mat-card-title class="title">
+        <!-- {{titile}} -->
+        </mat-card-title>
+        <br />
+  
+        <mat-card-content>
+          <form [formGroup]="BrandDetails">
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field>
+                      <mat-label class="labelcolor">Brand Name</mat-label>
+                      <input
+                        matInput
+                        [readonly]="disablefields"
+                        formControlName="brandId"   
+                        [matAutocomplete]="autoBrand"  
+                      />
+                      <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                      <mat-autocomplete
+                        #autoBrand="matAutocomplete"
+                        (optionSelected)="optionSelectedBrand($event)"
+                      >
+                        <mat-option
+                          *ngFor="let brand of filteredBrand | async"
+                          [value]="brand.brandName"
+                        >
+                          {{brand.brandName }}
+                        </mat-option>
+                      </mat-autocomplete>
+                      <mat-error
+                        *ngIf="
+                        BrandDetails.controls['brandId'].dirty &&
+                        BrandDetails.hasError('required', 'brandId')
+                        "
+                        class="text-danger"
+                        >Brand is required*</mat-error
+                      >
+                    </mat-form-field>
+                  </div>
+      
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Length(cm)</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    (input)="Length()"
+                    [readonly]="disablefields"
+                    formControlName="length"
+                    placeholder="Length"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Breadth(cm)</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    (input)="Breadth()"
+                    [readonly]="disablefields"
+                    formControlName="breadth"
+                    placeholder="Breadth"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Height(cm)</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    (input)="Height()"
+                    [readonly]="disablefields"
+                    formControlName="height"
+                    placeholder="Height"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Weight(Kg)</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    [readonly]="disablefields"
+                    formControlName="weight"
+                    placeholder="Weight"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+             
+              <!-- <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">UOM</mat-label>
+                  <input
+                    matInput
+                    [readonly]="disablefields"
+                    formControlName="storageUOMId"
+                    [matAutocomplete]="UOM"   
+                   
+                  />
+                  <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                  <mat-autocomplete
+                    #UOM="matAutocomplete"
+                    (optionSelected)="optionSelectedUOM($event)"
+                  >
+                    <mat-option
+                      *ngFor="let uom of filteredUom | async"
+                      [value]="uom.uomName"
+                    >
+                      {{ uom.uomName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error
+                    *ngIf="
+                    BrandDetails.controls['storageUOMId'].dirty &&
+                    BrandDetails.hasError('required', 'storageUOMId')
+                    "
+                    class="text-danger"
+                    >UOM is required*</mat-error
+                  >
+                </mat-form-field>
+              </div> -->
+  
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-label class="labelcolor">Storage Type</mat-label>
+                  <input
+                    matInput
+                    [readonly]="disablefields"
+                    formControlName="storageTypeId"
+                    [matAutocomplete]="autoStorageType"   
+                  />
+                  <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                  <mat-autocomplete
+                  #autoStorageType="matAutocomplete"
+                  (optionSelected)="optionSelectedStype($event)"
+                >
+                  <mat-option
+                    *ngFor="let Stype of filteredStorageType | async"
+                    [value]="Stype.storageTypeName"
+                  >
+                    {{ Stype.storageTypeName }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                *ngIf="
+                BrandDetails.controls['storageTypeId'].dirty &&
+                BrandDetails.hasError('required', 'storageTypeId')
+                "
+                class="text-danger"
+                >StorageType is required*</mat-error
+              >
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <!-- <div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+    <button
+      class="btn btn-primary savebtn me-1"
+      type="submit"
+      (click)="Savedata()"
+      *ngIf="Showsave"
+    >
+      <i class="fa fa-save me-2"></i>Save
+    </button>
+
+    <button
+    class="btn btn-primary savebtn me-1"
+    type="submit"
+    (click)="Update()"
+    *ngIf="ShowUpdate"
+  >
+    <i class="fa fa-save me-2"></i>Update
+  </button>
+
+    <button
+      type="submit"
+      class="btn btn-danger resetbtn"
+      (click)="reset()"
+      *ngIf="ShowReset"
+    >
+      <i class="fa fa-times-circle me-2"></i>Reset
+    </button> 
+  </div> -->
+  
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button
+    type="button"
+    class="btn btn-secondary me-2"
+    (click)="Close()"
+  >
+  Close
+  </button>
+
+    <button
+    class="btn btn-primary"
+    [hidden]="hidebutton"
+    type="submit"
+    (click)="AddtoList()"
+  >
+
+    <i class="fa fa-list me-2" ></i>Add to List
+  </button>
+
+</mat-dialog-actions>
+

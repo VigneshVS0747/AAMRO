@@ -1,0 +1,54 @@
+<div class="mt-3 mb-3 px-3 mx-2">
+    <div class="d-flex align-items-center justify-content-between">
+        <h3 class="mt-2 mb-2">Enquiry</h3>
+        <mat-icon mat-dialog-close type="button" style="color: red;">close</mat-icon>
+    </div>
+
+
+    <kendo-grid [data]="EgridData" [skip]="Eskip" [filterable]="true" [resizable]="true" [height]="500"
+        [pageSize]="EpageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [filterable]="true"
+        (dataStateChange)="onEStateChange($event)" (pageChange)="EpageChange($event)">
+
+        <kendo-grid-column field="enquiryNumber" title="Enquiry Code" [width]="80" filter="text">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                <div type="button" (click)="onCellClick(dataItem, 'enquiryNumber')">{{ dataItem.enquiryNumber }}</div>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column format="{0:dd/MMM/yyyy}" filter="date" [style]="{ 'text-align': 'left', padding: '5px' }"
+            [headerStyle]="{ justifyContent: 'center' }" field="enquiryDate" title="Date" [width]="85">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                <div>{{ dataItem.enquiryDate | date: 'dd/MMM/yyyy' }}
+                </div>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="jobCategory" title="Job Category" [width]="110" filter="text">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                <div (click)="onCellClick(dataItem, 'jobCategory')">{{ dataItem.jobCategory }}</div>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="jobTypeName" title="Job Type" [width]="110" filter="text">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                <div type="button" (click)="onCellClick(dataItem, 'jobTypeName')">{{ dataItem.jobTypeName }}</div>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="enquiryStatus" title="Status" [width]="100" filter="text">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                <div (click)="onCellClick(dataItem, 'enquiryStatus')">{{ dataItem.enquiryStatus }}</div>
+            </ng-template>
+        </kendo-grid-column>
+
+        <ng-template kendoPagerTemplate>
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+            <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+            <kendo-pager-next-buttons></kendo-pager-next-buttons>
+            <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+            <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+    </kendo-grid>
+
+
+</div>

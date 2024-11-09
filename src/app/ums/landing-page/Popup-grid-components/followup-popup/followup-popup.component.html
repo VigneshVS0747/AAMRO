@@ -1,0 +1,50 @@
+<div class="mt-3 mb-3 px-3 mx-2">
+    <div class="d-flex align-items-center justify-content-between">
+        <h3 class="mt-2 mb-2">Follow Up</h3>
+        <mat-icon mat-dialog-close type="button" style="color: red;">close</mat-icon>
+    </div>
+    <kendo-grid [data]="FgridData" [skip]="Fskip" [filterable]="true" [resizable]="true" [height]="500"
+        [pageSize]="FpageSize" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" [filterable]="true"
+        (dataStateChange)="onFStateChange($event)" (pageChange)="FpageChange($event)">
+
+    <kendo-grid-column field="followUpDate" title="Date&Time" filter="date" [width]="120">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div (click)="onCellClick(dataItem, 'followUpDate')">{{ dataItem.followUpDate | date: 'dd/MMM/yyyy HH:mm:ss' }}</div>
+        </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="followUpCode" title="Base Doc Id" [width]="120">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div type="button" (click)="onCellClick(dataItem, 'followUpCode')">{{ dataItem.followUpCode }}</div>
+        </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="followUpperson" title="Follow Up person" [width]="140">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div (click)="onCellClick(dataItem, 'followUpperson')">{{ dataItem.followUpperson }}</div>
+        </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="modeofFollowUp" title="Follow Up Mode" [width]="140">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div (click)="onCellClick(dataItem, 'modeofFollowUp')">{{ dataItem.modeofFollowUp }}</div>
+        </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="followUpStatus" title="Status" [width]="140">
+        <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div (click)="onCellClick(dataItem, 'followUpStatus')">{{ dataItem.followUpStatus }}</div>
+        </ng-template>
+    </kendo-grid-column>
+
+    <ng-template kendoPagerTemplate>
+        <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+        <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+        <kendo-pager-next-buttons></kendo-pager-next-buttons>
+        <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+        <kendo-pager-info></kendo-pager-info>
+    </ng-template>
+</kendo-grid>
+
+
+</div>

@@ -1,0 +1,147 @@
+<div class="table-list-display">
+  <div class="component-list">
+    <h3 class="box-title">
+      <img src="./assets/images/billing-storage.png" alt="UOMConversion Details" />
+      <span>UOM Conversion</span>
+    </h3>
+    <div class="text-end">
+      <button class="btn btn-primary Addbtn" *ngIf="pagePrivilege.includes('create')" type="button" (click)="Add()">
+        <i class="fa fa-plus-circle me-2"></i>Add
+      </button>
+    </div>
+    <hr class="mt-0 mb-4" />
+    <section class="custom-table-wrapper">
+      <kendo-grid [kendoGridBinding]="uomConversion" [filterable]="true" [resizable]="true" [height]="500"
+        [pageSize]="10" [sortable]="true" [pageable]="true" [selectable]="{ enabled: true }" (pageChange)="pageChange($event)"
+        [skip]="skip">
+
+
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px', overflow: 'visible'}"
+          [headerStyle]="{'justifyContent': 'center'}" field="uomName" title="From UOM *" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="dataItem.Isedit">
+
+              <ng-autocomplete [data]="uoms" [searchKeyword]="keyword" placeholder="Select code" (input)="onInputChange($event, dataItem)"
+                (selected)='selectEventUomfromId($event)' [itemTemplate]="itemTemplate" [(ngModel)]="dataItem.uomName"
+                (inputChanged)="onChangeSearch($event)" [notFoundTemplate]="notFoundTemplate">
+              </ng-autocomplete>
+
+              <ng-template #itemTemplate let-item>
+                <a [innerHTML]="item.uomName"></a>
+              </ng-template>
+
+              <ng-template #notFoundTemplate let-notFound>
+                <div [innerHTML]="notFound"></div>
+              </ng-template>
+              <div class="text-danger" *ngIf="ValidateField(dataItem.uomName)">
+                <span>From UOM is required*</span>
+              </div>
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              {{dataItem.uomName}}
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+
+
+        <kendo-grid-column [style]="{'text-align': 'left','padding': '5px', overflow: 'visible'}"
+          [headerStyle]="{'justifyContent': 'center'}" field="uomToName" title="To UOM *" [width]="100">
+
+
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="dataItem.Isedit">
+
+              <ng-autocomplete [data]="selectedValueToUOM" (input)="onInputuomToNameChange($event, dataItem)" [searchKeyword]="keyword" placeholder="Select code"
+                (selected)='selectEventUomToId($event)' [itemTemplate]="itemTemplate" [(ngModel)]="dataItem.uomToName"
+                (inputChanged)="onChangeSearch($event)" [notFoundTemplate]="notFoundTemplate">
+                <!-- [displayWith]="displayCountryLabelFn"    -->
+              </ng-autocomplete>
+
+              <ng-template #itemTemplate let-item>
+                <a [innerHTML]="item.uomName"></a>
+              </ng-template>
+
+              <ng-template #notFoundTemplate let-notFound>
+                <div [innerHTML]="notFound"></div>
+              </ng-template>
+              <div class="text-danger" *ngIf="ValidateField(dataItem.uomName)">
+                <span>To UOM is required*</span>
+              </div>
+
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              {{dataItem.uomToName}}
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column [style]="{ 'text-align': 'left', padding: '5px' }"
+          [headerStyle]="{ justifyContent: 'center' }" field="conversionRate" title="Conversion Rate *" [width]="100">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="dataItem.Isedit">
+              <input type="number" class="form-control" maxlength="20" (input)="crate(dataItem)" [(ngModel)]="dataItem.conversionRate" />
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              {{ dataItem.conversionRate }}
+            </div>
+            <div class="text-danger" *ngIf="ValidateField(dataItem.conversionRate)">
+              <span>ConversionRate is required*</span>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+
+
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }"
+          field="livestatus" filter="boolean" title="Active" [width]="90">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.Isedit">
+              <mat-checkbox class="example-margin" [(ngModel)]="dataItem.livestatus"
+                (change)="handleChange($event, dataItem)"></mat-checkbox>
+            </div>
+            <div *ngIf="!dataItem.Isedit">
+              <mat-checkbox class="example-margin" [disabled]="true" [(ngModel)]="dataItem.livestatus"></mat-checkbox>
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{ 'text-align': 'center' }" [headerStyle]="{ justifyContent: 'center' }"
+          title="Action" [width]="80" [sticky]="true">
+          <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+            <div *ngIf="!dataItem.Isedit">
+              <a type="submit" (click)="Edit(dataItem)" *ngIf="pagePrivilege.includes('edit')"><i class="fas fa-square-pen"></i></a>&nbsp;
+              <a type="submit" (click)="Delete(dataItem.uomConversionId)" *ngIf="pagePrivilege.includes('delete')"><i class="fas fa-trash"></i></a>
+            </div>
+            <div *ngIf="dataItem.Isedit">
+              <a type="submit" #submitButton tabindex="0" *ngIf="pagePrivilege.includes('create')" (keydown.enter)="hndlKeyPress($event , dataItem)"
+                (change)="hndlChange($event)" (click)="showAddRow ? Save(dataItem) : Update(dataItem)">
+                <ng-container *ngIf="showAddRow; else editIcon">
+                  <i class="fas fa-sd-card"></i>
+                </ng-container>
+                <ng-template #editIcon>
+                  <i class="fas fa-sd-card"></i>
+                </ng-template> </a>&nbsp;
+              <a type="submit" #cancelButton tabindex="0" (keydown.enter)="handleKeyPress($event , dataItem)"
+                (click)="oncancel(dataItem)"><i class="fas fa-xmark"></i></a>
+            </div>
+          </ng-template>
+          <!-- <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+  <a type="submit" routerLink="/ums/authmat/{{dataItem.authorizationMatrixID}}"><i class="fas fa-eye"></i></a>&nbsp; -->
+          <!-- <a type="submit" routerLink="/ums/department/edit/{{dataItem.departmentId}}"><i class="fas fa-square-pen"></i></a>&nbsp;
+  <a type="submit" (click)="onDelete(dataItem)"><i class="fas fa-trash"></i></a>&nbsp;
+  <a type="submit" 
+              ><i class="fas fa-eye"></i></a
+            >&nbsp;
+  
+  </ng-template> -->
+        </kendo-grid-column>
+        <ng-template kendoPagerTemplate>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-numeric-buttons [buttonCount]="buttonCount"></kendo-pager-numeric-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+
+          <kendo-pager-page-sizes class="Page-Short" [pageSizes]="sizes"></kendo-pager-page-sizes>
+          <kendo-pager-info></kendo-pager-info>
+        </ng-template>
+      </kendo-grid>
+    </section>
+  </div>
+</div>

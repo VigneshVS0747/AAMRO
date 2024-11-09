@@ -1,0 +1,91 @@
+<div class="table-list-display">
+  <div class="component-creation">
+    <div class="header-container">
+      <h3 class="box-title">
+        <img src="./assets/images/billing-storage.png" alt="Employee" />
+        <span>Currency</span>
+      </h3>
+
+      <button class="btn btn-primary returntolistbtn" type="button" (click)="returnToList()">
+        <i class="fa fa-list me-2"></i> Return to List
+      </button>
+    </div>
+    <hr class="mt-0 mb-4" />
+    <mat-card>
+      <mat-card-title class="title">
+        {{ title }}
+      </mat-card-title>
+      <br />
+      <mat-card-content>
+        <form (submit)="onSaveCurrency(currencyForm)" #currencyForm="ngForm">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Currency Name</mat-label>
+                <input matInput type="text" required [readonly]="disablefields" maxlength="20"
+                  placeholder="Currency Name" [ngModel]="editedCurrency?.currencyName" name="currencyName"
+                  #currencyName="ngModel" autocomplete="off" />
+                <mat-error *ngIf="currencyName.invalid && ShowError">Currency Name is required*</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Currency Code</mat-label>
+                <input matInput type="text" required maxlength="10" [readonly]="disablefields"
+                  placeholder="Currency Code" [ngModel]="editedCurrency?.currencyCode" name="currencyCode"
+                  #currencyCode="ngModel" autocomplete="off" />
+                <mat-error *ngIf="ShowError && currencyCode.invalid">Currency Code is required*</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Currency Symbol</mat-label>
+                <input matInput type="text" required [readonly]="disablefields" maxlength="4"
+                  placeholder="Currency Symbol" [ngModel]="editedCurrency?.currencySymbol" name="currencySymbol"
+                  #currencySymbol="ngModel" autocomplete="off" />
+                <mat-error *ngIf="currencySymbol.invalid && ShowError">Currency Symbol is required*</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Main Denomination</mat-label>
+                <input matInput type="text" required [readonly]="disablefields" maxlength="15"
+                  placeholder="Main Denomination" [ngModel]="editedCurrency?.denominationMain" name="mainDenomination"
+                  #mainDenomination="ngModel" autocomplete="off" />
+                <mat-error *ngIf="mainDenomination.invalid && ShowError">Main Denomination is required*</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-label class="labelcolor">Sub Denomination</mat-label>
+                <input matInput type="text" required [readonly]="disablefields" maxlength="15"
+                  placeholder="Sub Denomination" [ngModel]="editedCurrency?.denominationSub" name="subDenomination"
+                  #subDenomination="ngModel" autocomplete="off" />
+                <mat-error *ngIf="subDenomination.invalid && ShowError">Sub Denomination is required*</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-checkbox class="statusmargin" name="currencyStatus" [checked]="currencyStatus"
+                [disabled]="disablefields" (change)="valueChange($event)">
+                Active</mat-checkbox>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class="m-4 mb-5 d-flex justify-content-end" style="bottom: 115px">
+  <button *ngIf="isCreatedFlag" class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit"
+    (click)="onSaveCurrency(currencyForm)">
+    <i class="fa fa-save me-2"></i> Save
+  </button>
+  <button *ngIf="!isCreatedFlag" class="btn btn-primary savebtn me-1" [hidden]="disablefields" type="submit"
+    (click)="onSaveCurrency(currencyForm)">
+    <i class="fa fa-save me-2"></i> Update
+  </button>
+  <button type="button" class="btn btn-danger resetbtn" [hidden]="disablefields"
+    (click)="editedCurrency?resetButtonClick():resetButtonClickforSave(currencyForm)">
+    <i class="fa fa-times-circle"></i> Reset
+  </button>
+</div>

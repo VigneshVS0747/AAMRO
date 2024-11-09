@@ -1,0 +1,211 @@
+.header-container {
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: -0.9rem; /* Add spacing between header and hr */
+  }
+  
+  .mat-header-cell {
+    text-align: center;
+    font-size: 18px;
+    width: auto;
+    white-space: nowrap;
+  }
+  
+  .mat-cell {
+    font-size: 16px;
+  }
+  .Page-Short{
+    padding-left: 500px;
+}
+
+  
+  .centered-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  
+  .center-content {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .gray-icon {
+    color: gray; /* You can use any gray color you prefer */
+  }
+  
+  .blue-icon {
+    color: rgb(0, 0, 255); /* You can use any gray color you prefer */
+  }
+  
+  .golden-icon {
+    color: goldenrod;
+  }
+  
+  .mat-table {
+    font-size: 16px; /* Set font size for the entire table, including headers and data cells */
+  }
+  
+  .mat-table th.mat-header-cell {
+    font-size: 14px; /* Set font size for header cells within the table */
+  }
+  
+  .icon-checkbox-container {
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .icon-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* You might need to adjust the following styles according to your specific design */
+  .fa-star-of-david {
+    margin-right: 3px; /* Adjust spacing between the icon and checkbox */
+  }
+  
+  .table-container {
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: nowrap; /* Prevent text from wrapping */
+    max-width: 100%; /* Set a maximum width to allow horizontal scrolling */
+    max-height: 350px;
+    /* max-height: 84%; */
+    border-bottom: 1px solid #00447c; /* For the last row border */
+  }
+  
+  .custom-form-field {
+    width: 250px;
+  }
+  
+  .mdc-icon-button {
+    transform: scale(1.2);
+  }
+  
+  .form-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .inputs-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 80%;
+  }
+  
+  .inputs-wrapper div {
+    width: fit-content;
+    margin-right: 1rem;
+  }
+  
+  .info-div {
+    padding: 1rem;
+    text-align: center;
+    background: whitesmoke;
+    margin: 5px;
+    border-radius: 5px;
+    margin-top: 1rem;
+  }
+  
+  .danger {
+    color: red;
+  }
+  .text-end{
+    padding-top: 40px;
+  }
+
+
+.fas {
+  font-weight: 900;
+  font-size: 14px !important;
+  margin: 3px;
+  margin-bottom: 7px;
+} 
+
+::ng-deep .ql-video {
+  visibility: hidden !important;
+}
+
+::ng-deep .ql-image {
+  visibility: hidden !important;
+}
+
+::ng-deep .ql-link {
+  visibility: hidden !important;
+}
+
+/* Tab design */
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: rgb(255 255 255) !important ;
+  display: inline-flex;
+  align-items: center;
+}
+::ng-deep .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab {
+  flex-grow: 1;
+  border-radius: 50px 0 50px 0!important;
+  background: #6f7f8a;
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #f7f8ff !important;
+}
+::ng-deep .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab.mdc-tab--active {
+  flex-grow: 1;
+  border-radius: 50px 0 50px 0 !important;
+  background: #004ebd;
+  border-bottom-width:2px !important;
+  border-width: transparent !important;
+
+}
+::ng-deep .mat-mdc-focus-indicator {
+  position: static !important;
+}
+.mat-tab-label.mat-tab-label-active .mat-ripple-element::after {
+  background-color: transparent !important;
+}
+
+
+::ng-deep.k-grid-header .k-table-th.k-grid-header-sticky,
+.k-grid-header .k-filter-row .k-grid-header-sticky,
+.k-grid .k-grid-content-sticky,
+.k-grid .k-grid-row-sticky,
+.k-grid .k-grid-footer-sticky {
+    z-index: 0 !important;
+}
+
+::ng-deep .k-grid .k-grid-content-sticky {
+    z-index: 0 !important;
+}
+
+::ng-deep.k-grid-header .k-filter-row .k-grid-header-sticky{
+    z-index: 0 !important;
+}
+::ng-deep kendo-grid.k-grid .k-grid-content-sticky {
+    border-top-color: rgba(0, 0, 0, 0.08);
+    border-left-color: rgba(0, 0, 0, 0.08) !important;
+    border-right-color: rgba(0, 0, 0, 0.08) !important;
+    background-color: #ffffff;
+}
+
+::ng-deep .k-grid-header td.k-grid-header-sticky,
+.k-grid-header .k-table-td.k-grid-header-sticky {
+    border-right-color: rgba(0, 0, 0, 0.08) !important;
+    border-left-color: rgba(0, 0, 0, 0.08) !important;
+}
+::ng-deep .mat-mdc-tab-body-content{
+  overflow: hidden !important;
+  padding-bottom: 20px !important;
+}
+.labelcolorGray {
+  color: #676a6d;
+}

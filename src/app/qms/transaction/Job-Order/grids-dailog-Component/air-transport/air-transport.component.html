@@ -1,0 +1,135 @@
+<div class="mb-3 px-3 py-2">
+    <h3 *ngIf="this.data?.list == undefined || this.data?.list == null" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        Add
+    </h3>
+    <h3 *ngIf="this.data?.list && !this.data?.view" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        Update
+    </h3>
+    <h3 *ngIf="this.data?.view" class="box-title mb-2">
+        <img src="./assets/images/billing-storage.png" alt="Line Item" />
+        View
+    </h3>
+    <mat-divider></mat-divider>
+</div>
+<div mat-dialog-content>
+    <div>
+        <form [formGroup]="AirTransportForm">
+            <div class="row mt-2">
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">HAWB Number</mat-label>
+                    <input type="text" placeholder="HAWB Number" matInput formControlName="HAWBNumberControl">
+                    <mat-error
+                        *ngIf="f.HAWBNumberControl.touched && f.HAWBNumberControl.hasError('required') && !f.HAWBNumberControl.hasError('maxlength')">
+                        HAWB Number is required
+                    </mat-error>
+                    <mat-error *ngIf="f.HAWBNumberControl.hasError('maxlength')">
+                        HAWB Number cannot exceed 25 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Shipper</mat-label>
+                    <input type="text" placeholder="Shipper" matInput formControlName="shipperControl">
+                    <mat-error
+                        *ngIf="f.shipperControl.touched && f.shipperControl.hasError('required') && !f.shipperControl.hasError('maxlength')">
+                        Shipper is required
+                    </mat-error>
+                    <mat-error *ngIf="f.shipperControl.hasError('maxlength')">
+                        Shipper Item cannot exceed 100 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Consignee</mat-label>
+                    <input type="text" placeholder="Consignee" matInput formControlName="consigneeControl">
+                    <mat-error
+                        *ngIf="f.consigneeControl.touched && f.consigneeControl.hasError('required') && !f.consigneeControl.hasError('maxlength')">
+                        Consignee is required
+                    </mat-error>
+                    <mat-error *ngIf="f.consigneeControl.hasError('maxlength')">
+                        Consignee Item cannot exceed 100 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Notify Party</mat-label>
+                    <input type="text" placeholder="Notify Party" matInput formControlName="notifyPartyControl">
+                    <mat-error
+                        *ngIf="f.notifyPartyControl.touched && f.notifyPartyControl.hasError('required') && !f.notifyPartyControl.hasError('maxlength')">
+                        Notify Party is required
+                    </mat-error>
+                    <mat-error *ngIf="f.notifyPartyControl.hasError('maxlength')">
+                        Notify Party Item cannot exceed 100 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">ETD</mat-label>
+                    <input matInput formControlName="ETDControl" placeholder="DD/MM/YYYY" [matDatepicker]="picker1">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">ETA</mat-label>
+                    <input matInput formControlName="ETAControl" placeholder="DD/MM/YYYY" [matDatepicker]="picker2">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error *ngIf="f.ETAControl.touched && f.ETAControl.hasError('dateRange')">
+                        ETA cannot be earlier than ETD
+                    </mat-error>
+                </mat-form-field>
+
+
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Stage</mat-label>
+                    <input type="text" placeholder="Stage" aria-label="Number" matInput formControlName="stageControl"
+                        [matAutocomplete]="auto3">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredStage | async" [value]="option?.jobStage">
+                            {{option?.jobStage}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f.stageControl.touched && f.stageControl.invalid">Stage is
+                        required</mat-error>
+                    <mat-error *ngIf="f.stageControl.touched && f.stageControl.hasError('invalidOption')">Invalid
+                        Option</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-md-4">
+                    <mat-label class="labelcolor">Status</mat-label>
+                    <input type="text" placeholder="Stage" aria-label="Number" matInput formControlName="statusControl"
+                        [matAutocomplete]="auto">
+                    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="getLineItemId($event)">
+                        <mat-option *ngFor="let option of filteredStatus | async"
+                            [value]="option?.jobStageStatus">
+                            {{option?.jobStageStatus}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="f.statusControl.touched && f.statusControl.invalid">Status is
+                        required</mat-error>
+                    <mat-error *ngIf="f.statusControl.touched && f.statusControl.hasError('invalidOption')">Invalid
+                        Option</mat-error>
+                </mat-form-field>
+            </div>
+
+
+        </form>
+
+    </div>
+</div>
+<div mat-dialog-actions style="float: right;" class="d-flex gap-2">
+    <button (click)="Close()" class="btn btn-secondary canceltbtn" type="submit">
+        Cancel
+    </button> &nbsp;&nbsp;
+    <button [disabled]="this.data?.view" class="btn btn-primary returntolistbtn" type="submit"
+        (click)="save()">
+        <i class="fa fa-list me-2"></i>Add List
+    </button>
+
+</div>

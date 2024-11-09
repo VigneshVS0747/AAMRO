@@ -1,0 +1,117 @@
+<mat-dialog-actions>
+    <div class="table-list-display">
+        <div class="component-creation">
+            <div class="header-container">
+                <h3 class="box-title">
+                    <img src="./assets/images/billing-storage.png" alt="Package" />
+                    <span>Package Details</span>
+                </h3>
+            </div>
+        </div>
+        <hr class="mt-0 mb-4" />
+        <mat-card>
+            <mat-card-title class="title">
+                <!-- {{titile}} -->
+            </mat-card-title>
+            <br />
+            <mat-card-content>
+                <div class="table-list-display">
+                    <div class="component-creation">
+                        <div class="header-container">
+                            <form [formGroup]="PackageForm" #form="ngForm" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Package Type</mat-label>
+                                            <input matInput formControlName="packageTypeId"
+                                                [matAutocomplete]="autopackageType" required>
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                            <mat-error *ngIf="!PackageForm.controls['packageTypeId'].value">Package Type
+                                                is required*</mat-error>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autopackageType="matAutocomplete"
+                                            [displayWith]="displayPackageTypeLabelFn"
+                                            (optionSelected)="PackageypeSelectedoption($event)">
+                                            <mat-option
+                                                *ngFor="let packageTypeList of filteredPackageTypeListOptions$ | async"
+                                                [value]="packageTypeList" [disabled]="packageTypeList.isNotFound">
+                                                {{ packageTypeList.packageTypeName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Height(in Cm)</mat-label>
+                                            <input matInput (input)="Height($event)" formControlName="height"
+                                                maxlength="10" placeholder="Height" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Length(in Cm)</mat-label>
+                                            <input matInput  (input)="Length($event)" formControlName="length"
+                                                maxlength="10" placeholder="Length" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Breadth(in Cm)</mat-label>
+                                            <input matInput  (input)="Breadth($event)" formControlName="breadth"
+                                                maxlength="10" placeholder="Breadth" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Commodity</mat-label>
+                                            <input matInput formControlName="commodityId" 
+                                                [matAutocomplete]="autocommodity">
+                                            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+                                        </mat-form-field>
+                                        <mat-autocomplete #autocommodity="matAutocomplete"
+                                            [displayWith]="displayCommodityLabelFn"
+                                            (optionSelected)="CommodityListSelectedoption($event)">
+                                            <mat-option *ngFor="let CommodityList of filteredCommodityOptions$ | async"
+                                                [value]="CommodityList" [disabled]="CommodityList.isNotFound">
+                                                {{ CommodityList.commodityName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">CBM</mat-label>
+                                            <input matInput type="number" formControlName="cbm" 
+                                                placeholder="CBM" autocomplete="off" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Pack Weight(kg)</mat-label>
+                                            <input matInput  formControlName="packWeightKg" (input)="packWeightKg($event)" maxlength="10"
+                                                placeholder="Pack Weight(kg)" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4" [hidden]="seaportSelected">
+                                        <mat-form-field>
+                                            <mat-label class="labelcolor">Chargeable Package Weight</mat-label>
+                                            <input matInput type="number" formControlName="chargePackWtKg"
+                                                 readonly placeholder="Chargeable Pkg Weight" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+</mat-dialog-actions>
+<mat-dialog-actions align="end">
+    <button class="btn btn-secondary canceltbtn" type="submit" (click)="Close()">
+        Cancel
+    </button> &nbsp;&nbsp;
+    <button class="btn btn-primary returntolistbtn" *ngIf="!viewMode" type="submit" (click)="AddtoList()">
+        <i class="fa fa-list me-2"></i>Add to List
+    </button>
+</mat-dialog-actions>
